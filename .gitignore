@@ -11,3 +11,7 @@ references/
 # document decisions cheaply; these two do not.
 arc_ramps.svg
 magenta_field.svg
+
+# Rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a
+# second copy that goes stale silently.
+*.png
