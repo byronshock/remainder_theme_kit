@@ -54,6 +54,12 @@ values, and tiling gaps are all settable per-user with no sudo.
 - Toolkit config (`com.system76.CosmicTk`): fonts, density, header size.
 - `cosmic-randr` reports output size and scale, so an installer can compute
   per-output geometry.
+- `cosmic-settings appearance export|import` prints two ERRORs on **stderr** —
+  `1:1: Expected identifier` and `failed to get key 'frosted_maximized_apps'`,
+  both at `theme_manager.rs:62` — and exits 0 regardless. They are about
+  cosmic-settings' own config state, not the file being imported: an *export*,
+  which reads no theme file at all, prints the identical pair. Do not suppress
+  them in an installer; a real import failure would go with them.
 
 **Cannot reach:** this libcosmic paints header bars with the window
 background, so a header bar cannot differ from the field and every window

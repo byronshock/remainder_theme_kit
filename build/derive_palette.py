@@ -136,7 +136,7 @@ CHROME = 0.100
 TARGETS = [
     ('BLACK',  'WHITE',  90.0, 90.0, 'body text on the window field, 16px/400'),
     ('BLACK',  'LIGHT',  60.0, 60.0, 'panel and button text, 16px/700 bold (§2) -- LIGHT is pinned'),
-    ('WHITE',  'DARK',   75.0, 75.0, 'desktop and dock tile labels, 16px/400 -- balanced, see derive()'),
+    ('WHITE',  'DARK',   75.0, 75.0, 'dock tile labels, 16px/400 -- balanced, see derive(). The desktop field is BLACK (§5)'),
     ('WHITE',  'ACCENT', 60.0, 78.0, 'titlebar text, 16px/700 bold (§2)'),
     ('WHITE',  'SELECT', 75.0, 87.0, 'text on a selected row, 16px/400'),
     ('CURSOR', 'WHITE',  60.0, 60.0, 'the text cursor: a mark, wants to be seen -- pinned'),

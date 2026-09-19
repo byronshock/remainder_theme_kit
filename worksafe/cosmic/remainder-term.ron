@@ -1,0 +1,71 @@
+// Remainder — COSMIC Terminal color scheme. Import: COSMIC Terminal > View > Color schemes > Import.
+// BLACK on WHITE, CURSOR teal cursor (§2 names the terminal cursor as its use). Every value is derived
+// by build/cosmic.py; run `python3 build/cosmic.py --derive` for the ladder and the two gamut caps.
+//
+// THE SLOTS ARE CONTENT, NOT CHROME (§0a). A terminal buffer is a syntax-colored buffer, and inside it
+// red still means error and green still means done. So each hue slot takes the hue of the color xterm
+// ships in THAT slot — five of the six are realized members of a pole family in poles.json — and the
+// kit solves only its lightness and chroma, against its own WHITE field:
+//   normal  the most saturated value at that hue clearing APCA Lc 75, the floor for sustained reading
+//   bright  the same at Lc 60, the tier a terminal pairs with bold. Lighter and more saturated, as the
+//           ANSI convention has it: on a WHITE field the vivid end of a hue does not carry body text.
+//   dim     the ANSI faint attribute. On a light field de-emphasis by lightness is de-emphasis by
+//           legibility, so the kit dims by CHROMA instead — the normal slot's own lightness and hue
+//           taken down to C_FLOOR 0.092, the least hue that still counts as that hue (§0d's thesis
+//           used as a dimmer). Same Lc, quieter color.
+// Every value stays at or above C_FLOOR, so no slot has been dimmed out of its own family.
+//
+// This is where Remainder parts from the parent kit on this surface. De Stijl paints the ANSI slots
+// with its chrome pigments — chrome reaching into content. Remainder leaves content alone and the
+// poles keep meaning one thing each, in the buffer as well as out of it.
+//
+// TWO GAMUT CAPS, recorded rather than hidden — the same wall CURSOR hit in §2:
+//   yellow normal #525200 is Lc 74.1, 0.9 short of the 75 tier. Darker yellow exists; yellow that is
+//     both darker and still hue-bearing does not.
+//   cyan tops out at Lc 58.9, 1.1 short of the 60 tier, so normal, bright and dim are one value.
+//     sRGB has no dark saturated cyan, which is the same finding that forced CURSOR's chroma.
+// And one the platform cannot fix: ANSI white as TEXT on the WHITE field is Lc 28.5. A light-field
+// terminal cannot make that slot read, and the kit does not pretend otherwise.
+(
+    name: "Remainder",
+    foreground: "#10080CFF",          // BLACK on WHITE, Lc 91.8 — §2's body-text pair
+    background: "#F1E4E9FF",          // WHITE
+    cursor: "#007891FF",              // CURSOR: a locator, the one value in the kit at another hue (§2)
+    bright_foreground: "#10080CFF",   // BLACK. Brighter than BLACK on this field means lighter, so worse.
+    dim_foreground: "#4B4045FF",      // DARK, Lc 79.0
+    normal: (
+        black:   "#10080CFF",         // BLACK   — §2's ladder onto the four neutral ANSI slots
+        red:     "#930000FF",         // destructive hue, Lc 75.0
+        green:   "#005800FF",         // success hue, Lc 75.3
+        yellow:  "#525200FF",         // warning hue, Lc 74.1 — the gamut cap above
+        blue:    "#0000E6FF",         // info-blue hue, Lc 75.1
+        magenta: "#820082FF",         // no pole: magenta signals nothing (§0d), and at 328.4 its
+                                      //   realized hue lands inside the kit's own working arc — the one
+                                      //   ANSI slot the kit could have authored itself. Lc 75.1
+        cyan:    "#007F7FFF",         // demoted info-cyan (poles.json). In a terminal the claim it was
+                                      //   demoted for — note, diagnostic — is the claim the slot makes,
+                                      //   so the slot honours it where the pole set does not. Lc 58.9
+        white:   "#BAADB2FF",         // LIGHT
+    ),
+    bright: (
+        black:   "#4B4045FF",         // DARK
+        red:     "#D60000FF",         // Lc 60.1
+        green:   "#008100FF",         // Lc 60.2
+        yellow:  "#747400FF",         // Lc 60.1
+        blue:    "#0000FFFF",         // Lc 71.8 — blue's chroma ceiling sits above the tier, so this slot
+                                      //   is more legible than the 60 tier asks for
+        magenta: "#BD00BDFF",         // Lc 60.3
+        cyan:    "#007F7FFF",         // = normal: the cap above
+        white:   "#F1E4E9FF",         // WHITE
+    ),
+    dim: (
+        black:   "#10080CFF",         // BLACK
+        red:     "#76362DFF",         // Lc 76.1
+        green:   "#265423FF",         // Lc 76.0
+        yellow:  "#525201FF",         // = normal: yellow's normal slot already sits at the chroma floor
+        blue:    "#324A7FFF",         // Lc 75.5
+        magenta: "#6A3A68FF",         // Lc 75.5
+        cyan:    "#027F7FFF",         // = normal: the cap above
+        white:   "#756A6EFF",         // neutral_5, the ramp's midpoint
+    ),
+)

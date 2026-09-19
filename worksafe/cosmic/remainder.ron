@@ -1,0 +1,113 @@
+// Remainder — COSMIC theme. Import: cosmic-settings appearance import remainder.ron (install.sh does it).
+// Schema: libcosmic cosmic-theme ThemeBuilder v2. Implements AUTHORITY.md §2, §3, §5, §6 and PLATFORM.md COSMIC.
+// Every value here is a value some ladder derived; build/cosmic.py checks each one against the pole test.
+// Neutrals: WHITE #F1E4E9  LIGHT #BAADB2  DARK #4B4045  BLACK #10080C.  Chrome: ACCENT #763555  SELECT #521436.
+// The chrome carries no hue a user can read as a signal, which is the whole kit (§0a).
+(
+    palette: Light((
+        name: "Remainder",
+        // §3: the three semantic hues, the only colors in the system that mean anything. They are
+        // the axiom the palette is a consequence of, not an exception carved out of it.
+        bright_red:    "#AF1E2DFF",   // DESTRUCTIVE, FHWA red
+        bright_green:  "#006B54FF",   // SUCCESS, FHWA green
+        bright_orange: "#FCD116FF",   // WARNING, FHWA yellow
+        gray_1: "#BAADB2FF",          // LIGHT
+        gray_2: "#BAADB2FF",          // LIGHT
+        // Eleven slots where §2 has four. Interpolated in OKLab lightness at the cast (0.016),
+        // ANCHORED so the kit's own four land exactly on 0, 3, 8 and 10: COSMIC derives component
+        // colors from this ramp, so a ramp containing §2's ladder puts more of what the platform
+        // paints back on the kit's values. build/cosmic.py --derive shows the steps (dE 7.3-8.6).
+        neutral_0:  "#10080CFF",      // = BLACK
+        neutral_1:  "#22191DFF",
+        neutral_2:  "#362C30FF",
+        neutral_3:  "#4B4045FF",      // = DARK
+        neutral_4:  "#5F5459FF",
+        neutral_5:  "#756A6EFF",
+        neutral_6:  "#8B7F84FF",
+        neutral_7:  "#A2969BFF",
+        neutral_8:  "#BAADB2FF",      // = LIGHT
+        neutral_9:  "#D5C8CDFF",
+        neutral_10: "#F1E4E9FF",      // = WHITE
+        // The accent picker offers nine swatches, and every one is an accent the user may choose,
+        // so every one has to be legal: clear of every pole and able to carry the WHITE titlebar
+        // text §2 puts on the accent. Three hues — §1's working arc at its floor 295.4, at the
+        // derived centre 323.2 that §1 chose against, and at the home hue 351.0 — by three of
+        // APCA's tiers (Lc 60/78/87). The kit's own ACCENT and SELECT come back as two of the nine.
+        //
+        // No swatch is the color its slot is named, and that is the kit rather than an oversight:
+        // these names are the platform's vocabulary and §0a has vacated it. There is no legal blue,
+        // red, orange, yellow or green here to put in the slot that asks for one. The arc's two
+        // edges clear the pole test by 20 deg more than it requires and sit exactly on the kit's
+        // own stricter 31.4 deg guard (§1).
+        accent_blue:      "#7F6EAFFF",   // arc floor 295.4, Lc 60 tier
+        accent_indigo:    "#53417FFF",   // arc floor 295.4, Lc 78
+        accent_purple:    "#36225DFF",   // arc floor 295.4, Lc 87
+        accent_pink:      "#98669EFF",   // derived centre 323.2, Lc 60
+        accent_red:       "#683A6EFF",   // derived centre 323.2, Lc 78
+        accent_orange:    "#481A4DFF",   // derived centre 323.2, Lc 87
+        accent_yellow:    "#A86283FF",   // home 351.0, Lc 60
+        accent_green:     "#763555FF",   // home 351.0, Lc 78 — the kit's choice, = ACCENT
+        accent_warm_grey: "#521436FF",   // home 351.0, Lc 87 — = SELECT
+        ext_warm_grey: "#4B4045FF",      // DARK
+        ext_orange:    "#481A4DFF",
+        ext_yellow:    "#A86283FF",
+        ext_blue:      "#7F6EAFFF",
+        ext_purple:    "#683A6EFF",
+        ext_pink:      "#98669EFF",
+        ext_indigo:    "#53417FFF",
+    )),
+    // Denser than COSMIC's default (4/8/12/16/24/32/48/64/128). Inherited from the parent kit as
+    // convention (§5): AUTHORITY.md has no spacing scale, and this one is declared, not derived.
+    spacing: (
+        space_none: 0, space_xxxs: 2, space_xxs: 4, space_xs: 8, space_s: 12,
+        space_m: 16, space_l: 24, space_xl: 32, space_xxl: 48, space_xxxl: 96,
+    ),
+    // Curves deprecated: every slot, every corner. Inherited from the parent kit's §3 as
+    // convention — AUTHORITY.md §5 records the rule and the type and does not record this, so it
+    // is carried rather than derived, and PLATFORM.md names radius 0 as what COSMIC reaches.
+    corner_radii: (
+        radius_0:  (0.0, 0.0, 0.0, 0.0),
+        radius_xs: (0.0, 0.0, 0.0, 0.0),
+        radius_s:  (0.0, 0.0, 0.0, 0.0),
+        radius_m:  (0.0, 0.0, 0.0, 0.0),
+        radius_l:  (0.0, 0.0, 0.0, 0.0),
+        radius_xl: (0.0, 0.0, 0.0, 0.0),
+    ),
+    neutral_tint:           Some("#BAADB2FF"),  // LIGHT: derived neutrals take the cast and no other hue
+    bg_color:               Some("#F1E4E9FF"),  // WHITE: window backgrounds, fields, lists (§2). This
+                                                //   libcosmic paints header bars with it too, so every
+                                                //   window reads as non-key; §2's ACCENT key titlebar is
+                                                //   unreachable here (PLATFORM.md, README_COSMIC.md).
+                                                //   COSMIC derives its row and card surface from this.
+    primary_container_bg:   Some("#BAADB2FF"),  // LIGHT: nav sidebars — §2 gives LIGHT to panels. BLACK
+                                                //   text on it is Lc 61.2, the pair §2 authors for it.
+    secondary_container_bg: Some("#F1E4E9FF"),  // WHITE: lists, cards, content wells
+    text_tint:              Some("#10080CFF"),  // BLACK text. This slot tints a near-black toward a hue
+                                                //   and cannot set one — which costs this kit nothing,
+                                                //   because BLACK is a near-black with the kit's own cast.
+    accent:      Some("#763555FF"),  // ACCENT: links, toggles, nav indicators, focus, selection (§2). COSMIC
+                                     //   has one accent and cannot split focus from it (PLATFORM.md). It is
+                                     //   dark, so libcosmic lightens it for accent-as-text; unlike the parent
+                                     //   kit that costs nothing here, because the hypothesis constrains hue
+                                     //   only and every chroma at the home hue clears every pole (§0c).
+    success:     Some("#006B54FF"),  // §3, WHITE legend
+    warning:     Some("#FCD116FF"),  // §3, BLACK legend
+    destructive: Some("#AF1E2DFF"),  // §3, WHITE legend
+    // §0: blur is one of the things the platform put in the user's way, and removing it is the larger half.
+    frosted: ExtremelyLow,
+    frosted_windows: false,
+    frosted_system_interface: false,
+    frosted_panel: false,
+    frosted_applets: false,
+    frosted_maximized_apps: false,
+    // §5: the rule's reference width is 22 dp/pt, which §5 records as a 44 pt (about 1 cm) effective
+    // hit box, taken from the sizing guidelines by input modality so that a gap is a touch target and
+    // not only a line. Flat 22 at every output: dp is logical, so it is the same rule on 1080p and on
+    // 4K at 150%. The pair is (outer, inner); cosmic-comp draws outer + inner at a screen edge and
+    // inner alone between two windows, so outer is 0 and inner is the rule: one rule everywhere.
+    gaps: (0, 22),
+    // §5: the rule carries no state. COSMIC draws its hint on the focused window only, so a hint
+    // would make the gap carry focus.
+    active_hint: 0,
+    window_hint: Some("#10080CFF"),
+)

@@ -1,4 +1,4 @@
-"""Visual QA (AUTHORITY.md principle 9): the palette as a surface, not as swatches.
+"""Visual QA (AUTHORITY.md principle 12): the palette as a surface, not as swatches.
 
 Renders a mock window using every authored value in the role it actually plays, so the
 question "is this pleasant to look at for eight hours" can be asked of something that looks

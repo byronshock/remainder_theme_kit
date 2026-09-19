@@ -294,8 +294,8 @@ pink rather than a warm neutral.
 |---|---|---|---|---|
 | WHITE | `#F1E4E9` | 0.93 | 0.016 | window backgrounds, fields, lists |
 | LIGHT | `#BAADB2` | 0.76 | 0.016 | panels, buttons, non-key titlebars |
-| DARK | `#4B4045` | 0.38 | 0.017 | desktop, dock tiles, disabled text |
-| BLACK | `#10080C` | 0.15 | 0.017 | rules, text, badges |
+| DARK | `#4B4045` | 0.38 | 0.017 | dock tiles, disabled text |
+| BLACK | `#10080C` | 0.15 | 0.017 | rules, text, badges, the desktop field |
 
 The four-step ladder is NeXTSTEP AppKit structure, inherited from De Stijl as
 convention. **The steps are borrowed; the values are derived or declared.**
@@ -370,7 +370,7 @@ simultaneous margins: +0.004 chroma, 0.8° inside the guard edge, +0.7 Lc.
 |---|---|---|---|---|
 | BLACK on WHITE | 91.8 | 90 | +1.8 | body text on the window field, 16px/400 |
 | BLACK on LIGHT | 61.2 | 60 | +1.2 | panel and button text, 16px/700 bold (§2) |
-| WHITE on DARK | -81.7 | 75 | +6.7 | desktop and dock tile labels, 16px/400 |
+| WHITE on DARK | -81.7 | 75 | +6.7 | dock tile labels, 16px/400 |
 | WHITE on ACCENT | -78.5 | 60 | +18.5 | titlebar text, 16px/700 bold (§2) |
 | WHITE on SELECT | -87.5 | 75 | +12.5 | text on a selected row, 16px/400 |
 | CURSOR on WHITE | 60.7 | 60 | +0.7 | the text cursor: a mark, wants to be seen |
@@ -410,9 +410,10 @@ The remaining 6 clear by 30 or more.
 Four pairs are **exempt**, and for a reason rather than by exception. §5 draws
 a rule *outside* the field it bounds, so what a rule must distinguish is
 rule-against-field — BLACK/WHITE at ΔE 78.3, BLACK/LIGHT at 61.2.
-Rule-against-chrome at a window's edge is not its job, and where the rule and
-the dark desktop meet, the window's edge still reads through the field against
-the surround.
+Rule-against-chrome at a window's edge is not its job, and where the rule meets
+the desktop the two are now the same value by construction (§5): the gap *is*
+the rule, so a window's edge reads as its own field against the surround rather
+than as a line drawn on it.
 
 | Exempt pair | ΔE | Why |
 |---|---|---|
@@ -469,10 +470,22 @@ parent kit:
 - **Surface findings** — which registry key, which pref, what COSMIC will and
   will not let a theme reach. Kept in `PLATFORM.md`, which is theme-
   independent and parallel in both kits.
-- **Application icons** — a brand is information and keeps its own art. The
-  kit does not repaint it. *(Remainder does not inherit De Stijl's
-  contradiction here: its §4b forbids repainting app icons and its COSMIC
-  surface repaints them to pigments. Remainder does not repaint.)*
+- **Application icons** — a brand is information and keeps its own art, so
+  **the kit repaints nothing by default**. *(De Stijl contradicts itself here:
+  its §4b forbids repainting app icons and its COSMIC surface repaints them to
+  pigments anyway. Remainder does not resolve that by pretending the question
+  never comes up.)*
+
+  **The user may decide otherwise, and the kit gives them the means.** A brand
+  is information to someone who wants to be told whose software this is, and
+  furniture to someone who already knows and wants a dock that reads as one
+  surface. Which it is on a given screen is that user's judgement, not the
+  kit's. `build/icon_theme.py` projects the icons that machine actually has
+  onto the seven values §2 authors and writes an overlay theme. It is opt-in
+  (`install.sh --icons`), reversible by selecting another icon theme, and never
+  committed: the output is the user's own brands in the user's own paint, and
+  the kit has no license to redistribute anybody's brand art. The generator
+  authors nothing — an icon the chain cannot find is skipped, not invented.
 - **Modern rendering** — anti-aliased type, 8-bit icons, real shadows,
   resolution-independent points, integer-scaled.
 
@@ -484,8 +497,8 @@ painting and those derivations have no source. Remainder therefore **declares**
 them rather than pretending to measure them:
 
 - **Geometry.** One rule, BLACK, drawn outside the field it bounds, the same
-  everywhere on a screen, carrying no state. Reference width 28 pt, taken from
-  De Stijl's 1080p figure. A borrowed constant, and the kit says so.
+  everywhere on a screen, carrying no state. Reference width 22 density-independent pixels (dp/pt) , a 44 pt, 1 cm effective hit box, taken from the sizing guidelines by input modality according to Fitt's Law to enable touch surfaces. References will follow.
+
   There is no thinner rule. **A separator that wants to be lighter than the
   rule is not a rule; it is a change of field tone — WHITE against LIGHT — and
   draws no line.** That tone change is a boundary the kit relies on to divide
@@ -497,8 +510,14 @@ them rather than pretending to measure them:
   that is wrong, every floor moves. It is the kit's weakest input and the
   reason §0c insists on margin.
 - **Wallpaper.** No painting, so no composed desktop. The default is a flat
-  DARK field, and the tiling gaps are the rule. Photographs are content (§0a)
-  and are permitted; nothing the kit generates is in color.
+  **BLACK** field. The tiling gaps are the rule, and at BLACK they are
+  literally it: the rule is BLACK, so the gap between two windows is the same
+  value as the line the kit draws — ΔE 0.0, where a DARK field left the two
+  ΔE 23.7 apart and made the claim true only by approximation. It also buys the
+  desktop's own labels margin, WHITE on BLACK measuring Lc −92.3 against −81.7
+  on DARK. Dock tiles stay DARK and read against the field at ΔE 23.7, clear of
+  the ΔE 17.1 floor. Photographs are content (§0a) and are permitted; nothing
+  the kit generates is in color.
 
 ## 6. Principles
 
@@ -523,3 +542,4 @@ them rather than pretending to measure them:
 12. QA every build visually before delivery.
 13. `palette.json` is generated. Edit the poles or the derivation, never the
     output — and never a color in this file alone.
+14. `CONTRIBUTING.md` is the procedure, and every rule in it is binding.

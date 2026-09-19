@@ -15,3 +15,18 @@ magenta_field.svg
 # Rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a
 # second copy that goes stale silently.
 *.png
+
+# The icon theme build/icon_theme.py generates. These are the USER'S OWN application icons --
+# their installed brands, reprojected -- made at install time into ~/.local/share/icons/remainder.
+# They are the user's, not the kit's, and the kit has no licence to redistribute anybody's brand
+# art. Ignored here too in case a run is pointed back into the tree with --out.
+icons/
+worksafe/icons/
+
+# Fonts. §5 declares two typefaces; the kit ships neither. `install.sh --fonts` fetches them from the
+# projects themselves at a pinned tag and checks each against a recorded SHA-256, so a copy sitting in
+# the tree is an unverified second source -- exactly what fetching from the authority avoids.
+worksafe/fonts/
+
+# The venv for the icon generator (Pillow, numpy, cairosvg). Built per machine, never shipped.
+.venv/

@@ -17,7 +17,7 @@ def build(src=SRC):
     version = re.search(r'@version\s+(\S+)', s).group(1)
     m = re.search(r'@-moz-document\s+([^{]*)\{\n(.*)\n\}\s*$', s, re.S)
     prefixes = re.findall(r'url-prefix\("([^"]+)"\)', m.group(1))
-    header = f'/* {name} {version} — DESTIJL_STYLE.md §1, §1b, §2, §3, §7. github.com/byronshock/destijl_theme_kit */'
+    header = f'/* {name} {version} — AUTHORITY.md §0a, §1, §2, §3. github.com/byronshock/remainder_theme_kit */'
     code = header + '\n' + m.group(2).strip()
     return [{
         'enabled': True, 'name': name,
