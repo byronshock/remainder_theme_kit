@@ -120,13 +120,12 @@ cairosvg — point `REMAINDER_PYTHON` at a venv that has them.
 dynasty, 16th century; Fahua ware; Art Institute of Chicago 1938.454, Bequest of
 Kate S. Buckingham), fetched from the museum at a pinned IIIF URL, verified
 against a recorded SHA-256, and installed with its credit line beside it. It is
-the one work in a 8,291-object survey of open-access collections whose two
-glazes land in the kit's two unclaimed arcs and nowhere else — aubergine
-`#532C48` in the home arc, below `C_FLOOR` and so carrying no readable hue
-(ΔE 5.7 to SELECT), and teal `#00A3B7` in the cursor gap, clear by 38.8° where
-12.0° is required (ΔE 12.9 to CURSOR). Fahua ware separates its glazes with
-raised slip trails so the colours cannot run together, which is §5's geometry
-argument fired in a kiln.
+an open-access work whose two glazes land in the kit's unclaimed arcs and
+nowhere else — aubergine `#532C48` in the home arc, below `C_FLOOR` and so
+carrying no readable hue (ΔE 5.7 to SELECT), and teal `#00A3B7` in the cursor
+gap, clear by 38.8° where 12.0° is required (ΔE 12.9 to CURSOR). Fahua ware
+separates its glazes with raised slip trails so the colours cannot run
+together, which is §5's geometry argument fired in a kiln.
 
 Photographs are content (§0a, §5) and are permitted; nothing about this one is
 authored and no value from it enters the palette. It has a measured cost and the
@@ -141,10 +140,10 @@ the screen does not. Omit `--art` for the §5 desktop.
 The palette is settled and every floor is cleared. COSMIC is built: the theme,
 the terminal scheme, the toolkit config and an installer, with every committed
 value checked by `build/cosmic.py`. Not yet built: the Windows `.theme`, the
-Firefox chrome CSS, the Claude Code theme, and everything in `elevated/`. `AUTHORITY.md`
-§5 records what is inherited from De Stijl as convention rather than measured,
-including the kit's weakest input: what "12pt" actually renders at, which every
-contrast floor depends on.
+Firefox chrome CSS, the Claude Code theme, and everything in `elevated/`.
+`AUTHORITY.md` §5 records what is inherited from De Stijl as convention rather
+than measured, including the kit's weakest input: what "12pt" actually renders
+at, which every contrast floor depends on.
 
 ## License
 
