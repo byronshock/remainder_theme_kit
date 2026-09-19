@@ -471,10 +471,12 @@ parent kit:
   will not let a theme reach. Kept in `PLATFORM.md`, which is theme-
   independent and parallel in both kits.
 - **Application icons** — a brand is information and keeps its own art, so
-  **the kit repaints nothing by default**. *(De Stijl contradicts itself here:
-  its §4b forbids repainting app icons and its COSMIC surface repaints them to
-  pigments anyway. Remainder does not resolve that by pretending the question
-  never comes up.)*
+  **the kit repaints nothing by default**. *(The difference from De Stijl is
+  when, not whether: its §4b ships the projection with the install, Remainder
+  makes it a choice. That §4b described a kit that does not repaint while its
+  COSMIC surface repainted, from 2026-09-08 until the rule was written down on
+  2026-09-19 — its own issue 006 had asked for the sentence and it went
+  unwritten for eleven days.)*
 
   **The user may decide otherwise, and the kit gives them the means.** A brand
   is information to someone who wants to be told whose software this is, and

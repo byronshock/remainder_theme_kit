@@ -112,9 +112,13 @@ All three extras are off by default and all three are the user's call
 (`AUTHORITY.md` §4, §5). `--fonts` fetches from the two projects themselves at a
 pinned tag and refuses anything whose SHA-256 does not match. `--icons` repaints
 nothing that is not already on the machine and is undone by selecting another
-icon theme; `--icons-neutral` does it on the neutral ladder alone, keeping
-CURSOR teal for the text cursor. The icon generator needs Pillow, numpy and
-cairosvg — point `REMAINDER_PYTHON` at a venv that has them.
+icon theme; it projects onto all seven values the kit authors, ACCENT, SELECT
+and CURSOR included, which is the intended result rather than a concession. The
+goal is not a colourless interface but a colourful one that does not interfere
+with what you are doing: the hypothesis constrains hue against the signals
+(§0a), and says nothing against colour as such (§0c). `--icons-neutral` drops to
+the neutral ladder for a user who wants the dock grey. The icon generator needs
+Pillow, numpy and cairosvg — point `REMAINDER_PYTHON` at a venv that has them.
 
 `--art` sets the background to **Jar with Peonies and lid** (China, Ming
 dynasty, 16th century; Fahua ware; Art Institute of Chicago 1938.454, Bequest of
