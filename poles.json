@@ -1,0 +1,69 @@
+{
+  "name": "Remainder",
+  "hypothesis": "An effective computer interface stays away from the semantically important poles of the realized color space. Chrome is chosen for what it is far from, not for what it is.",
+  "method": "Each pole family is an arc in OKLCh hue, measured from colors actually shipped as that signal (not from an abstract hue wheel). The bars are derived from the pole set itself, never declared. See AUTHORITY.md 1.",
+  "measured": "2026-09-19",
+  "families": {
+    "destructive": {
+      "means": "error, delete, discard, stop",
+      "members": {
+        "FHWA Red / Pantone 187": "#AF1E2D",
+        "iOS systemRed": "#FF3B30",
+        "Material Red 700": "#D32F2F",
+        "ANSI red (xterm)": "#CD0000"
+      }
+    },
+    "caution": {
+      "means": "alert, attention, pending, degraded",
+      "members": {
+        "Material Orange 800": "#EF6C00",
+        "iOS systemOrange": "#FF9500",
+        "amber alert": "#F57C00"
+      }
+    },
+    "warning": {
+      "means": "caution, hazard, review before proceeding",
+      "members": {
+        "FHWA Yellow / Pantone 116": "#FCD116",
+        "iOS systemYellow": "#FFCC00",
+        "ANSI yellow (xterm)": "#CDCD00"
+      }
+    },
+    "success": {
+      "means": "ok, done, confirmed, healthy, go",
+      "members": {
+        "FHWA Green / Pantone 342": "#006B54",
+        "iOS systemGreen": "#34C759",
+        "Material Green 700": "#388E3C",
+        "ANSI green (xterm)": "#00CD00"
+      }
+    },
+    "info-blue": {
+      "means": "hyperlink, platform accent, selection, focus, info",
+      "members": {
+        "hyperlink blue": "#0645AD",
+        "Windows accent": "#0078D4",
+        "iOS systemBlue": "#0A84FF",
+        "ANSI blue (xterm)": "#0000EE"
+      }
+    }
+  },
+  "sources": [
+    "FHWA MUTCD color designations (Pantone 342 / 116 / 187), sRGB conversions used for road-sign renderings on Wikimedia Commons.",
+    "Apple Human Interface Guidelines system colors (light, sRGB).",
+    "Material Design 2014 palette, 700 weights.",
+    "xterm 16-color defaults, the ANSI slots a terminal ships.",
+    "Hyperlink blue: the long-standing browser default link color."
+  ],
+  "demoted": {
+    "info-cyan": {
+      "means": "information, note, diagnostic",
+      "members": {
+        "ANSI cyan (xterm)": "#00CDCD",
+        "iOS systemTeal": "#30B0C7"
+      },
+      "demoted": "2026-09-19",
+      "reason": "Demoted from the pole set, not deleted: the measurement stands, the judgement is that the claim is too thin to spend an arc on. Cyan means \"information, note, diagnostic\" in ANSI terminals and iOS, but it is a convention of two realized members against four each for destructive and info-blue, and unlike red-means-error a user does not arrive already drilled on it. Demoting it merges the 23.5 and 38.6 degree gaps either side into one 80.1 degree arc between success and info-blue, which is where CURSOR now lives (AUTHORITY.md 2). Restore it here and the pole test picks it up again with no other change; the derived bars do not move either way (C_FLOOR is FHWA green, DELTA_MAX is destructive->caution)."
+    }
+  }
+}
