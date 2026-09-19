@@ -491,7 +491,7 @@ them rather than pretending to measure them:
   draws no line.** That tone change is a boundary the kit relies on to divide
   two surfaces with nothing drawn between them, which is why §2 takes it as
   the floor every other load-bearing boundary must clear.
-- **Typography.** UI Helvetica (Nimbus Sans shipped), mono Hack, 12pt system
+- **Typography.** UI Montserrat, mono Hack, 12pt system
   size. **This is load-bearing and unmeasured**: every contrast floor in §0e is
   a function of what "12pt" renders at, taken to be about 16px effective. If
   that is wrong, every floor moves. It is the kit's weakest input and the
