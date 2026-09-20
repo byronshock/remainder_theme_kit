@@ -90,10 +90,12 @@ in `worksafe/`, `elevated/`, `palette.json` and `poles.json`, comments stripped:
 semantics, 17 are pole members recorded in `poles.json`, 12 are terminal ANSI
 slots, and **2 are the reserved legend values**. Nothing is unexplained.
 
-The two reserved values are new, and they are the first reserved-legend use in
-the kit: `#FFFFFF` on DESTRUCTIVE, in `worksafe/firefox/chrome/`, on the close
-button and the destructive button — which is precisely the one use §3 permits
-them. `build/firefox.py` is what makes that checkable rather than a claim: the
+The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
+on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
+`elevated/remainder.user.css` — the close button, the destructive button, and
+the two ARIA states a page uses to say what it means — which is precisely the
+one use §3 permits them. **The all-sites sheet added a third surface and not one
+new value**: the count below was 60 before it landed and is 60 after. `build/firefox.py` is what makes that checkable rather than a claim: the
 sheet names them `--rm-legend-light` and `--rm-legend-dark`, and the checker
 fails if either is ever the text side of a pair whose ground is not one of §3's
 three.
@@ -231,9 +233,11 @@ python3 build/cosmic.py            # check every value in the committed .ron fil
 python3 build/cosmic.py --derive   # the three ladders, and how each value was reached
 python3 build/firefox.py           # every value, text pair and adjacency in the sheet
 python3 build/firefox.py --derive  # the grey ladder, under both of Firefox's numberings
+python3 build/stylus.py            # the all-sites sheet: values, pairs, and what it may not paint
+python3 build/stylus.py --derive   # the roles it may name, and the pairs no rule block states
 ```
 
-Two are built. What a checker owes:
+Three are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -285,6 +289,18 @@ surface:
   tokens most releases and a renamed token is how a strip silently falls back to
   a Mozilla colour. It is a report, not a gate: it needs Firefox installed, and
   an unset token is a question rather than always a defect.
+
+And one the third checker added, which only a surface with this reach needs:
+
+- **It enforces the exemption rather than relying on it.** The other two
+  surfaces cannot touch content, because chrome is all they reach.
+  `elevated/remainder.user.css` reaches everything, so `build/stylus.py` fails if
+  any rule gives an authored colour to an `img`, `video`, `canvas`, `picture`,
+  `svg`, `iframe`, `embed`, `object`, `source` or `audio`. Restoring one —
+  `color: inherit`, `filter: none` — is not painting it, and a selector that
+  names a content tag only inside `:not()` is not painting it either, so `:not()`
+  is stripped before the check: excluding them is that rule's whole job. §0a
+  stops being a promise in a comment and becomes a thing that fails.
 
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
@@ -378,6 +394,7 @@ motion, no blur.
 | File | Rule |
 |---|---|
 | `palette.json` | generated **and committed**; guarded by the check in §7 |
+| `elevated/remainder.stylus.json` | generated **and committed**; guarded by `build/stylus.py` |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |
@@ -389,12 +406,16 @@ The small figures **are** committed — `poles_and_palette.svg`, `arc_guards.svg
 documents a decision cheaply and each is reproducible by a command named in the
 README.
 
-`elevated/remainder.stylus.json` will be the second generated file that ships,
-for the parent kit's reason: Stylus imports its own JSON and balks at
-`*.user.css`, so the import file has to ship. `elevated/remainder.user.css` is
-the source. After editing the sheet: bump `@version`, add the change to the
-header's changelog with what it fixed, run `python3 build/stylus_json.py`, and
-commit both files together.
+`elevated/remainder.stylus.json` is the second generated file that ships, for
+the parent kit's reason: Stylus imports its own JSON and balks at `*.user.css`,
+so the import file has to ship. `elevated/remainder.user.css` is the source.
+After editing the sheet: bump `@version`, add the change to the header's
+changelog with what it fixed, run `python3 build/stylus_json.py`, and commit both
+files together. `build/stylus.py` checks all three of those: that the committed
+JSON is what the generator now produces, and that the `@version` in the header
+has a line beneath it saying what it changed. One field is compared out —
+`installDate` is a timestamp taken at generation, so the file is byte-stable
+between edits and not between runs.
 
 **`PLATFORM.md` is parallel in both kits.** It records facts about platforms,
 and platforms do not have opinions about either palette. Change it in both, or
