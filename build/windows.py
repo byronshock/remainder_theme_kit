@@ -387,7 +387,7 @@ def _theme():
           '[MasterThemeSelector]',
           'MTSM=RJSPBS',
           '']
-    return '\r\n'.join(L)
+    return _crlf(L)
 
 
 def _reg():
@@ -457,11 +457,33 @@ def _reg():
           '; otherwise. The 1 px DWM frame and the control corner radii are out of reach at',
           '; any tier -- tolerated, never echoed (AUTHORITY.md sec. 4).',
           '']
-    return '\r\n'.join(L)
+    return _crlf(L)
+
+
+def _crlf(lines):
+    """Join to one CRLF-terminated string, normalising any line ending the pieces carried.
+
+    THEME_HEADER and REG_HEADER are multi-line strings that enter the list as a single element
+    each, so a plain CRLF join left their own newlines bare -- the files shipped with mixed
+    endings until `file` reported "CRLF, LF line terminators" on one and not the other. A .reg
+    is read line-wise and regedit tolerates it, which is exactly why it would have gone on being
+    wrong. Normalising the finished text cannot regress the way a careful join can.
+    """
+    text = '\n'.join(lines) if not isinstance(lines, str) else lines
+    return '\r\n'.join(text.replace('\r\n', '\n').replace('\r', '\n').split('\n'))
 
 
 def _ascii(name, body):
-    """The two generated files are ASCII or they are not written. See THEME_HEADER for why."""
+    """The two generated files are ASCII and all-CRLF, or they are not written.
+
+    Both are load-bearing on Windows and neither is visible in a diff, so both are enforced at
+    the one point the bytes are produced -- which is also the point the checker compares against,
+    so a file that drifted could not pass by being regenerated wrong the same way twice.
+    """
+    lf, crlf = body.count('\n'), body.count('\r\n')
+    if lf != crlf:
+        raise SystemExit('%s: %d line ending(s) are a bare LF where Windows wants CRLF. '
+                         'Build the body through _crlf().' % (name, lf - crlf))
     try:
         return body.encode('ascii')
     except UnicodeEncodeError as e:

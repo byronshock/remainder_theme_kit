@@ -1,0 +1,19 @@
+# Line endings. The kit is written on Linux and now ships files that Windows itself reads,
+# so the working tree is pinned here rather than left to whatever `core.autocrlf` is set to
+# on the machine doing the checkout. Without this file a clone on Windows converts every
+# text file to CRLF -- which breaks `worksafe/cosmic/install.sh` under WSL or git-bash with
+# `\r: command not found` -- and a commit from Windows would quietly normalise the .reg and
+# .theme files to LF, which is the one thing they must not be.
+
+# Everything is LF in the working tree, on every platform. This is what the repository
+# already holds, so it renormalises nothing.
+* text=auto eol=lf
+
+# Except the Windows surface. A .reg or a .theme is read by Windows, and install.cmd is run
+# by cmd.exe, which needs CRLF -- a batch file with LF endings mis-parses `goto` labels and
+# multi-line blocks. These three keep CRLF in the working tree on every platform, which is
+# also what `build/windows.py` compares the generated files against: the checker reads them
+# as bytes, so an LF checkout would fail it rather than ship silently.
+elevated/windows/*.reg    text eol=crlf
+elevated/windows/*.theme  text eol=crlf
+elevated/windows/*.cmd    text eol=crlf
