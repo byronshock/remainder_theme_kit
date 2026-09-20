@@ -73,6 +73,7 @@ derivation and record it.
 
 Draws its own chrome and hands it to a per-profile stylesheet — so it is the
 one surface that can show key/non-key state where the platform will not.
+Measured on 155.0.1 (deb), 2026-09-19, except where noted.
 
 - `user.js` for prefs; `chrome/userChrome.css` and `userContent.css` for
   chrome and content. Requires `toolkit.legacyUserProfileCustomizations.
@@ -80,8 +81,70 @@ one surface that can show key/non-key state where the platform will not.
 - Reachable: tab strip, toolbars, address and search fields, menus, panels,
   sidebar, new tab / home / blank pages, every radius.
 - Prefs: density, scrollbars, reduced motion, fonts, and the declutter —
-  sponsored tiles, suggestions, Pocket, trending, promotions, "what's new".
+  sponsored tiles, suggestions, trending, promotions, "what's new".
 - uBlock Origin can be installed into the profile by script.
+- **A user sheet outranks the layers.** Firefox defines its own chrome tokens
+  inside `@layer` blocks, where layer order normally decides. It does not bite:
+  `userChrome.css` loads in the *user* origin, and a user-origin `!important`
+  outranks every author-origin declaration, layered or not.
+- **The chrome resolves through a design-token system**, not through a handful
+  of theme colors: a primitive ramp plus roughly 280 named color tokens above
+  it. **The names are renamed most releases**, and a renamed token is how a
+  strip silently falls back to a built-in color. Read the current ones off the
+  installed build rather than from memory:
+
+  ```
+  unzip -p /usr/lib/firefox/omni.ja \
+    chrome/toolkit/skin/classic/global/design-system/tokens-shared.css
+  unzip -p /usr/lib/firefox/browser/omni.ja \
+    chrome/browser/skin/classic/browser/urlbar/urlbar.tokens.css
+  ```
+
+  `python3` cannot open these: Firefox ships `omni.ja` optimised, with data
+  ahead of the central directory, which `zipfile` rejects as a bad magic number
+  and `unzip` reads with a warning.
+- **Some surfaces are derived by alpha-mixing** — `color-mix(in srgb,
+  currentColor N%, transparent)` and a `--color-*-alpha-*` family. Anything
+  painted that way is a blend of two things rather than a value a theme set.
+- **A component token cannot be set from `:root`.** Each `moz-*` web component
+  ships its own `*.tokens.css` declaring its tokens on `:root, :host`, and the
+  `:host` half lands on the custom element. A value inherited from `:root` loses
+  to a value declared at the element, whatever origin the inherited one came
+  from — importance does not cross inheritance, so even a user-origin
+  `!important` on `:root` loses. Set such a token on the element itself
+  (`moz-page-nav { --page-nav-...: ... }`). Only components with a real shadow
+  root are affected; `--tab-*` and `--urlbar-*` are declared the same way and
+  are read in the light DOM, where `:root` reaches them.
+- **A brand-new profile shows the terms notice**, which dims the entire window —
+  chrome included — at 75% black until it is answered. A first screenshot of a
+  fresh profile therefore measures every surface at a quarter of its value.
+  `termsofuse.bypassNotification` gets past it; the pref exists for a test
+  profile and not for a user's.
+- `browser.nova.enabled` (default **false** in 155) is a second, parallel set of
+  token values behind a pref, and it **renumbers the primitive grey ramp**: the
+  same slot name carries a different lightness under it. A theme derived against
+  one numbering is not derived against the other.
+- `browser.theme.native-theme` is 155's "use system colors" switch. With it on,
+  the `-moz-native-theme` media query matches and the chrome takes GTK's colors
+  for everything a theme has not named.
+- **Prefs gone by 155**, and a pref for a feature that is gone looks like it is
+  doing something: `extensions.pocket.enabled`, `browser.theme.toolbar-theme`
+  and its `content-theme` pair, `browser.messaging-system.whatsNewPanel.enabled`,
+  `browser.tabs.firefox-view`, `browser.promo.focus.enabled`.
+- **On by default in 155**, and new since the parent kit's list:
+  `browser.ml.chat.enabled` (a chatbot in the sidebar),
+  `browser.tabs.groups.smart.enabled`, `browser.urlbar.suggest.weather`,
+  `browser.preferences.moreFromMozilla`.
+- **The profile root moves with the packaging**: `~/.mozilla/firefox` (deb),
+  `~/snap/firefox/common/.mozilla/firefox`,
+  `~/.var/app/org.mozilla.firefox/.mozilla/firefox`. Inside it, `installs.ini`
+  names the profile *this install* opens, which is not always the one
+  `profiles.ini` marks `Default=1`.
+- **The running process is named `firefox-bin`**, not `firefox`: on the deb
+  build the main process's `argv[0]` is `firefox` while its `comm` is
+  `firefox-bin`, so `pgrep -x firefox` reports nothing while Firefox is running.
+  An installer that checks only that name will write into a live profile, and
+  Firefox will overwrite `prefs.js` from memory when it exits.
 
 **Cannot reach:** a running window's dock icon is the one the window
 supplies. GTK dialogs (file picker) are GTK's.

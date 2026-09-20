@@ -71,6 +71,9 @@ build/stylus_json.py      generates elevated/remainder.stylus.json from the user
 
 build/cosmic.py           the COSMIC ladders, and the checker for what is committed:
                           python3 build/cosmic.py [--derive]
+build/firefox.py          the Firefox grey ladder, and the checker for the sheet --
+                          every value, every text pair, every adjacency:
+                          python3 build/firefox.py [--derive|--coverage]
 build/remainder_space.py  projects any sRGB pixel onto the seven values the kit
                           authors; OKLab dE, with C_FLOOR as the gray threshold
 build/icon_theme.py       the opt-in icon theme (§4). Never commits its output.
@@ -78,6 +81,8 @@ build/icon_theme.py       the opt-in icon theme (§4). Never commits its output.
 worksafe/                 per-user, no elevation
 worksafe/cosmic/          the COSMIC surface: theme, terminal scheme, toolkit
                           config, install.sh
+worksafe/firefox/         the Firefox surface: userChrome.css, userContent.css,
+                          user.js, install.sh, README_FIREFOX.md
 elevated/                 all-sites user styles
 ```
 
@@ -163,12 +168,30 @@ in §0e, which is why the question states the number before you answer it.
 Answer 2, or pass `--black-field`, for the §5 desktop; `--no-wallpaper` keeps
 your own.
 
+Firefox, per-profile, no sudo, with Firefox closed. It asks one question — uBlock
+Origin — and takes no for an answer by default:
+
+```
+sh worksafe/firefox/install.sh
+sh worksafe/firefox/install.sh --ublock --no-ask     # answered in advance
+```
+
+The tab strip is the key titlebar, ACCENT with WHITE labels, and goes LIGHT with
+BLACK ones when the window is not key — the one surface on this desktop that can
+show it, since this libcosmic paints header bars with the window background.
+Details, measurements and what is left over: `worksafe/firefox/README_FIREFOX.md`.
+
+
 ## Status
 
-The palette is settled and every floor is cleared. COSMIC is built: the theme,
-the terminal scheme, the toolkit config and an installer, with every committed
-value checked by `build/cosmic.py`. Not yet built: the Windows `.theme`, the
-Firefox chrome CSS, the Claude Code theme, and everything in `elevated/`.
+The palette is settled and every floor is cleared. Two surfaces are built, each
+with its own checker: COSMIC — the theme, the terminal scheme, the toolkit config
+and an installer, checked by `build/cosmic.py` — and Firefox — `userChrome.css`,
+`userContent.css`, `user.js` and an installer, checked by `build/firefox.py`,
+which measures every text pair and every adjacency the sheet authors rather than
+taking a table on trust. Not yet built: the Windows `.theme`, the Claude Code
+theme, and everything in `elevated/`, which is where the all-sites sheet and its
+Stylus JSON go.
 `AUTHORITY.md` §5 records what is inherited from De Stijl as convention rather
 than measured, including the kit's weakest input: what "12pt" actually renders
 at, which every contrast floor depends on.

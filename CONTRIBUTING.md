@@ -84,11 +84,21 @@ Over `remainder.ron` that reports exactly three POLE lines — `#006B54`,
 `#FCD116`, `#AF1E2D` — and those three are the whole expected result. A fourth
 is a defect. This is a way to look; the gate is the surface's own checker (§8).
 
-**Measured 2026-09-19** over every value in `worksafe/`, `elevated/` and
-`palette.json`: 58 distinct, of which 28 are chrome and every one clears, 3 are
-§3's semantics, 15 are pole members recorded in `poles.json`, and 12 are
-terminal ANSI slots. Nothing is a reserved-legend use and nothing is
-unexplained. **The kit admits no exception at all.** The only one the authority
+**Re-measured 2026-09-19**, after the Firefox surface landed, over every value
+in `worksafe/`, `elevated/`, `palette.json` and `poles.json`, comments stripped:
+**60 distinct**, of which 26 are chrome and every one clears, 3 are §3's
+semantics, 17 are pole members recorded in `poles.json`, 12 are terminal ANSI
+slots, and **2 are the reserved legend values**. Nothing is unexplained.
+
+The two reserved values are new, and they are the first reserved-legend use in
+the kit: `#FFFFFF` on DESTRUCTIVE, in `worksafe/firefox/chrome/`, on the close
+button and the destructive button — which is precisely the one use §3 permits
+them. `build/firefox.py` is what makes that checkable rather than a claim: the
+sheet names them `--rm-legend-light` and `--rm-legend-dark`, and the checker
+fails if either is ever the text side of a pair whose ground is not one of §3's
+three.
+
+**The kit admits no exception at all.** The only one the authority
 names is platform residue (principle 1), which is tolerated where neither tier
 reaches it and never echoed (§4). There is no Remainder equivalent of De
 Stijl's §1c, and an authored value that needs one needs a clause in
@@ -219,10 +229,11 @@ the kit already has, and the derivation ships as code beside the surface.
 ```
 python3 build/cosmic.py            # check every value in the committed .ron files
 python3 build/cosmic.py --derive   # the three ladders, and how each value was reached
+python3 build/firefox.py           # every value, text pair and adjacency in the sheet
+python3 build/firefox.py --derive  # the grey ladder, under both of Firefox's numberings
 ```
 
-`build/cosmic.py` is the pattern for the surfaces not yet built. What a checker
-owes:
+Two are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -244,6 +255,36 @@ beats one that lands near them: COSMIC's eleven-slot ramp is anchored so §2's
 four neutrals fall exactly on slots 0, 3, 8 and 10. An even ramp missed DARK by
 ΔE 0.1 and LIGHT by ΔE 1.4 — close enough to look right, and wrong enough that
 COSMIC would paint surfaces at values the kit never authored.
+
+**A ladder that cannot land off the kit's values beats one that has to be right.**
+Firefox's grey ramp is twenty slots and it is *renumbered* under
+`browser.nova.enabled`, so an interpolated ladder would be sixteen invented
+values that are correct under one numbering and wrong under the other. Snapping
+each slot to the nearest of §2's four instead means a slot can move one step
+along the kit's own ladder when the pref flips and cannot leave it. Where the
+platform's own scale is stable, anchor and interpolate; where it moves, snap.
+
+Three things the second checker added, and each is worth carrying to the next
+surface:
+
+- **The sheet keeps one invariant so the checker can be mechanical.** The only
+  literal colours in `userChrome.css` and `userContent.css` are twelve `--rm-*`
+  definitions; every other declaration refers to those by name. So "a value
+  nobody derived" stops being a judgement call — a hex outside that block is a
+  defect by construction. So is any notation that mixes (`rgba`, `color-mix`,
+  `light-dark`, an alpha hex) or any CSS named or system colour, because a mixed
+  value is not an authored value and nothing downstream can measure one.
+- **It measures pairs rather than reading a table.** A stylesheet says what text
+  sits on what ground, which a `.ron` file never did, so the checker reads both
+  sides out of the file and measures them — including the `font-weight` the rule
+  sets, which picks the APCA tier. That is how the non-key titlebar and the
+  status panel were caught sitting at Lc 61.2 with no weight on them; a
+  hand-written table would have recorded 61.2 and called it authored.
+- **It reads the platform's vocabulary off the machine.** `--coverage` pulls the
+  token names out of the installed build's `omni.ja`, because Firefox renames
+  tokens most releases and a renamed token is how a strip silently falls back to
+  a Mozilla colour. It is a report, not a gate: it needs Firefox installed, and
+  an unset token is a question rather than always a defect.
 
 ## 9. Measure, don't eyeball (principle 10)
 

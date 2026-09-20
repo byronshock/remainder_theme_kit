@@ -1,0 +1,628 @@
+/* Remainder — Firefox chrome. worksafe/firefox/chrome/userChrome.css (worksafe tier: per profile, no elevation).
+   Implements AUTHORITY.md §1 (chrome clears every pole), §2 (the seven values), §3 (the three semantics and
+   the reserved legend), §5 (no rule thinner than the rule; square), §0 (the removal), and PLATFORM.md Firefox.
+   Needs toolkit.legacyUserProfileCustomizations.stylesheets = true — user.js sets it.
+   Checked by build/firefox.py. Measured on Firefox 155.0.1 (deb) on COSMIC, 2026-09-19.
+
+   THE ONLY LITERAL COLOURS IN THIS FILE ARE THE --rm-* DEFINITIONS BELOW. Everything else refers to them by
+   name, so a value nobody derived cannot get in by hand and build/firefox.py can prove it (CONTRIBUTING.md §8).
+
+   The shape of it:
+     tab strip = the key titlebar, ACCENT with WHITE labels. Firefox draws its own titlebar, so this is the one
+       surface on this desktop that can show key/non-key state at all (PLATFORM.md COSMIC cannot).
+     toolbars, panels, menus, buttons, sidebar = LIGHT, BLACK labels at 700. BLACK on LIGHT is Lc 61.2, which
+       is APCA's 16px/700 tier and not its body tier -- so the weight is not decoration, it is the pair §2
+       authors. The COSMIC surface puts the same pair on its panel and nav sidebar.
+     fields and in-window lists = WHITE, BLACK labels at 400 (Lc 91.8).
+     hover and the selected row = SELECT with WHITE text, everywhere except on the ACCENT tab strip, where
+       SELECT is only dE 11.8 from the ground and BLACK is used instead (dE 29.0).
+     Every corner square. No hairline anywhere: §5 has no rule thinner than the rule, so where Firefox drew a
+       line the tone changes instead -- WHITE against LIGHT, dE 17.1, the separator §2 derives its floor from. */
+
+:root {
+  /* §2 and §3. The kit's ten authored values; build/firefox.py checks each against palette.json. */
+  --rm-white:  #F1E4E9;   /* window fields, in-window lists, the urlbar             */
+  --rm-light:  #BAADB2;   /* toolbars, panels, menus, buttons, non-key titlebar     */
+  --rm-dark:   #4B4045;   /* disabled and secondary text                            */
+  --rm-black:  #10080C;   /* text, marks, the hovered tab                           */
+  --rm-accent: #763555;   /* key titlebar, links, toggles, nav indicators, focus    */
+  --rm-select: #521436;   /* hover, selected rows, selected text                    */
+  --rm-cursor: #007891;   /* the text caret, and nothing else (§2)                  */
+  --rm-success:     #006B54;
+  --rm-warning:     #FCD116;
+  --rm-destructive: #AF1E2D;
+  /* §3 reserves #FFFFFF and #000000 for legend on a semantic field and refuses them anywhere else. These two
+     names exist so the refusal is checkable: build/firefox.py fails if either appears on a ground that is not
+     one of the three above. Every other light-on-dark legend in this file is --rm-white. */
+  --rm-legend-light: #FFFFFF;
+  --rm-legend-dark:  #000000;
+
+  font-family: "Montserrat", sans-serif !important;
+
+  /* --- the primitive ramp (CONTRIBUTING.md §8: a surface ships with its checker) ----------------------------
+     Firefox's design system bottoms out in a grey ramp of twenty slots where §2 has four, and every semantic
+     token above it resolves through that ramp. The kit does not interpolate sixteen new values into it: it
+     SNAPS each slot to the nearest of §2's four by lightness. Snapping rather than interpolating is what makes
+     the ladder survive `browser.nova.enabled`, which renumbers the ramp -- under nova three slots land on a
+     different kit neutral, but no slot can land off the kit's ladder at all. user.js pins the pref false so
+     the derivation stays the one that was measured; build/firefox.py --derive prints both columns.
+     This is the backstop, not the paint: every token the kit has an opinion about is set by name below. */
+  --color-white:    var(--rm-white) !important;   /* §3: an unstyled surface renders #FFFFFF and this must not */
+  --color-black:    var(--rm-black) !important;
+  --color-gray-0:   var(--rm-white) !important;
+  --color-gray-05:  var(--rm-white) !important;
+  --color-gray-10:  var(--rm-white) !important;
+  --color-gray-15:  var(--rm-white) !important;
+  --color-gray-20:  var(--rm-white) !important;
+  --color-gray-25:  var(--rm-white) !important;
+  --color-gray-30:  var(--rm-light) !important;
+  --color-gray-35:  var(--rm-light) !important;
+  --color-gray-40:  var(--rm-light) !important;
+  --color-gray-45:  var(--rm-light) !important;
+  --color-gray-50:  var(--rm-light) !important;
+  --color-gray-55:  var(--rm-light) !important;
+  --color-gray-60:  var(--rm-light) !important;
+  --color-gray-65:  var(--rm-dark) !important;
+  --color-gray-70:  var(--rm-dark) !important;
+  --color-gray-75:  var(--rm-dark) !important;
+  --color-gray-80:  var(--rm-black) !important;
+  --color-gray-85:  var(--rm-black) !important;
+  --color-gray-90:  var(--rm-black) !important;
+  --color-gray-100: var(--rm-black) !important;
+
+  /* --- the design system: surfaces and text ---------------------------------------------------------------- */
+  --background-color-canvas: var(--rm-white) !important;
+  --background-color-box: var(--rm-light) !important;
+  --background-color-box-info: var(--rm-light) !important;
+  --background-color-dimmed: var(--rm-light) !important;
+  --background-color-dimmed-further: var(--rm-dark) !important;
+  --background-color-list-item-hover: var(--rm-select) !important;
+  --text-color: var(--rm-black) !important;
+  --text-color-deemphasized: var(--rm-dark) !important;   /* DARK on WHITE is Lc 79.0, over the body floor    */
+  --text-color-disabled: var(--rm-dark) !important;       /* on LIGHT it is Lc 48.4 -- see README_FIREFOX.md  */
+  --text-color-list-item-hover: var(--rm-white) !important;
+  --text-color-accent-primary-selected: var(--rm-white) !important;
+  --icon-color: var(--rm-black) !important;
+  --panel-text-color: var(--rm-black) !important;
+
+  /* §3: the three semantic hues, and the only place the reserved legend values are permitted. A red surface
+     that is not destructive is a defect, so these are set and then used nowhere else. */
+  --background-color-success: var(--rm-success) !important;
+  --background-color-warning: var(--rm-warning) !important;
+  --background-color-critical: var(--rm-destructive) !important;
+  --icon-color-success: var(--rm-success) !important;
+  --icon-color-warning: var(--rm-warning) !important;
+  --icon-color-critical: var(--rm-destructive) !important;
+  --border-color-error: var(--rm-destructive) !important;
+  --text-color-error: var(--rm-destructive) !important;
+  /* "information" is the fourth box Firefox wants and the kit has no hue for it: info-blue is a pole (§1) and
+     §3 has three semantics, not four. An informational box is furniture and carries its meaning in its text.
+     It is the same bill §3 pays on hyperlinks, and it is paid the same way. */
+  --background-color-information: var(--rm-light) !important;
+  --icon-color-information: var(--rm-black) !important;
+  --info-bar-border-color: var(--rm-light) !important;
+
+  /* --- accent, focus, links --------------------------------------------------------------------------------- */
+  --color-accent-primary: var(--rm-accent) !important;
+  --color-accent-primary-hover: var(--rm-select) !important;
+  --color-accent-primary-active: var(--rm-select) !important;
+  --color-accent-primary-selected: var(--rm-accent) !important;
+  --color-accent-attention: var(--rm-accent) !important;
+  --link-color: var(--rm-accent) !important;              /* Lc 75.4 on WHITE; §3 keeps the underline         */
+  --link-color-hover: var(--rm-select) !important;
+  --link-color-active: var(--rm-select) !important;
+  --link-color-visited: var(--rm-accent) !important;
+  --focus-outline-color: var(--rm-accent) !important;
+  --focus-outline: 2px solid var(--rm-accent) !important;
+  --focus-outline-offset: 0 !important;
+  --card-focus-outline: 2px solid var(--rm-accent) !important;
+
+  /* --- borders: there is none. §5 has no rule thinner than the rule, so every boundary inside a window is a
+     change of field tone (WHITE against LIGHT, dE 17.1) and nothing is drawn. --------------------------------- */
+  --border-color: transparent !important;
+  --border-color-deemphasized: transparent !important;
+  --border-color-interactive: transparent !important;
+  --border-color-interactive-hover: transparent !important;
+  --border-color-interactive-active: transparent !important;
+  --border-color-interactive-disabled: transparent !important;
+  --border-color-selected: var(--rm-accent) !important;   /* selection is state, not a boundary               */
+  --input-border-color: transparent !important;
+  --input-text-border-color: transparent !important;
+  --input-text-border-color-disabled: transparent !important;
+  --card-border-color: transparent !important;
+  --panel-border-color: transparent !important;
+  --popup-border-color: transparent !important;
+  --panel-separator-color: var(--rm-white) !important;    /* a separator IS the tone change (§5)              */
+  --toolbarseparator-color: var(--rm-white) !important;
+  --sidebar-border-color: transparent !important;
+  --table-border-color: transparent !important;
+  --tabs-navbar-separator-color: transparent !important;
+  --chrome-content-separator-color: transparent !important;
+  --tabs-border-color: transparent !important;
+
+  /* --- every radius: 0 (§5, and PLATFORM.md COSMIC names radius 0 as what this desktop reaches) -------------- */
+  --border-radius-xsmall: 0 !important; --border-radius-small: 0 !important;
+  --border-radius-medium: 0 !important; --border-radius-large: 0 !important;
+  --border-radius-xlarge: 0 !important; --border-radius-circle: 0 !important;
+  --button-border-radius: 0 !important; --toolbarbutton-border-radius: 0 !important;
+  --tab-border-radius: 0 !important; --panel-border-radius: 0 !important;
+  --arrowpanel-border-radius: 0 !important; --popup-border-radius: 0 !important;
+  --urlbar-border-radius: 0 !important; --urlbar-inner-border-radius: 0 !important;
+  --urlbarview-border-radius: 0 !important; --panel-menuitem-border-radius: 0 !important;
+  --card-border-radius: 0 !important; --card-border-radius-compact: 0 !important;
+  --input-text-border-radius: 0 !important; --input-search-border-radius: 0 !important;
+
+  /* --- buttons. LIGHT ground, BLACK label at 700 (§2). hover is SELECT, pressed is BLACK, a toggle that is on
+     is ACCENT -- §2 gives toggles to ACCENT and selected rows to SELECT, and they are different things. ------- */
+  --button-background-color: var(--rm-white) !important;
+  --button-background-color-hover: var(--rm-select) !important;
+  --button-background-color-active: var(--rm-black) !important;
+  --button-background-color-selected: var(--rm-accent) !important;
+  --button-background-color-disabled: var(--rm-light) !important;
+  --button-text-color: var(--rm-black) !important;
+  --button-text-color-hover: var(--rm-white) !important;
+  --button-text-color-active: var(--rm-white) !important;
+  --button-text-color-selected: var(--rm-white) !important;
+  --button-text-color-disabled: var(--rm-dark) !important;
+  --button-border-color: transparent !important;
+  --button-border-color-hover: transparent !important;
+  --button-border-color-active: transparent !important;
+  --button-border-color-selected: transparent !important;
+  --button-border-color-disabled: transparent !important;
+  --button-background-color-primary: var(--rm-accent) !important;
+  --button-background-color-primary-hover: var(--rm-select) !important;
+  --button-background-color-primary-active: var(--rm-select) !important;
+  --button-background-color-primary-selected: var(--rm-accent) !important;
+  --button-background-color-primary-disabled: var(--rm-light) !important;
+  --button-text-color-primary: var(--rm-white) !important;
+  --button-text-color-primary-hover: var(--rm-white) !important;
+  --button-text-color-primary-active: var(--rm-white) !important;
+  --button-text-color-primary-selected: var(--rm-white) !important;
+  --button-text-color-primary-disabled: var(--rm-dark) !important;
+  --button-border-color-primary: transparent !important;
+  --button-border-color-primary-hover: transparent !important;
+  --button-border-color-primary-active: transparent !important;
+  --button-border-color-primary-disabled: transparent !important;
+  /* destructive is §3's own colour and carries its label as well as its colour, which §3 requires of it */
+  --button-background-color-destructive: var(--rm-destructive) !important;
+  --button-background-color-destructive-hover: var(--rm-destructive) !important;
+  --button-background-color-destructive-active: var(--rm-destructive) !important;
+  --button-background-color-destructive-selected: var(--rm-destructive) !important;
+  --button-background-color-destructive-disabled: var(--rm-light) !important;
+  --button-text-color-destructive: var(--rm-legend-light) !important;
+  --button-text-color-destructive-hover: var(--rm-legend-light) !important;
+  --button-text-color-destructive-active: var(--rm-legend-light) !important;
+  --button-text-color-destructive-selected: var(--rm-legend-light) !important;
+  --button-text-color-destructive-disabled: var(--rm-dark) !important;
+  --button-border-color-destructive: transparent !important;
+  --button-border-color-destructive-hover: transparent !important;
+  --button-border-color-destructive-active: transparent !important;
+  --button-border-color-destructive-disabled: transparent !important;
+  /* ghost / muted / menu / toolbar variants: the same ladder, ground transparent where Firefox wants it flat */
+  --button-background-color-ghost: transparent !important;
+  --button-background-color-ghost-hover: var(--rm-select) !important;
+  --button-background-color-ghost-active: var(--rm-black) !important;
+  --button-background-color-ghost-selected: var(--rm-accent) !important;
+  --button-background-color-ghost-disabled: transparent !important;
+  --button-text-color-ghost: var(--rm-black) !important;
+  --button-text-color-ghost-hover: var(--rm-white) !important;
+  --button-text-color-ghost-active: var(--rm-white) !important;
+  --button-text-color-ghost-selected: var(--rm-white) !important;
+  --button-text-color-ghost-disabled: var(--rm-dark) !important;
+  --button-border-color-ghost: transparent !important;
+  --button-border-color-ghost-hover: transparent !important;
+  --button-border-color-ghost-active: transparent !important;
+  --button-border-color-ghost-selected: transparent !important;
+  --button-border-color-ghost-disabled: transparent !important;
+  --button-background-color-muted: var(--rm-white) !important;
+  --button-background-color-muted-hover: var(--rm-select) !important;
+  --button-background-color-muted-active: var(--rm-black) !important;
+  --button-background-color-muted-selected: var(--rm-accent) !important;
+  --button-background-color-muted-disabled: var(--rm-light) !important;
+  --button-text-color-muted: var(--rm-black) !important;
+  --button-text-color-muted-hover: var(--rm-white) !important;
+  --button-text-color-muted-active: var(--rm-white) !important;
+  --button-text-color-muted-selected: var(--rm-white) !important;
+  --button-text-color-muted-disabled: var(--rm-dark) !important;
+  --button-border-color-muted: transparent !important;
+  --button-border-color-muted-hover: transparent !important;
+  --button-border-color-muted-active: transparent !important;
+  --button-border-color-muted-selected: transparent !important;
+  --button-border-color-muted-disabled: transparent !important;
+  --button-background-color-menu: var(--rm-white) !important;
+  --button-background-color-menu-hover: var(--rm-select) !important;
+  --button-background-color-menu-active: var(--rm-black) !important;
+  --button-background-color-menu-selected: var(--rm-accent) !important;
+  --button-background-color-menu-disabled: var(--rm-light) !important;
+  --button-text-color-menu: var(--rm-black) !important;
+  --button-text-color-menu-hover: var(--rm-white) !important;
+  --button-text-color-menu-active: var(--rm-white) !important;
+  --button-text-color-menu-selected: var(--rm-white) !important;
+  --button-text-color-menu-disabled: var(--rm-dark) !important;
+  --button-border-color-menu: transparent !important;
+  --button-border-color-menu-hover: transparent !important;
+  --button-border-color-menu-active: transparent !important;
+  --button-border-color-menu-selected: transparent !important;
+  --button-border-color-menu-disabled: transparent !important;
+  --button-background-color-toolbar: transparent !important;
+  --button-background-color-toolbar-hover: var(--rm-select) !important;
+  --button-background-color-toolbar-active: var(--rm-black) !important;
+  --button-background-color-toolbar-selected: var(--rm-accent) !important;
+  --button-background-color-toolbar-disabled: transparent !important;
+  --button-text-color-toolbar: var(--rm-black) !important;
+  --button-text-color-toolbar-hover: var(--rm-white) !important;
+  --button-text-color-toolbar-active: var(--rm-white) !important;
+  --button-text-color-toolbar-selected: var(--rm-white) !important;
+  --button-text-color-toolbar-disabled: var(--rm-dark) !important;
+  --button-border-color-toolbar: transparent !important;
+  --button-border-color-toolbar-hover: transparent !important;
+  --button-border-color-toolbar-active: transparent !important;
+  --button-border-color-toolbar-selected: transparent !important;
+  --button-border-color-toolbar-disabled: transparent !important;
+  --button-attention-dot-color: var(--rm-accent) !important;
+  --button-badge-background-color: var(--rm-black) !important;
+  --button-split-separator-background-color: var(--rm-white) !important;
+  --toolbarbutton-background-color-hover: var(--rm-select) !important;
+  --toolbarbutton-background-color-active: var(--rm-black) !important;
+  --toolbarbutton-badge-background-color: var(--rm-black) !important;
+  --toolbarbutton-outline-color: transparent !important;
+  --toolbarbutton-outline-color-hover: transparent !important;
+  --toolbarbutton-outline-color-active: transparent !important;
+  --toolbarbutton-outline-color-selected: transparent !important;
+  --toolbarbutton-hover-background: var(--rm-select) !important;
+  --toolbarbutton-active-background: var(--rm-black) !important;
+
+  /* --- the titlebar / tab strip. ACCENT when the window is key, LIGHT when it is not (§2). Firefox draws its
+     own titlebar, which is why this surface can show key state at all (PLATFORM.md). ------------------------- */
+  --toolbox-background-color: var(--rm-accent) !important;
+  --toolbox-text-color: var(--rm-white) !important;
+  --toolbox-background-color-inactive: var(--rm-light) !important;
+  --toolbox-text-color-inactive: var(--rm-black) !important;
+  --lwt-accent-color: var(--rm-accent) !important;
+  --lwt-accent-color-inactive: var(--rm-light) !important;
+  --lwt-text-color: var(--rm-white) !important;
+  --toolbox-textcolor: var(--rm-white) !important;
+  --tab-background-color-selected: var(--rm-light) !important;   /* the current tab joins the toolbar below it */
+  --tab-selected-bgcolor: var(--rm-light) !important;
+  --tab-selected-textcolor: var(--rm-black) !important;
+  --tab-background-color-hover: var(--rm-black) !important;      /* SELECT is only dE 11.8 from ACCENT (§2)    */
+  --tab-hover-background-color: var(--rm-black) !important;
+  --tab-loading-fill: var(--rm-accent) !important;               /* Firefox ships --color-blue-50 here         */
+  --tab-attention-dot-color: var(--rm-white) !important;         /* a mark in the strip's own text colour      */
+  --tab-box-shadow-selected: none !important;
+  --tab-outline-color: transparent !important;
+  --tab-selected-outline-color: transparent !important;
+  --tab-hover-outline-color: transparent !important;
+  --tab-border-color-selected-leading: transparent !important;   /* nova paints a violet->orange gradient here */
+  --tab-border-color-selected-trailing: transparent !important;
+  --tab-block-margin: 0 !important;
+  --tab-margin-block: 0 !important;
+  --tab-vertical-block-margin: 0 !important;
+  --tabs-navbar-separator-style: none !important;
+  --tabstrip-inner-border: none !important;
+
+  /* --- toolbars: LIGHT panels (§2). Their labels are bold; see the header. --------------------------------- */
+  --toolbar-background-color: var(--rm-light) !important;
+  --toolbar-text-color: var(--rm-black) !important;
+  --toolbar-bgcolor: var(--rm-light) !important;
+  --toolbar-color: var(--rm-black) !important;
+  --toolbar-bgimage: none !important;
+
+  /* --- the address and search fields: WHITE, because §2 gives WHITE to fields, and because the caret lives
+     here. CURSOR on WHITE is Lc 60.7; on LIGHT it is 30.2, at the non-text floor. The field is what buys the
+     caret its margin, so the field is WHITE. ----------------------------------------------------------------- */
+  --toolbar-field-background-color: var(--rm-white) !important;
+  --toolbar-field-background-color-focus: var(--rm-white) !important;
+  --toolbar-field-focus-background-color: var(--rm-white) !important;
+  --toolbar-field-text-color: var(--rm-black) !important;
+  --toolbar-field-text-color-focus: var(--rm-black) !important;
+  --toolbar-field-color: var(--rm-black) !important;
+  --toolbar-field-focus-color: var(--rm-black) !important;
+  --toolbar-field-border-color: transparent !important;
+  --toolbar-field-border-color-focus: var(--rm-accent) !important;
+  --toolbar-field-focus-border-color: var(--rm-accent) !important;
+  --toolbar-field-highlight: var(--rm-select) !important;
+  --toolbar-field-highlight-text: var(--rm-white) !important;
+  --lwt-toolbar-field-highlight: var(--rm-select) !important;
+  --lwt-toolbar-field-highlight-text: var(--rm-white) !important;
+  --urlbar-background-color: var(--rm-white) !important;
+  --urlbar-background-color-focus: var(--rm-white) !important;
+  --urlbar-box-background-color: var(--rm-light) !important;
+  --urlbar-box-background-color-hover: var(--rm-select) !important;
+  --urlbar-box-background-color-active: var(--rm-black) !important;
+  --urlbar-box-background-color-focus: var(--rm-light) !important;
+  --urlbar-box-bgcolor: var(--rm-light) !important;
+  --urlbar-box-hover-bgcolor: var(--rm-select) !important;
+  --urlbar-box-active-bgcolor: var(--rm-black) !important;
+  --urlbar-box-text-color: var(--rm-black) !important;
+  --urlbar-box-text-color-hover: var(--rm-white) !important;
+  --urlbar-icon-fill-opacity: 1 !important;
+
+  /* --- the urlbar results list: a floating surface, so LIGHT (see the header) ------------------------------- */
+  --urlbarview-background-color-hover: var(--rm-select) !important;
+  --urlbarview-background-color-selected: var(--rm-select) !important;
+  --urlbarview-text-color-selected: var(--rm-white) !important;
+  --urlbarview-text-color-secondary: var(--rm-dark) !important;
+  --urlbarview-text-color-action: var(--rm-dark) !important;   /* Firefox ships LinkText here                  */
+  --urlbarview-separator-color: var(--rm-white) !important;
+  --urlbarview-action-button-background-color: var(--rm-white) !important;
+  --urlbarview-action-button-background-color-hover: var(--rm-select) !important;
+  --urlbarView-highlight-background: var(--rm-select) !important;
+  --urlbarView-highlight-color: var(--rm-white) !important;
+  --urlbarView-hover-background: var(--rm-select) !important;
+  --urlbarView-hover-color: var(--rm-white) !important;
+  --autocomplete-popup-background: var(--rm-light) !important;
+  --autocomplete-popup-color: var(--rm-black) !important;
+  --autocomplete-popup-highlight-background: var(--rm-select) !important;
+  --autocomplete-popup-highlight-color: var(--rm-white) !important;
+
+  /* --- panels, menus, popups: floating, so LIGHT, and no border to draw (§5) -------------------------------- */
+  --panel-background-color: var(--rm-light) !important;
+  --panel-background-color-dimmed: var(--rm-white) !important;
+  --panel-background-color-dimmed-further: var(--rm-white) !important;
+  --popup-background-color: var(--rm-light) !important;
+  --arrowpanel-background: var(--rm-light) !important;
+  --arrowpanel-color: var(--rm-black) !important;
+  --arrowpanel-border-color: transparent !important;
+  --panel-item-hover-bgcolor: var(--rm-select) !important;
+  --panel-item-active-bgcolor: var(--rm-black) !important;
+  --menu-background-color: var(--rm-light) !important;
+  --menu-color: var(--rm-black) !important;
+  --menu-border-color: transparent !important;
+  --menuitem-hover-background-color: var(--rm-select) !important;
+  --menuitem-hover-color: var(--rm-white) !important;
+  --menu-disabled-color: var(--rm-dark) !important;
+
+  /* --- sidebar: a panel, as COSMIC's nav sidebar is (§2, and the two surfaces agree) ------------------------ */
+  --sidebar-background-color: var(--rm-light) !important;
+  --sidebar-text-color: var(--rm-black) !important;
+  --lwt-sidebar-background-color: var(--rm-light) !important;
+  --lwt-sidebar-text-color: var(--rm-black) !important;
+
+  /* --- inputs, cards, tables ------------------------------------------------------------------------------- */
+  --input-bgcolor: var(--rm-white) !important;
+  --input-color: var(--rm-black) !important;
+  --input-background-color: var(--rm-white) !important;
+  --input-text-color: var(--rm-black) !important;
+  --input-text-background-color-disabled: var(--rm-light) !important;
+  --input-text-color-disabled: var(--rm-dark) !important;
+  --card-background-color: var(--rm-light) !important;
+  --card-header-text-color: var(--rm-black) !important;
+  --card-header-text-color-hover: var(--rm-white) !important;
+  --card-header-text-color-active: var(--rm-white) !important;
+  --card-header-background-color-hover: var(--rm-select) !important;
+  --card-header-background-color-active: var(--rm-black) !important;
+  --card-box-shadow: none !important;
+  --card-box-shadow-hover: none !important;
+  --table-background-color: var(--rm-white) !important;
+  --table-row-background-color: var(--rm-white) !important;
+  --table-row-background-color-alternate: var(--rm-white) !important;
+  --table-header-background-color: var(--rm-light) !important;
+  --table-header-text-color: var(--rm-black) !important;
+
+  /* --- what the coverage pass turned up (`python3 build/firefox.py --coverage`) ------------------------------
+     Reading the installed build's own token list is how you find the strip that is still painting itself. Two
+     of these are the kind of thing the pole test exists for: Firefox 155 has a violet-to-orange gradient
+     behind the toolbox and another on the selected tab's border, and orange is a pole (caution, 48.1-62.6).
+     They are behind `nova` today, which is exactly why they are set here -- a value that appears when a pref
+     flips is not residue, it is a value nobody checked. */
+  --toolbox-background-color-gradient-leading: var(--rm-accent) !important;
+  --toolbox-background-color-gradient-trailing: var(--rm-accent) !important;
+  --toolbox-background-gradient: none !important;
+  --tab-border-color-accent: none !important;
+  /* icon fills follow the text, because the text is what every rule below already authors per state. An icon
+     given a fixed fill would stay BLACK when its button goes SELECT on hover -- Lc 0.0, the pair vanishing. */
+  --toolbarbutton-icon-fill: currentColor !important;
+  --button-icon-fill: currentColor !important;
+  --toolbarbutton-icon-fill-attention: var(--rm-accent) !important;
+  --toolbarbutton-icon-fill-attention-text: var(--rm-white) !important;
+  --icon-color-accent-primary-desaturated: var(--rm-accent) !important;
+  --border-color-transparent: transparent !important;
+  --card-header-border-color: transparent !important;
+  --card-header-border-color-hover: transparent !important;
+  --card-header-border-color-active: transparent !important;
+  --button-border-color-primary-selected: transparent !important;
+  --button-border-color-destructive-selected: transparent !important;
+  --focus-outline-width: 2px !important;
+
+  /* §2 gives CURSOR one job. It is set here, on the chrome's own fields, and in userContent.css on the pages
+     the kit paints -- not on arbitrary web pages, whose ground the kit cannot measure (§0a). */
+  /* --- surfaces the platform would paint as a blend (`--coverage` lists these) ---------------------------
+     A token whose default is a color-mix or an alpha primitive paints a mix of two values rather than a
+     value, and nothing downstream can measure one. Where such a token paints a SURFACE the sheet names an
+     authored value instead. The selected item of an about: page's navigation is the one the screen pass
+     caught: Firefox paints it `color-mix(in srgb, currentColor 8%, transparent)`, which over the WHITE field
+     measured #E7D6DE -- ACCENT at 8%, a value no ladder produced. It is a selected row, so it takes SELECT
+     with WHITE on it, like every other selected row in the sheet, and the 4px indicator beside it stays
+     ACCENT because §2 gives nav indicators to ACCENT.
+     What is left blending after this is shadows and the modal scrim, and §4 inherits real shadows. */
+  --page-nav-button-background-color-selected: var(--rm-select) !important;
+  --page-nav-button-text-color-selected: var(--rm-white) !important;
+  --page-nav-button-indicator-background-color: var(--rm-accent) !important;
+  --badge-border-color: transparent !important;
+  --badge-border-color-filled: transparent !important;
+  --promo-background-color: var(--rm-light) !important;
+  --promo-border-color: transparent !important;
+
+  caret-color: var(--rm-cursor) !important;
+  scrollbar-color: var(--rm-dark) var(--rm-light) !important;
+  accent-color: var(--rm-accent) !important;
+}
+
+/* --- the titlebar / tab strip ------------------------------------------------------------------------------ */
+#navigator-toolbox, #titlebar, #TabsToolbar, #TabsToolbar-customization-target {
+  background-color: var(--rm-accent) !important;
+  background-image: none !important;
+  color: var(--rm-white) !important;
+  border: 0 !important; box-shadow: none !important;
+}
+/* non-key: LIGHT with BLACK text. PLATFORM.md records that this libcosmic paints header bars with the window
+   background, so every native window here reads as non-key; Firefox is the one surface that can show it. */
+:root:-moz-window-inactive #navigator-toolbox,
+:root:-moz-window-inactive #titlebar,
+:root:-moz-window-inactive #TabsToolbar,
+:root:-moz-window-inactive #TabsToolbar-customization-target {
+  background-color: var(--rm-light) !important;
+  color: var(--rm-black) !important;
+  font-weight: 700 !important;   /* BLACK on LIGHT is Lc 61.2: the strip goes bold when the window goes non-key */
+}
+:root:-moz-window-inactive .tabbrowser-tab:not([selected]) .tab-label,
+:root:-moz-window-inactive .tabbrowser-tab:not([selected]) .tab-icon-image,
+:root:-moz-window-inactive .titlebar-button { color: var(--rm-black) !important; fill: var(--rm-black) !important; }
+
+.tabbrowser-tab .tab-background {
+  border-radius: 0 !important; border: 0 !important; box-shadow: none !important; outline: none !important;
+  background-image: none !important; margin: 0 !important;
+}
+.tabbrowser-tab:not([selected]) .tab-label,
+.tabbrowser-tab:not([selected]) .tab-icon-image { color: var(--rm-white) !important; }
+/* hover on the strip is BLACK, not SELECT: SELECT is dE 11.8 from the ACCENT ground and would not read as a
+   separate surface (§2's floor is 17.1). BLACK is dE 29.0, and it darkens rather than lightens, so a hovered
+   tab cannot be mistaken for the selected one, which lightens to LIGHT. */
+.tabbrowser-tab:hover:not([selected]) .tab-background { background-color: var(--rm-black) !important; }
+.tabbrowser-tab:hover:not([selected]) .tab-label,
+.tabbrowser-tab:hover:not([selected]) .tab-icon-image { color: var(--rm-white) !important; }
+.tabbrowser-tab[selected] .tab-background, .tabbrowser-tab[visuallyselected] .tab-background {
+  background-color: var(--rm-light) !important;
+}
+.tabbrowser-tab[selected] .tab-label, .tabbrowser-tab[visuallyselected] .tab-label {
+  color: var(--rm-black) !important; font-weight: 700 !important;   /* BLACK on LIGHT is Lc 61.2: the 700 tier */
+}
+.tabbrowser-tab[selected] .tab-icon-image { color: var(--rm-black) !important; }
+.tab-close-button, #tabs-newtab-button, #new-tab-button, #alltabs-button, .tabs-newtab-button {
+  border-radius: 0 !important;
+}
+.tabbrowser-tab::after, .tabbrowser-tab::before { display: none !important; }
+#tabbrowser-tabs { --tab-min-height: 32px; }
+/* the private-browsing mark. §8 carries state by tone or geometry, and the kit's two tones far enough from
+   ACCENT for a strip are BLACK and WHITE -- BLACK is spent on hover above. So private browsing keeps Firefox's
+   own mark and label instead, which is geometry, and the sheet makes sure it reads on the strip. */
+#private-browsing-indicator-with-label, .private-browsing-indicator-with-label, #private-browsing-indicator {
+  color: var(--rm-white) !important; fill: var(--rm-white) !important; opacity: 1 !important;
+}
+:root:-moz-window-inactive #private-browsing-indicator-with-label,
+:root:-moz-window-inactive #private-browsing-indicator { color: var(--rm-black) !important; fill: var(--rm-black) !important; }
+
+/* --- toolbars ---------------------------------------------------------------------------------------------- */
+#nav-bar, #PersonalToolbar, #toolbar-menubar, .browser-toolbar:not(#TabsToolbar) {
+  background-color: var(--rm-light) !important;
+  background-image: none !important;
+  color: var(--rm-black) !important;
+  font-weight: 700 !important;          /* BLACK on LIGHT is Lc 61.2 -- APCA's 16px/700 tier, not its body one */
+  border: 0 !important; box-shadow: none !important;
+}
+#nav-bar { border-top: 0 !important; }
+.toolbarbutton-1, .toolbarbutton-1 > .toolbarbutton-icon, .toolbarbutton-1 > .toolbarbutton-badge-stack,
+.bookmark-item, #PlacesToolbarItems > .bookmark-item { border-radius: 0 !important; }
+.toolbarbutton-1:not([disabled]):hover > .toolbarbutton-icon,
+.toolbarbutton-1:not([disabled]):hover > .toolbarbutton-badge-stack,
+.bookmark-item:hover { background-color: var(--rm-select) !important; color: var(--rm-white) !important; }
+.toolbarbutton-1:not([disabled])[open] > .toolbarbutton-icon,
+.toolbarbutton-1:not([disabled]):active > .toolbarbutton-icon {
+  background-color: var(--rm-black) !important; color: var(--rm-white) !important;
+}
+.toolbarbutton-1[checked] > .toolbarbutton-icon {
+  background-color: var(--rm-accent) !important; color: var(--rm-white) !important;   /* §2: a toggle is ACCENT */
+}
+toolbarseparator { border-color: var(--rm-white) !important; }
+
+/* --- the address and search fields -------------------------------------------------------------------------- */
+#urlbar-background, #searchbar, .searchbar-textbox, .findbar-textbox, #urlbar-input-container {
+  border-radius: 0 !important; border: 0 !important; box-shadow: none !important;
+}
+#urlbar-background, #searchbar { background-color: var(--rm-white) !important; outline: none !important; }
+#urlbar[focused] > #urlbar-background, #urlbar[breakout][breakout-extend] > #urlbar-background {
+  outline: 2px solid var(--rm-accent) !important; outline-offset: -2px !important;   /* §2 gives focus to ACCENT */
+}
+#urlbar-input, .searchbar-textbox, .findbar-textbox {
+  color: var(--rm-black) !important; font-weight: 400 !important; caret-color: var(--rm-cursor) !important;
+}
+#urlbar-input::placeholder, .searchbar-textbox::placeholder { color: var(--rm-dark) !important; opacity: 1 !important; }
+#urlbar-input::selection, .searchbar-textbox::selection, .findbar-textbox::selection {
+  background-color: var(--rm-select) !important; color: var(--rm-white) !important;
+}
+.urlbarView, .urlbarView-row, .urlbarView-row-inner, .urlbarView-button, .urlbarView-body-inner {
+  border-radius: 0 !important;
+}
+.urlbarView { background-color: var(--rm-light) !important; font-weight: 700 !important; }
+.urlbarView-row[selected] > .urlbarView-row-inner, .urlbarView-row:hover > .urlbarView-row-inner,
+.urlbarView-row[selected], .urlbarView-row:hover {
+  background-color: var(--rm-select) !important; color: var(--rm-white) !important;
+}
+
+/* --- panels and menus --------------------------------------------------------------------------------------- */
+panel, menupopup, .panel-arrowcontent, .panel-subview-body, panelview, .panel-subview-footer, .subviewbutton,
+menu, menuitem, menucaption, .menu-iconic, .toolbaritem-combined-buttons > toolbarbutton, .PanelUI-subView,
+#appMenu-popup, #contentAreaContextMenu, .customization-panel, #customization-panel, #downloadsPanel,
+.downloadsPanelFooterButton, #identity-popup, #protections-popup, #notification-popup,
+.popup-notification-body-container, .popup-notification-button, .popup-notification-footer, #editBookmarkPanel {
+  border-radius: 0 !important;
+}
+menupopup, panel, .panel-arrowcontent { --panel-border-radius: 0 !important; --arrowpanel-border-radius: 0 !important; }
+.panel-arrowcontent, menupopup, panelview {
+  background-color: var(--rm-light) !important; color: var(--rm-black) !important;
+  font-weight: 700 !important; border: 0 !important;
+}
+menupopup > menuitem:hover, menupopup > menu:hover, menupopup > menuitem[_moz-menuactive],
+menupopup > menu[_moz-menuactive], .subviewbutton:hover, .subviewbutton[open], .subviewbutton:focus-visible,
+toolbarbutton.subviewbutton:not([disabled]):hover {
+  background-color: var(--rm-select) !important; color: var(--rm-white) !important;
+}
+menuitem[disabled], menu[disabled], .subviewbutton[disabled] { color: var(--rm-dark) !important; }
+menuseparator, .panel-separator, toolbarseparator.PanelUI-subView-separator {
+  border-color: var(--rm-white) !important;      /* the tone change is the separator; no line is drawn (§5)    */
+}
+
+/* --- sidebar ------------------------------------------------------------------------------------------------ */
+#sidebar-box, #sidebar-header, #sidebar-splitter, #sidebar, #sidebar-main, #sidebar-launcher {
+  background-color: var(--rm-light) !important; color: var(--rm-black) !important;
+  font-weight: 700 !important; border: 0 !important;
+}
+#sidebar-splitter { width: 0 !important; }
+/* the trees inside it are in-window LISTS, so WHITE (§2) -- and WHITE on LIGHT is the dE 17.1 separator */
+#sidebar-box treechildren, .sidebar-placesTree, #bookmarks-view, #historyTree, #tabs-view {
+  background-color: var(--rm-white) !important; color: var(--rm-black) !important; font-weight: 400 !important;
+}
+treechildren::-moz-tree-row(selected), treechildren::-moz-tree-row(hover) {
+  background-color: var(--rm-select) !important; border-radius: 0 !important;
+}
+treechildren::-moz-tree-cell-text { color: var(--rm-black) !important; }
+treechildren::-moz-tree-cell-text(selected) { color: var(--rm-white) !important; }
+#sidebar-search-container, .sidebar-search-input, #search-box {
+  background-color: var(--rm-white) !important; color: var(--rm-black) !important; border-radius: 0 !important;
+}
+
+/* --- findbar, notifications, status ------------------------------------------------------------------------- */
+findbar, .findbar-container {
+  background-color: var(--rm-light) !important; color: var(--rm-black) !important;
+  font-weight: 700 !important; border: 0 !important;
+}
+.findbar-textbox { background-color: var(--rm-white) !important; color: var(--rm-black) !important; }
+notification-message, .notificationbox-stack, .infobar { border-radius: 0 !important; }
+#statuspanel-label {
+  background-color: var(--rm-light) !important; color: var(--rm-black) !important;
+  font-weight: 700 !important;   /* a LIGHT ground, so the 700 tier (§2) -- it is a URL and it is read */
+  border: 0 !important; border-radius: 0 !important;
+}
+
+/* --- the window itself: no curve anywhere (§5) --------------------------------------------------------------- */
+:root, #main-window, #navigator-toolbox, #browser, #tabbrowser-tabbox, .browserStack, #appcontent,
+#tabbrowser-tabpanels, .browserSidebarContainer, #sidebar-box { border-radius: 0 !important; }
+:root[customtitlebar] #navigator-toolbox, :root[tabsintitlebar] #navigator-toolbox {
+  border-top-left-radius: 0 !important; border-top-right-radius: 0 !important;
+}
+:root[customtitlebar] #tabbrowser-tabpanels, :root[tabsintitlebar] #tabbrowser-tabpanels { border-radius: 0 !important; }
+.titlebar-button { border-radius: 0 !important; }
+.titlebar-button:hover { background-color: var(--rm-black) !important; }
+/* §3: destructive means destructive, and closing a window is the one destructive act in the titlebar. Its
+   legend is #FFFFFF, which §3 reserves for exactly this -- a legend on a semantic field. */
+.titlebar-close:hover { background-color: var(--rm-destructive) !important; color: var(--rm-legend-light) !important; }
+
+/* --- weight follows the ground, not the element (§2) -------------------------------------------------------
+   BLACK on LIGHT is Lc 61.2, which APCA admits at 16px/700 and not at 16px/400; BLACK on WHITE is 91.8 and
+   admits either. So every LIGHT surface above carries 700 and every WHITE one nested inside it goes back to
+   400 -- the weight is a measurement, not a house style, and it changes exactly where the ground changes. */
+button, input, select, textarea, .urlbarView-row-body, richlistbox, richlistitem, tree, treechildren,
+#urlbar-input, .searchbar-textbox, .findbar-textbox, #sidebar-box treechildren, .sidebar-placesTree {
+  font-weight: 400 !important;
+}

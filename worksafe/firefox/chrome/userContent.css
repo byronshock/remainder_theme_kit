@@ -1,0 +1,218 @@
+/* Remainder — the in-browser pages that are chrome, not content. worksafe/firefox/chrome/userContent.css.
+   Implements AUTHORITY.md §2, §3 and §0a; checked by build/firefox.py alongside userChrome.css.
+
+   WHAT THIS FILE IS SCOPED TO, AND WHY IT STOPS THERE. §0a exempts content entirely: a page a user went to
+   is information, and information is read by its contrast with what surrounds it. So this sheet paints only
+   the pages Firefox itself draws -- the new tab, home, blank, the about: pages, the reader's frame -- which
+   are furniture wearing a page's clothes. Web pages keep their own colours, and the kit's all-sites sheet is
+   a separate thing in a separate tier: elevated/remainder.user.css, because its reach is every site
+   (CONTRIBUTING.md §1).
+
+   The caret is scoped the same way and for the same reason. §2 gives CURSOR one job and the kit would like it
+   on every field a user types in -- but CURSOR on WHITE is Lc 60.7 and the kit cannot measure the ground of a
+   page it has never seen. A locator that vanishes on some grounds is worse than the one the browser picks,
+   which follows the page's own text colour. So the caret is set where the ground is the kit's, and nowhere
+   else. On the all-sites sheet the ground IS the kit's, and that is where it belongs next.
+
+   The only literal colours here are the --rm-* definitions, as in userChrome.css. Custom properties do not
+   cross a document boundary, so they are restated rather than shared. */
+
+@-moz-document url-prefix(about:) {
+  :root {
+    --rm-white:  #F1E4E9;
+    --rm-light:  #BAADB2;
+    --rm-dark:   #4B4045;
+    --rm-black:  #10080C;
+    --rm-accent: #763555;
+    --rm-select: #521436;
+    --rm-cursor: #007891;
+    --rm-success:     #006B54;
+    --rm-warning:     #FCD116;
+    --rm-destructive: #AF1E2D;
+    --rm-legend-light: #FFFFFF;   /* §3: legend on a semantic field, and refused anywhere else */
+    --rm-legend-dark:  #000000;
+
+    font-family: "Montserrat", sans-serif !important;
+
+    /* the grey ramp, snapped onto §2's four exactly as in userChrome.css (build/firefox.py --derive) */
+    --color-white:    var(--rm-white) !important;
+    --color-black:    var(--rm-black) !important;
+    --color-gray-0:   var(--rm-white) !important;
+    --color-gray-05:  var(--rm-white) !important;
+    --color-gray-10:  var(--rm-white) !important;
+    --color-gray-15:  var(--rm-white) !important;
+    --color-gray-20:  var(--rm-white) !important;
+    --color-gray-25:  var(--rm-white) !important;
+    --color-gray-30:  var(--rm-light) !important;
+    --color-gray-35:  var(--rm-light) !important;
+    --color-gray-40:  var(--rm-light) !important;
+    --color-gray-45:  var(--rm-light) !important;
+    --color-gray-50:  var(--rm-light) !important;
+    --color-gray-55:  var(--rm-light) !important;
+    --color-gray-60:  var(--rm-light) !important;
+    --color-gray-65:  var(--rm-dark) !important;
+    --color-gray-70:  var(--rm-dark) !important;
+    --color-gray-75:  var(--rm-dark) !important;
+    --color-gray-80:  var(--rm-black) !important;
+    --color-gray-85:  var(--rm-black) !important;
+    --color-gray-90:  var(--rm-black) !important;
+    --color-gray-100: var(--rm-black) !important;
+
+    /* the design system, the same assignment the chrome makes */
+    --background-color-canvas: var(--rm-white) !important;
+    --background-color-box: var(--rm-light) !important;
+    --background-color-box-info: var(--rm-light) !important;
+    --background-color-dimmed: var(--rm-light) !important;
+    --background-color-dimmed-further: var(--rm-dark) !important;
+    --background-color-list-item-hover: var(--rm-select) !important;
+    --background-color-success: var(--rm-success) !important;
+    --background-color-warning: var(--rm-warning) !important;
+    --background-color-critical: var(--rm-destructive) !important;
+    --background-color-information: var(--rm-light) !important;
+    --text-color: var(--rm-black) !important;
+    --text-color-deemphasized: var(--rm-dark) !important;
+    --text-color-disabled: var(--rm-dark) !important;
+    --text-color-error: var(--rm-destructive) !important;
+    --text-color-list-item-hover: var(--rm-white) !important;
+    --icon-color: var(--rm-black) !important;
+    --icon-color-success: var(--rm-success) !important;
+    --icon-color-warning: var(--rm-warning) !important;
+    --icon-color-critical: var(--rm-destructive) !important;
+    --icon-color-information: var(--rm-black) !important;
+    --color-accent-primary: var(--rm-accent) !important;
+    --color-accent-primary-hover: var(--rm-select) !important;
+    --color-accent-primary-active: var(--rm-select) !important;
+    --color-accent-attention: var(--rm-accent) !important;
+    --link-color: var(--rm-accent) !important;
+    --link-color-hover: var(--rm-select) !important;
+    --link-color-active: var(--rm-select) !important;
+    --link-color-visited: var(--rm-accent) !important;
+    --focus-outline-color: var(--rm-accent) !important;
+    --focus-outline: 2px solid var(--rm-accent) !important;
+    --focus-outline-offset: 0 !important;
+    --button-background-color: var(--rm-white) !important;
+    --button-background-color-hover: var(--rm-select) !important;
+    --button-background-color-active: var(--rm-black) !important;
+    --button-background-color-selected: var(--rm-accent) !important;
+    --button-background-color-disabled: var(--rm-light) !important;
+    --button-text-color: var(--rm-black) !important;
+    --button-text-color-hover: var(--rm-white) !important;
+    --button-text-color-active: var(--rm-white) !important;
+    --button-text-color-selected: var(--rm-white) !important;
+    --button-text-color-disabled: var(--rm-dark) !important;
+    --button-background-color-primary: var(--rm-accent) !important;
+    --button-background-color-primary-hover: var(--rm-select) !important;
+    --button-background-color-primary-active: var(--rm-select) !important;
+    --button-text-color-primary: var(--rm-white) !important;
+    --button-background-color-destructive: var(--rm-destructive) !important;
+    --button-text-color-destructive: var(--rm-legend-light) !important;
+    --input-background-color: var(--rm-white) !important;
+    --input-text-color: var(--rm-black) !important;
+    --card-background-color: var(--rm-light) !important;
+    --card-border-color: transparent !important;
+    --card-box-shadow: none !important;
+    --table-background-color: var(--rm-white) !important;
+    --table-row-background-color: var(--rm-white) !important;
+    --table-row-background-color-alternate: var(--rm-white) !important;
+    --table-header-background-color: var(--rm-light) !important;
+    --table-header-text-color: var(--rm-black) !important;
+    --border-color: transparent !important;
+    --border-color-deemphasized: transparent !important;
+    --border-color-interactive: transparent !important;
+    --border-color-selected: var(--rm-accent) !important;
+    --border-color-error: var(--rm-destructive) !important;
+    --in-content-banner-background: var(--rm-light) !important;
+    --in-content-banner-text-color: var(--rm-black) !important;
+    --border-radius-xsmall: 0 !important; --border-radius-small: 0 !important;
+    --border-radius-medium: 0 !important; --border-radius-large: 0 !important;
+    --border-radius-xlarge: 0 !important; --border-radius-circle: 0 !important;
+    --button-border-radius: 0 !important; --card-border-radius: 0 !important;
+    --input-text-border-radius: 0 !important;
+
+    /* the new tab, home and private pages */
+    --newtab-background-color: var(--rm-white) !important;
+    --newtab-background-color-secondary: var(--rm-white) !important;
+    --newtab-background-card: var(--rm-white) !important;
+    --newtab-border-color: transparent !important;
+    --newtab-text-primary-color: var(--rm-black) !important;
+    --newtab-text-secondary-color: var(--rm-dark) !important;
+    --newtab-contextual-text-primary-color: var(--rm-black) !important;
+    --newtab-contextual-text-secondary-color: var(--rm-dark) !important;
+    --newtab-text-topic-label-color: var(--rm-black) !important;
+    --newtab-wordmark-color: var(--rm-black) !important;
+    --newtab-primary-action-background: var(--rm-accent) !important;
+    --newtab-primary-element-text-color: var(--rm-white) !important;
+    --newtab-primary-element-active-color: var(--rm-select) !important;
+    --newtab-element-hover-color: var(--rm-select) !important;
+    --newtab-element-active-color: var(--rm-black) !important;
+    --newtab-element-secondary-color: var(--rm-light) !important;
+    --newtab-element-secondary-hover-color: var(--rm-select) !important;
+    --newtab-element-secondary-active-color: var(--rm-black) !important;
+    --newtab-button-background: var(--rm-light) !important;
+    --newtab-button-hover-background: var(--rm-select) !important;
+    --newtab-button-active-background: var(--rm-black) !important;
+    --newtab-button-focus-background: var(--rm-light) !important;
+    --newtab-button-focus-border: var(--rm-accent) !important;
+    --newtab-button-static-background: var(--rm-light) !important;
+    --newtab-button-static-hover-background: var(--rm-select) !important;
+    --newtab-button-static-active-background: var(--rm-black) !important;
+    --newtab-button-static-focus-background: var(--rm-light) !important;
+    --newtab-button-text: var(--rm-black) !important;
+    --newtab-button-secondary-color: var(--rm-black) !important;
+    --newtab-card-placeholder-background-color: var(--rm-light) !important;
+    --newtab-status-success: var(--rm-success) !important;
+    --newtab-status-error: var(--rm-destructive) !important;
+    --newtab-weather-background-color: var(--rm-light) !important;
+    --newtab-overlay-color: var(--rm-light) !important;
+
+    /* --- surfaces the platform would paint as a blend (`--coverage` lists these) ---------------------------
+       A token whose default is a color-mix or an alpha primitive paints a mix of two values rather than a
+       value, and nothing downstream can measure one. Where such a token paints a SURFACE the sheet names an
+       authored value instead. The selected item of an about: page's navigation is the one the screen pass
+       caught: Firefox paints it `color-mix(in srgb, currentColor 8%, transparent)`, which over the WHITE field
+       measured #E7D6DE -- ACCENT at 8%, a value no ladder produced. It is a selected row, so it takes SELECT
+       with WHITE on it, like every other selected row in the sheet, and the 4px indicator beside it stays
+       ACCENT because §2 gives nav indicators to ACCENT.
+       What is left blending after this is shadows and the modal scrim, and §4 inherits real shadows. */
+    --page-nav-button-background-color-selected: var(--rm-select) !important;
+    --page-nav-button-text-color-selected: var(--rm-white) !important;
+    --page-nav-button-indicator-background-color: var(--rm-accent) !important;
+    --badge-border-color: transparent !important;
+    --badge-border-color-filled: transparent !important;
+    --promo-background-color: var(--rm-light) !important;
+    --promo-border-color: transparent !important;
+
+    caret-color: var(--rm-cursor) !important;
+    scrollbar-color: var(--rm-dark) var(--rm-light) !important;
+    accent-color: var(--rm-accent) !important;
+  }
+
+
+  /* A component's own `*.tokens.css` declares on `:root, :host`, and the `:host` half lands ON the custom
+     element -- where it beats a value inherited from `:root`, whatever the origin, because importance does
+     not cross inheritance. A user sheet's `:root` wins the cascade and still loses the element. So a token a
+     web component declares has to be set on the element itself, which is what these three rules are for.
+     Only components with a real shadow root are affected; the browser chrome's own `--tab-*` and `--urlbar-*`
+     are declared the same way and are read in the light DOM, where `:root` reaches them. */
+  moz-page-nav, moz-page-nav-button {
+    --page-nav-button-background-color-selected: var(--rm-select) !important;
+    --page-nav-button-text-color-selected: var(--rm-white) !important;
+    --page-nav-button-indicator-background-color: var(--rm-accent) !important;
+    --page-nav-button-background-color-hover: var(--rm-select) !important;
+    --page-nav-button-background-color-active: var(--rm-black) !important;
+    --page-nav-button-text-color-hover: var(--rm-white) !important;
+    --page-nav-button-text-color-active: var(--rm-white) !important;
+  }
+  moz-badge { --badge-border-color: transparent !important;
+              --badge-border-color-filled: transparent !important; }
+  moz-promo { --promo-background-color: var(--rm-light) !important;
+              --promo-border-color: transparent !important; }
+
+  html, body { background-color: var(--rm-white) !important; color: var(--rm-black) !important; }
+  * { border-radius: 0 !important; }
+  /* §3 routes links to ACCENT and keeps the underline, because underline is what the convention actually
+     rests on once the blue is gone. ACCENT on WHITE is Lc 75.4, over the body floor. */
+  a, a:visited { color: var(--rm-accent) !important; text-decoration: underline !important; }
+  a:hover, a:active { color: var(--rm-select) !important; text-decoration: underline !important; }
+  ::selection { background-color: var(--rm-select) !important; color: var(--rm-white) !important; }
+}
