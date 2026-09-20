@@ -2,11 +2,11 @@
 # Remainder for Firefox — per-profile install. No sudo, nothing outside $HOME. (worksafe tier)
 # Implements AUTHORITY.md §0, §2, §3, §5 and PLATFORM.md Firefox. Re-runnable, and it backs up what it replaces.
 #
-# Usage: sh install.sh [--profile PATH] [--ublock|--no-ublock] [--no-ask]
+# Usage: sh install.sh [--profile PATH] [--ublock|--no-ublock] [--stylus|--no-stylus] [--style] [--no-ask]
 #
-# Run it with no arguments on a terminal and it asks one question -- uBlock Origin -- before it writes
-# anything, and Ctrl-C before answering leaves the machine untouched. The flag answers the question in advance
-# so a scripted install never blocks. With no terminal on stdin nothing is asked and the default stands.
+# Run it with no arguments on a terminal and it asks two questions -- uBlock Origin, then Stylus -- before it
+# writes anything, and Ctrl-C before answering leaves the machine untouched. A flag answers its own question in
+# advance so a scripted install never blocks. With no terminal on stdin nothing is asked and the defaults stand.
 #
 #   --profile PATH  install into this profile directory instead of the one this Firefox opens. The default is
 #              read from installs.ini, and failing that from the Default= flag in profiles.ini.
@@ -18,16 +18,27 @@
 #              installer's two. Fonts are the faces §5 declares and icons are the machine's own art reprojected;
 #              uBlock is another project's program, and the kit does not put somebody else's program on a
 #              machine unless it is asked in so many words. --no-ublock declines without being asked.
+#   --stylus   also install Stylus the same way, for elevated/remainder.user.css -- the kit's all-sites
+#              sheet, the one thing it has whose reach is every site. Sideloading puts the extension in the
+#              profile; IMPORTING THE SHEET IS A MANUAL STEP and always will be, because Stylus imports
+#              through its own UI: Stylus > Manage > Import, and choose the file --style prints. Off by
+#              default for the same reason as uBlock. --no-stylus declines without being asked.
+#   --style    print where the import file is and exit. Writes nothing, asks nothing, and does not need
+#              Firefox closed. Stylus reads its own JSON cleanly and balks at *.user.css, so the kit ships
+#              both: elevated/remainder.user.css is the source and build/stylus_json.py generates the JSON.
 #   --no-ask   ask nothing; take the flags and the defaults. Implied when stdin is not a terminal.
 #
 # Firefox must be closed. user.js and the chrome stylesheets are read once, at startup.
 set -e
 
-WANT_UBLOCK=''; PROFILE=''; NOASK=0
+WANT_UBLOCK=''; WANT_STYLUS=''; PROFILE=''; NOASK=0; STYLE=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --ublock) WANT_UBLOCK=1 ;;
     --no-ublock) WANT_UBLOCK=0 ;;
+    --stylus) WANT_STYLUS=1 ;;
+    --no-stylus) WANT_STYLUS=0 ;;
+    --style) STYLE=1 ;;
     --profile) shift; PROFILE="$1" ;;
     --profile=*) PROFILE="${1#--profile=}" ;;
     --no-ask) NOASK=1 ;;
@@ -53,6 +64,23 @@ fi
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 KIT=$(cd "$HERE/../.." && pwd)
+
+# --style writes nothing and needs no profile, so it answers before any of the checks below.
+if [ "$STYLE" = 1 ]; then
+  JSON="$KIT/elevated/remainder.stylus.json"
+  [ -f "$JSON" ] || python3 "$KIT/build/stylus_json.py" >/dev/null 2>&1
+  if [ -f "$JSON" ]; then
+    echo "remainder: in Firefox, Stylus > Manage > Import, and choose"
+    echo "           $JSON"
+    echo "           It is generated from elevated/remainder.user.css. After editing the sheet: bump"
+    echo "           @version, add a line to the header changelog, run python3 $KIT/build/stylus_json.py,"
+    echo "           and commit both files together (CONTRIBUTING.md §11)."
+  else
+    echo "remainder: no import file, and python3 could not generate one from $KIT/elevated/remainder.user.css" >&2
+    exit 1
+  fi
+  exit 0
+fi
 DATA="${XDG_DATA_HOME:-$HOME/.local/share}"
 STATE="${XDG_STATE_HOME:-$HOME/.local/state}/remainder"   # what this script replaced, so it is reversible
 say() { echo "remainder: $*"; }
@@ -126,7 +154,18 @@ remainder: the kit's larger half is removal (§0), and on the web that means an 
 Q
   if yesno "Install uBlock Origin into this profile?" n; then WANT_UBLOCK=1; else WANT_UBLOCK=0; fi
 fi
+if [ "$ASK" = 1 ] && [ -z "$WANT_STYLUS" ]; then
+  cat <<Q
+remainder: the kit's all-sites sheet, elevated/remainder.user.css, restyles every site you visit -- §0a
+           exempts content, so that sheet is the reader's choice about their own screen and never the kit's.
+           Stylus is the extension that loads it, and it is another project's software, fetched the same way.
+           Sideloading it here does NOT import the sheet: Stylus imports through its own UI, so that stays a
+           step you take (sh install.sh --style prints the file to choose).
+Q
+  if yesno "Install Stylus into this profile?" n; then WANT_STYLUS=1; else WANT_STYLUS=0; fi
+fi
 [ -n "$WANT_UBLOCK" ] || WANT_UBLOCK=0
+[ -n "$WANT_STYLUS" ] || WANT_STYLUS=0
 
 mkdir -p "$STATE"        # the first thing this script writes, and not before here
 
@@ -142,22 +181,30 @@ cp "$HERE/chrome/userChrome.css" "$HERE/chrome/userContent.css" "$PROFILE/chrome
 # --- 5. uBlock Origin (§0), asked for or --ublock ----------------------------------------------------
 UBLOCK_ID="uBlock0@raymondhill.net"
 UBLOCK_URL="https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
-if [ "$WANT_UBLOCK" = 1 ]; then
-  mkdir -p "$PROFILE/extensions"; XPI="$PROFILE/extensions/$UBLOCK_ID.xpi"
-  if   command -v curl >/dev/null 2>&1; then curl -fsSL --max-time 120 -o "$XPI" "$UBLOCK_URL"
-  elif command -v wget >/dev/null 2>&1; then wget -q -O "$XPI" "$UBLOCK_URL"
-  else say "sideloading needs curl or wget -- uBlock NOT installed"; XPI=''; fi
-  if [ -n "$XPI" ] && [ -s "$XPI" ]; then
-    # Firefox starts a sideloaded extension disabled and asks once. Scope 1 is the profile directory -- the
-    # user's own -- so 15 - 1 = 14 narrows the asking to that one scope and leaves user, system and
-    # application scopes exactly as they were. No checksum is pinned here on purpose: this fetches the
-    # CURRENT build, which is the one with the current filter-list compatibility, and Mozilla's signature is
-    # the provenance. A font is pinned to a tag because §5 names a version; an ad blocker is not.
-    printf '\n// sideloaded by install.sh --ublock: enable extensions the user put in this profile\nuser_pref("extensions.autoDisableScopes", 14);\n' >> "$PROFILE/user.js"
-    say "uBlock Origin $(du -h "$XPI" | cut -f1) at $XPI (signed by Mozilla; from $UBLOCK_URL)"
+STYLUS_ID="{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}"
+STYLUS_URL="https://addons.mozilla.org/firefox/downloads/latest/styl-us/latest.xpi"
+SIDELOADED=0
+sideload() {  # sideload ID URL NAME
+  mkdir -p "$PROFILE/extensions"; XPI="$PROFILE/extensions/$1.xpi"
+  if   command -v curl >/dev/null 2>&1; then curl -fsSL --max-time 120 -o "$XPI" "$2"
+  elif command -v wget >/dev/null 2>&1; then wget -q -O "$XPI" "$2"
+  else say "sideloading needs curl or wget -- $3 NOT installed"; return 1; fi
+  if [ -s "$XPI" ]; then
+    SIDELOADED=1
+    say "$3 $(du -h "$XPI" | cut -f1) at $XPI (signed by Mozilla; from $2)"
   else
-    [ -n "$XPI" ] && { rm -f "$XPI"; say "uBlock Origin NOT installed -- the download was empty"; }
+    rm -f "$XPI"; say "$3 NOT installed -- the download was empty"; return 1
   fi
+}
+[ "$WANT_UBLOCK" = 1 ] && { sideload "$UBLOCK_ID" "$UBLOCK_URL" "uBlock Origin" || true; }
+[ "$WANT_STYLUS" = 1 ] && { sideload "$STYLUS_ID" "$STYLUS_URL" "Stylus" || true; }
+if [ "$SIDELOADED" = 1 ]; then
+  # Firefox starts a sideloaded extension disabled and asks once. Scope 1 is the profile directory -- the
+  # user's own -- so 15 - 1 = 14 narrows the asking to that one scope and leaves user, system and
+  # application scopes exactly as they were. No checksum is pinned on either of these on purpose: both fetch
+  # the CURRENT build, which is the one with current filter-list and browser compatibility, and Mozilla's
+  # signature is the provenance. A font is pinned to a tag because §5 names a version; these are not.
+  printf '\n// sideloaded by install.sh: enable extensions the user put in this profile\nuser_pref("extensions.autoDisableScopes", 14);\n' >> "$PROFILE/user.js"
 fi
 
 # --- 6. the fonts §5 declares, which this installer does not fetch -----------------------------------
@@ -172,10 +219,17 @@ done
 
 # --- 7. what happened ---------------------------------------------------------------------------------
 [ "$WANT_UBLOCK" = 1 ] && U="uBlock Origin installed" || U="uBlock left alone (§0 default)"
+[ "$WANT_STYLUS" = 1 ] && Y="Stylus installed" || Y="Stylus left alone"
 cat <<MSG
 remainder: Firefox profile $PROFILE
-           user.js, chrome/userChrome.css, chrome/userContent.css in place; $U.
+           user.js, chrome/userChrome.css, chrome/userContent.css in place; $U; $Y.
            what was replaced is in $STATE
 Start Firefox. The tab strip is the key titlebar and goes LIGHT when the window is not key -- the one
 surface on this desktop that shows it (PLATFORM.md).
 MSG
+if [ "$WANT_STYLUS" = 1 ]; then cat <<MSG
+           Stylus does not import the sheet for you. In Firefox: Stylus > Manage > Import, and choose
+           $KIT/elevated/remainder.stylus.json
+           That sheet restyles every site you visit, which is the reader's choice and not the kit's (§0a).
+MSG
+fi

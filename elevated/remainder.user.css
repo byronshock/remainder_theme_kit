@@ -1,0 +1,387 @@
+/* ==UserStyle==
+@name           Remainder
+@namespace      github.com/byronshock/remainder_theme_kit
+@version        0.1.3
+@description    Remainder for websites: WHITE ground and documents, LIGHT fields and panels, ACCENT links kept underlined, SELECT selection carrying WHITE, the CURSOR caret, one BLACK rule at 22px, Montserrat and Hack, no curves, no hairlines. Tier: elevated — no elevation on this surface, but its reach is every site.
+@author         Byron Shock, Ph.D.
+==/UserStyle== */
+
+/* AUTHORITY.md §0, §0a, §1, §2, §3, §5. Values from palette.json; checked by build/stylus.py.
+   The import file is elevated/remainder.stylus.json, generated from this by build/stylus_json.py.
+
+   WHY A SHEET LIKE THIS IS ALLOWED TO EXIST. §0a exempts content, and a web page is content — so a sheet
+   that repaints every site needs an argument before it needs a selector. The argument is §4's, about icons,
+   applied one level up: a site's styling is furniture its author drew, and whether that furniture is
+   information TO THIS READER is the reader's judgement and not the kit's. Someone who wants to be told
+   whose site this is wants the site's own colours; someone who reads forty sites a day and wants them to
+   stop shouting has a different answer, and it is theirs to give. So the sheet is opt-in, installed by
+   hand into one browser profile, removed by switching it off — and it stops dead at the things that are
+   content by anyone's reckoning: images, video, canvas, SVG, and anything a site gave a colour inline,
+   which is how chips, labels and calendars carry meaning.
+
+   WHAT IS DIFFERENT HERE FROM THE PARENT KIT'S SHEET, beyond the palette:
+   - Links are ACCENT and KEEP THEIR UNDERLINE. §3 calls link blue the hypothesis's largest bill and pays
+     it; what the convention actually rests on is the underline, so the underline is not optional here.
+   - Focus is ACCENT, and needs no exception. The parent kit draws focus in BLACK and records it as "the
+     accessibility exception to §1b", because it had no chrome hue to spare. §2 gives ACCENT focus outright.
+   - Selection is a dark ground carrying light text (SELECT with WHITE), not a pale tint. §2 settled that:
+     every tint light enough to carry body text at Lc 75 is invisible against the WHITE field.
+   - Text on a LIGHT ground is 700. BLACK on LIGHT is Lc 61.2, which is APCA's 16px/700 tier and not its
+     body tier, so the weight changes exactly where the ground changes — the same rule the Firefox chrome
+     surface keeps, and for the same measurement.
+   - The rule is 22px: §5's reference width, where the parent kit's 28 came from its painting.
+
+   THE ONLY LITERAL COLOURS IN THIS FILE ARE THE --rm-* DEFINITIONS. build/stylus.py proves it.
+
+   Lessons carried from the parent kit, which paid for them on real sites:
+   L1 stretched click targets go transparent, not painted.  L2 pin -webkit-text-fill-color or a site's own
+   fill survives on the new ground.  L3 every background rule recolours its own text.  L4 clear background
+   images off non-media, inline too — but not off sprite icons, or the icon vanishes and leaves its label.
+   L5 font rules carry no !important: with it, every icon-font glyph renders as tofu.
+
+   0.1.3: text fields were doing what the buttons were. A native text input is painted by the widget theme
+          too, so every well on every site rendered #FFFFFF -- the one value §3 refuses outright, in the
+          place a user looks at most. Measured at 21,193 px across two inputs on one fixture page. The
+          appearance rule now covers input and textarea, less the four types that ARE the control rather
+          than a box around one: checkbox, radio, range and colour, where turning appearance off erases
+          them and accent-color is the right lever instead.
+   0.1.2: what two Google pages found, measured off a screenshot rather than argued (§10). Gmail came back
+          93.6% authored and Google Search 95.1%, and the misses were one mechanism: a [role] the sheet does
+          not paint keeps the site's own background, because the transparent rule spares every role rather
+          than the fifteen it actually paints. role=presentation and its kin are scaffolding, they are
+          everywhere in Google's markup, and a probe page proved it -- a plain div went WHITE and a
+          div[role="presentation"] stayed #FFFFFF, which is 9.5% of the Search page and the one value §3
+          refuses outright. Also: a dialog, menu, listbox and tooltip FLOAT and were being painted as
+          documents, so a Gmail contact card was WHITE on WHITE with no edge across 900 px; and a site's own
+          hairlines survived on generic containers, 4,270 px of #DCDFE5 on one page, where §5 says there is
+          no rule thinner than the rule.
+   0.1.1: what the fixture found on the screen, which the checker could not (§10). A site's own text colour
+          survived on a generic container, because the ground rule sets BLACK without !important and a
+          user-origin normal declaration loses to an author-origin one — #FFCC00 on the WHITE field. Native
+          controls ignored every fill: appearance is now off for buttons and selects, and every button in
+          the fixture had been Firefox's own #E9E9ED. A selected row was covered by its own cells, since td
+          is a document and paints over the tr. And a nav link was ACCENT on LIGHT at Lc 44.8, so links that
+          are navigation take the field's pair and keep no underline.
+   0.1.0: first sheet in this kit. Lineage: the parent kit's destijl.user.css 0.3.6, re-solved onto §2's
+          seven values, with links underlined (§3), focus on ACCENT rather than BLACK, selection inverted
+          to a dark ground, the rule at §5's 22px, code blocks taken out of the wells rule and left as the
+          content §0a says they are, and the caret finally given the job §2 authors it for —
+          worksafe/firefox/ sets CURSOR on the chrome's own fields and stops there, because the kit cannot
+          measure the ground of a page it has never seen. Here it can: the ground is the kit's. */
+
+@-moz-document url-prefix("http"), url-prefix("file") {
+
+:root {
+  --rm-white:  #F1E4E9;
+  --rm-light:  #BAADB2;
+  --rm-dark:   #4B4045;
+  --rm-black:  #10080C;
+  --rm-accent: #763555;
+  --rm-select: #521436;
+  --rm-cursor: #007891;
+  --rm-success:     #006B54;
+  --rm-warning:     #FCD116;
+  --rm-destructive: #AF1E2D;
+  --rm-legend-light: #FFFFFF;
+  --rm-legend-dark:  #000000;
+  --rm-rule: 22px;
+  --rm-ui:   Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --rm-mono: Hack, "DejaVu Sans Mono", monospace;
+}
+
+/* ---------- geometry (§5) ---------- */
+*, *::before, *::after {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+input, textarea, select, button, fieldset, table, td, th, tr, blockquote, dialog, details, summary, nav, header, footer, aside, section, article, main, figure, [role="dialog"], [role="menu"], [role="listbox"], [role="toolbar"], [role="tablist"], [role="tab"] {
+  border-color: transparent !important;
+  border-width: 0 !important;
+}
+/* And the same for the generic containers a site draws its hairlines on, which the tag list above cannot
+   reach. §5 is not ambiguous about this: there is no rule thinner than the rule, and a separator that wants
+   to be lighter than one is a change of field tone instead. Google's own #DCDFE5 card outlines measured
+   4,270 px across one page; every one of them is a line the kit does not draw. An element a site gave a
+   border inline is left alone, on the same reasoning as the inline background. */
+div:not([style*="border"]), span:not([style*="border"]), ul, ol, li, dl, dt, dd, p, form, label, [role="presentation"], [role="group"], [role="list"], [role="listitem"], [role="row"], [role="cell"], [role="gridcell"], [role="region"], [role="article"], [role="banner"], [role="contentinfo"], [role="navigation"], [role="search"], [role="main"] {
+  border-color: transparent !important;
+}
+/* There is no rule thinner than the rule (§5). A site's hairline is not a rule; where one separated two
+   surfaces, the tone change between them does it instead — WHITE against LIGHT, dE 17.1. */
+hr {
+  border: 0 !important;
+  height: var(--rm-rule) !important;
+  background: var(--rm-black) !important;
+  margin: var(--rm-rule) 0 !important;
+}
+
+/* ---------- ground ---------- */
+html, body {
+  background: var(--rm-white) !important;
+  color: var(--rm-black) !important;
+  -webkit-text-fill-color: currentcolor !important;
+}
+/* L4, with the sprite exemption: an element whose image IS its background keeps it, or a CSS-sprite
+   toolbar loses every icon and keeps every label. */
+body *:not(img):not(video):not(canvas):not(svg):not(iframe):not(picture):not(source):not(embed):not(object):not([data-visualcompletion="css-img"]):not([style*="background-image"]):not([style*="mask-image"]):not([role="img"]):not(i[class*="icon"]):not([class*="sprite"]) {
+  background-image: none !important;
+  background-color: transparent;
+  color: var(--rm-black);
+  -webkit-text-fill-color: currentcolor;
+}
+svg, svg * {
+  background-image: initial;
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+}
+/* A site's own surfaces — dark modes, theme overlays, card grounds — are generic containers coloured by
+   class. They go transparent; anything with a role is a field the sheet paints below, and anything with an
+   inline background is information and is left alone (§0a). :where() holds this at specificity (0,0,1) so
+   every rule below outranks it. */
+body :where(div:not([role]):not([style*="background"]), span:not([role]):not([style*="background"]), section:not([role]):not([style*="background"]), ul:not([role]):not([style*="background"]), ol:not([role]):not([style*="background"]), li:not([role]):not([style*="background"]), table:not([style*="background"]), tr:not([style*="background"]), td:not([style*="background"]), th:not([style*="background"])) {
+  background-color: transparent !important;
+}
+/* A ROLE THAT NAMES NOTHING IS NOT A SURFACE, and this is the rule the Google pages needed. The rule above
+   spares every element with a [role] on the theory that a role means the sheet paints it below -- which is
+   true of about fifteen roles and false of the rest. role=presentation, none, group, list, rowgroup and
+   their kin say "this element is scaffolding": they are everywhere in Google's markup, they are not fields,
+   and each one kept the site's own background. Measured on a probe page: a plain div went WHITE and a
+   div[role="presentation"] came back #FFFFFF, the value §3 reserves and refuses. An inline background is
+   still spared, because that is how a chip carries meaning (§0a). */
+[role="presentation"]:not([style*="background"]), [role="none"]:not([style*="background"]), [role="group"]:not([style*="background"]), [role="generic"]:not([style*="background"]), [role="list"]:not([style*="background"]), [role="listitem"]:not([style*="background"]), [role="rowgroup"]:not([style*="background"]), [role="row"]:not([style*="background"]), [role="cell"]:not([style*="background"]), [role="gridcell"]:not([style*="background"]), [role="text"]:not([style*="background"]), [role="paragraph"]:not([style*="background"]) {
+  background-color: transparent !important;
+}
+
+/* L3, and the fixture found the hole in it. The ground rule above sets BLACK WITHOUT !important, and a
+   user-origin normal declaration loses to an author-origin one — so a site that colours text by class keeps
+   that colour on the kit's new ground. A page whose own .site class said #FFCC00 came out yellow on WHITE.
+   So the text rule is !important and covers CONTAINERS, and the list stops exactly where it has to:
+   - never span, and never inside pre or code. It does not have to name them. INHERITANCE LOSES TO
+     DECLARATION: a syntax-highlighting span DECLARES its colour and keeps it, where a div that merely
+     inherits BLACK does not. That is the same rule that decides the :host question in PLATFORM.md, used
+     here on purpose rather than tripped over, and it is what lets §0a's syntax-coloured buffer survive a
+     sheet that repaints everything around it.
+   - never an element a site gave a colour inline, which is how chips and labels carry meaning (§0a). */
+p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, label, legend, figcaption, summary, blockquote, caption, div:not([style*="color"]), section:not([style*="color"]), article, aside, main, ul, ol, dl, tr, figure {
+  color: var(--rm-black) !important;
+  -webkit-text-fill-color: var(--rm-black) !important;
+}
+
+/* ---------- fields and panels: LIGHT, and their text is 700 (§2) ---------- */
+header, footer, nav, form, thead, th, blockquote, figcaption, summary, [role="banner"], [role="contentinfo"], [role="navigation"], [role="toolbar"], [role="tablist"], [role="search"] {
+  background-color: var(--rm-light) !important;
+  color: var(--rm-black) !important;
+  font-weight: 700 !important;
+}
+/* ---------- documents: WHITE, and their text goes back to 400 ---------- */
+main, article, section, table, tbody, td, details, [role="main"], [role="article"], [role="region"], [role="document"] {
+  background-color: var(--rm-white) !important;
+  color: var(--rm-black) !important;
+  font-weight: 400 !important;
+}
+/* An overlay must be opaque or it floats over the page. Everything a popover, typeahead or sheet is
+   likely to be called, carried from the parent kit's 0.3.3. */
+/* A DIALOG, A MENU, A LISTBOX AND A TOOLTIP FLOAT, so they belong here and not among the documents, which
+   is where they were. A floating surface painted WHITE over a WHITE page has no edge at all: a contact card
+   on Gmail measured WHITE continuously across 900 px with nothing to say where it began. LIGHT against the
+   field is dE 17.1, the separator §5 names, and it costs the 700 tier for the text on it. */
+dialog, [role="dialog"], [role="menu"], [role="listbox"], [role="tooltip"], [role="alertdialog"], [role="menubar"], [aria-modal="true"], [aria-label*="Search results" i], [aria-label*="search suggestions" i], [aria-label*="Typeahead" i], [data-radix-popper-content-wrapper], [data-radix-popper-content-wrapper] > *, [data-headlessui-state], [data-floating-ui-portal] > *, [class*="popover" i], [class*="popup" i], [class*="dropdown" i], [class*="typeahead" i], [class*="autocomplete" i], [class*="flyout" i], [id*="popover" i], [id*="dropdown" i] {
+  background-color: var(--rm-light) !important;
+  color: var(--rm-black) !important;
+  font-weight: 700 !important;
+}
+
+/* ---------- wells: the other tone from whatever holds them ---------- */
+/* A nested surface alternates WHITE and LIGHT, dE 17.1 either way — the separator §5 names and the floor
+   §2 derives from it. So a well on a document is LIGHT, and a well on a field is WHITE, and the weight
+   follows the ground because that is what the ground measures at: BLACK on LIGHT is Lc 61.2, APCA's
+   16px/700 tier, and BLACK on WHITE is 91.8, which admits either weight.
+   THE COST, STATED: a well on a document carries what the user types in 700. §2 authors LIGHT as a ground
+   for bold text and for nothing else, so the alternative was a field that reads at Lc 61.2 at 400 — under
+   the body floor, in the one place on a page where a user is reading their own words back. The weight is
+   the cheaper of the two, and it is a measurement, not a house style. */
+input, textarea, select, [role="textbox"], [role="combobox"], [role="searchbox"] {
+  background-color: var(--rm-light) !important;
+  color: var(--rm-black) !important;
+  -webkit-text-fill-color: var(--rm-black) !important;
+  font-weight: 700 !important;
+}
+form input, form textarea, form select, form [role="textbox"], form [role="combobox"], form [role="searchbox"], header input, header textarea, header select, header [role="textbox"], header [role="combobox"], header [role="searchbox"], nav input, nav textarea, nav select, footer input, footer textarea, footer select, [role="search"] input, [role="search"] textarea, [role="search"] select, [role="banner"] input, [role="banner"] select, [role="toolbar"] input, [role="toolbar"] select {
+  background-color: var(--rm-white) !important;
+  color: var(--rm-black) !important;
+  -webkit-text-fill-color: var(--rm-black) !important;
+  font-weight: 400 !important;
+}
+/* pre, code, kbd and samp are NOT wells, and the parent kit's sheet painting them as one was the thing
+   this surface had to correct. §0a names a syntax-coloured buffer as its example of content: those colours
+   were chosen by the site against its own ground, and no tone this sheet could give them is one the kit has
+   measured. So they keep the document's WHITE and their own colours -- the ground rule sets BLACK on them
+   WITHOUT !important, so a site's highlighting wins and unhighlighted code still reads at Lc 91.8. What
+   distinguishes a code block here is its face and its measure, which is §8's other answer: where there is
+   no meaning to carry, tone AND GEOMETRY. */
+::placeholder {
+  color: var(--rm-dark) !important;
+  -webkit-text-fill-color: var(--rm-dark) !important;
+  opacity: 1 !important;
+}
+
+/* ---------- buttons ---------- */
+/* First: turn the platform's own rendering off, or none of what follows lands. A control with the default
+   appearance is painted by the widget theme and background-color is ignored outright -- every button in the
+   fixture came back #E9E9ED, Firefox's native face, with the sheet's rules cascading correctly and having
+   no effect at all. Checkbox, radio, range and colour are left native on purpose: appearance:none erases
+   those controls rather than restyling them, and accent-color below is the right lever for them. */
+button, [type="button"], [type="submit"], [type="reset"], select, [role="button"], textarea, input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+}
+/* A button on a document is LIGHT; a button on a field is WHITE. Same alternation as a well, and the
+   Firefox chrome surface reaches the same arrangement for the same reason. */
+button, [type="button"], [type="submit"], [type="reset"], [role="button"] {
+  background-color: var(--rm-light) !important;
+  color: var(--rm-black) !important;
+  -webkit-text-fill-color: var(--rm-black) !important;
+  font-weight: 700 !important;
+}
+header button, nav button, footer button, form button, [role="banner"] button, [role="toolbar"] button, [role="search"] button, header [role="button"], nav [role="button"], footer [role="button"], [role="toolbar"] [role="button"] {
+  background-color: var(--rm-white) !important;
+  color: var(--rm-black) !important;
+  -webkit-text-fill-color: var(--rm-black) !important;
+  font-weight: 400 !important;
+}
+/* L1: a stretched click target painted is a block of colour across the page. Transparent, not painted. */
+a[role="button"], li > [role="button"], [role="button"][tabindex="-1"] {
+  background-color: transparent !important;
+}
+/* The thing a form is FOR is the one button allowed to be noticed, and §2 gives that to ACCENT. The guess
+   is by attribute and by class, and it matches BUTTONS ONLY: the parent kit's 0.2.5 caught message text on
+   [class*="primary"] — text-primary is a Tailwind utility — and painted it WHITE on WHITE. */
+button[type="submit"], [type="submit"], button[class*="primary" i]:not([class*="text-primary" i]):not([class*="border-primary" i]):not([class*="ring-primary" i]), [role="button"][class*="primary" i]:not([class*="text-primary" i]):not([class*="border-primary" i]):not([class*="ring-primary" i]), button[class*="cta" i], [aria-pressed="true"] {
+  background-color: var(--rm-accent) !important;
+  color: var(--rm-white) !important;
+  -webkit-text-fill-color: var(--rm-white) !important;
+  font-weight: 700 !important;
+}
+button[type="submit"] *, [type="submit"] *, button[class*="primary" i] *, [role="button"][class*="primary" i] *, [aria-pressed="true"] * {
+  color: var(--rm-white) !important;
+  -webkit-text-fill-color: var(--rm-white) !important;
+}
+button[disabled], [type="button"][disabled], [type="submit"][disabled], [role="button"][aria-disabled="true"], button[aria-disabled="true"] {
+  background-color: var(--rm-light) !important;
+  color: var(--rm-dark) !important;
+  -webkit-text-fill-color: var(--rm-dark) !important;
+}
+
+/* ---------- links, selection, the caret, focus ---------- */
+/* §3: the kit gives up link blue and routes links to ACCENT, and keeps the underline, because the
+   underline is what the convention actually rests on once the blue is gone. ACCENT on WHITE is Lc 75.4. */
+a, a *, [role="link"] {
+  color: var(--rm-accent) !important;
+  -webkit-text-fill-color: var(--rm-accent) !important;
+  text-decoration-line: underline !important;
+  text-decoration-color: var(--rm-accent) !important;
+}
+a:hover, a:hover *, [role="link"]:hover {
+  color: var(--rm-select) !important;
+  -webkit-text-fill-color: var(--rm-select) !important;
+}
+/* A link that is a button, or an item in a navigation, is not prose. §3 keeps the underline because that is
+   what the link convention rests on in RUNNING TEXT; a nav item is self-evidently a place to click and does
+   not need one. It also cannot have the link colour: ACCENT on LIGHT is Lc 44.8, APCA's display-type tier,
+   and a navigation is a LIGHT field. So it takes the field's own pair instead — BLACK at 700, Lc 61.2. */
+a[role="button"], a[class*="btn" i], a[class*="button" i], nav a, header a, footer a, [role="navigation"] a, [role="tablist"] a, [role="banner"] a, [role="contentinfo"] a {
+  color: var(--rm-black) !important;
+  -webkit-text-fill-color: var(--rm-black) !important;
+  text-decoration-line: none !important;
+}
+::selection {
+  background: var(--rm-select) !important;
+  color: var(--rm-white) !important;
+  -webkit-text-fill-color: var(--rm-white) !important;
+}
+/* The current thing, and the thing under the pointer, are one state and one value (§2). */
+/* A row's own cells have to be named, not just the row: td is a document above and paints WHITE straight
+   over a selected tr. The fixture's selected row came back WHITE 98% and the frame held no SELECT at all. */
+mark, option:checked, [aria-current], [aria-selected="true"], [role="menuitem"]:hover, [role="option"]:hover, [role="menu"] li:hover, [role="listbox"] li:hover, tbody tr:hover > td, tbody tr:hover > th, li[aria-selected="true"], tr[aria-selected="true"], tr[aria-selected="true"] > td, tr[aria-selected="true"] > th, [aria-current] > td, [aria-current] > th, [role="option"][aria-selected="true"], [role="row"][aria-selected="true"], [role="row"][aria-selected="true"] > [role="cell"], [role="tab"][aria-selected="true"] {
+  background-color: var(--rm-select) !important;
+  color: var(--rm-white) !important;
+  -webkit-text-fill-color: var(--rm-white) !important;
+}
+mark *, [aria-current] *, [aria-selected="true"] *, [role="menuitem"]:hover *, [role="option"]:hover *, li[aria-selected="true"] *, tr[aria-selected="true"] *, [role="option"][aria-selected="true"] *, [role="row"][aria-selected="true"] *, [role="tab"][aria-selected="true"] * {
+  color: var(--rm-white) !important;
+  -webkit-text-fill-color: var(--rm-white) !important;
+}
+/* The caret, at last on a ground the kit set. §2 gives CURSOR exactly one job — a locator, found fast and
+   repeatedly on a field of text — and this is the only sheet in the kit whose reach is every field a user
+   types in. worksafe/firefox/ sets it on the chrome's own fields and stops, because the kit cannot measure
+   the ground of a page it has not seen. Here it has: every field above is WHITE or LIGHT, and CURSOR
+   measures Lc 60.7 on the first and 30.2 on the second — over APCA's mark floor on both. */
+input, textarea, select, [contenteditable="true"], [role="textbox"], [role="combobox"], [role="searchbox"], body {
+  caret-color: var(--rm-cursor) !important;
+}
+/* Focus is ACCENT and needs no exception here. The parent kit draws it in BLACK and records that as an
+   accessibility exception carved out of its palette; §2 authors ACCENT for focus outright, and ACCENT on
+   WHITE is Lc 75.4 and on LIGHT 44.8 — over APCA's 30 for a non-text mark either way. */
+:focus-visible {
+  outline: 2px solid var(--rm-accent) !important;
+  outline-offset: 0 !important;
+}
+:root {
+  accent-color: var(--rm-accent) !important;
+}
+
+/* ---------- semantic, only where the meaning is stated (§3) ---------- */
+/* Not guessed from a class name. A red surface that is not destructive is a defect, so these match the
+   places a page SAYS what it means: the ARIA states, and nothing else. */
+[aria-invalid="true"], [role="alert"] {
+  background-color: var(--rm-destructive) !important;
+  color: var(--rm-legend-light) !important;
+  -webkit-text-fill-color: var(--rm-legend-light) !important;
+}
+[aria-invalid="true"] *, [role="alert"] * {
+  color: var(--rm-legend-light) !important;
+  -webkit-text-fill-color: var(--rm-legend-light) !important;
+}
+[role="status"] {
+  background-color: var(--rm-success) !important;
+  color: var(--rm-legend-light) !important;
+  -webkit-text-fill-color: var(--rm-legend-light) !important;
+}
+
+/* ---------- scrollbars ---------- */
+* {
+  scrollbar-color: var(--rm-dark) var(--rm-light);
+}
+::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  background: var(--rm-light);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rm-dark);
+  border: 0;
+}
+::-webkit-scrollbar-corner {
+  background: var(--rm-light);
+}
+
+/* ---------- type (§5) ---------- */
+/* L5: no !important. The sheet is injected last, so it wins a tie against a site's own body font, and any
+   element a site gives a font by class — which is how icon fonts are applied — keeps it. */
+html, body, p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, label, legend, figcaption, summary, blockquote, caption, a, button, input, select, textarea, option, [role="button"], [role="link"], [role="tab"], [role="menuitem"], [role="option"] {
+  font-family: var(--rm-ui);
+}
+code, pre, kbd, samp, tt, code *, pre *, [class*="mono" i] {
+  font-family: var(--rm-mono);
+}
+
+/* ---------- content is content (§0a) ---------- */
+/* The sheet stops here and this is the clause that says so. Nothing above may give one of these a colour,
+   and build/stylus.py fails if anything does. */
+img, video, canvas, picture, svg, iframe, embed, object {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+}

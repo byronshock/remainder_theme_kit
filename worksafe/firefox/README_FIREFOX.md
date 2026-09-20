@@ -19,6 +19,8 @@ Measured on **Firefox 155.0.1** (deb) on COSMIC, 2026-09-19.
 | `chrome/userContent.css` | the pages Firefox itself draws — new tab, home, blank, the `about:` pages. Web pages are untouched: content is exempt (§0a) and the all-sites sheet is a different tier. |
 | `install.sh` | finds the profile this Firefox install opens, backs up what it replaces into `~/.local/state/remainder`, copies the three files in. Refuses while Firefox is running, and refuses under `sudo`. |
 | `install.sh --ublock` | the same, plus uBlock Origin from addons.mozilla.org into the profile's own `extensions/`, with `extensions.autoDisableScopes` narrowed to 14 so a profile-directory extension starts enabled instead of asking. §0: advertisements are noise. Off by default, and the question defaults to **no** — see below. |
+| `install.sh --stylus` | the same, plus Stylus, which loads `elevated/remainder.user.css` — the kit's all-sites sheet. Sideloading puts the extension in the profile; importing the sheet is a manual step and always will be, because Stylus imports through its own UI. |
+| `install.sh --style` | print the file to import and exit. Writes nothing, asks nothing, does not need Firefox closed. |
 
 ## The shape of it
 
@@ -159,22 +161,45 @@ toolbar and the card were sampled at, and every pair in them is measured by
 - **GTK dialogs** (the file picker) are GTK's.
 - **Page content** keeps its own colours, by design.
 
-## Not built yet
+## Importing it: the JSON, not the CSS
 
-`elevated/remainder.user.css`, the all-sites sheet, and the Stylus import JSON
-that `build/stylus_json.py` generates from it. Firefox hands an all-sites sheet
-to a per-profile extension, so it needs no elevation on this surface — it
-belongs in `elevated/` because its reach is every site, not because of its
-privilege (`CONTRIBUTING.md` §1). Until that sheet exists the installer does not
-offer to sideload Stylus: a question whose answer cannot be honoured is worse
-than the hint that replaces it.
+Stylus reads its own JSON export cleanly and balks at a `*.user.css` file, so the
+kit ships both and they do different jobs:
 
-The caret waits on the same sheet. §2 gives CURSOR one job and the kit would
-like it on every field a user types in, but CURSOR on WHITE is Lc 60.7 and the
-kit cannot measure the ground of a page it has never seen. So the caret is set
-where the ground is the kit's — the chrome's own fields and the `about:` pages —
-and the all-sites sheet is where it goes next, because there the ground is the
-kit's too.
+| File | What it is |
+|---|---|
+| `elevated/remainder.user.css` | the **source**. A person edits this one. |
+| `elevated/remainder.stylus.json` | **what you import.** Generated from the source by `build/stylus_json.py`, and committed, because the import has to work on a machine that is not running the generator (`CONTRIBUTING.md` §11). |
+
+Stylus › Manage › Import, and choose the JSON. `sh install.sh --style` prints its
+path and exits without writing anything.
+
+The parent kit also carries a `--style-css` fallback that serves the `.user.css`
+over localhost so Stylus can offer its own install page. That is deliberately not
+here. It exists because a `.user.css` *can* be installed that way, not because it
+is the better route — it needs a server, a port and a browser window to go right,
+where the JSON needs a file picker. One way in, and it is the easy one.
+
+After editing the sheet: bump `@version`, add a line to the header changelog
+saying what it fixed, run `python3 build/stylus_json.py`, and commit both files
+together. `build/stylus.py` fails if the committed JSON is not what the generator
+now produces, or if the `@version` has no line beneath it — so the two files
+cannot drift apart quietly.
+
+## The other half, and where the caret went
+
+`elevated/remainder.user.css` is built, and `build/stylus.py` checks it. Firefox
+hands an all-sites sheet to a per-profile extension, so it needs no elevation on
+this surface — it belongs in `elevated/` because its reach is every site, not
+because of its privilege (`CONTRIBUTING.md` §1).
+
+**The caret is there now.** §2 gives CURSOR one job — a locator, found fast and
+repeatedly on a field of text — and this sheet stops at the chrome's own fields
+and the `about:` pages, because the kit cannot measure the ground of a page it
+has never seen. The all-sites sheet can: every field it paints is WHITE or
+LIGHT, and CURSOR measures Lc 60.7 on the first and 30.2 on the second, over
+APCA's floor for a mark on both. So the caret is CURSOR on every field a user
+types in, and the ground under it is one the kit chose.
 
 ## Why the fonts are not fetched here
 
