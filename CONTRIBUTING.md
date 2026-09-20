@@ -84,18 +84,26 @@ Over `remainder.ron` that reports exactly three POLE lines — `#006B54`,
 `#FCD116`, `#AF1E2D` — and those three are the whole expected result. A fourth
 is a defect. This is a way to look; the gate is the surface's own checker (§8).
 
-**Re-measured 2026-09-19**, after the Firefox surface landed, over every value
+**Re-measured 2026-09-20**, after the Windows surface landed, over every value
 in `worksafe/`, `elevated/`, `palette.json` and `poles.json`, comments stripped:
-**60 distinct**, of which 26 are chrome and every one clears, 3 are §3's
+**65 distinct**, of which 31 are chrome and every one clears, 3 are §3's
 semantics, 17 are pole members recorded in `poles.json`, 12 are terminal ANSI
 slots, and **2 are the reserved legend values**. Nothing is unexplained.
+
+The count was 60 before `elevated/windows/` landed. **It added five**, and they are
+one ladder: the interior slots of Windows' eight-entry accent palette — `#AE6788`
+`#9B5677` `#894666` `#652546` `#420328`. Indices 3 and 5 of that ramp are ACCENT
+and SELECT exactly, and the thirty-one-slot colours table added nothing at all,
+because Windows' table is a table of roles and §2 already names a value for every
+role in it. Each of the five clears destructive by about 31° where its own chroma
+requires 10.6.
 
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
 the two ARIA states a page uses to say what it means — which is precisely the
 one use §3 permits them. **The all-sites sheet added a third surface and not one
-new value**: the count above was 60 before it landed and is 60 after.
+new value**: the count stood at 60 before it landed and at 60 after.
 `build/firefox.py` is what makes that checkable rather than a claim: the sheet
 names them `--rm-legend-light` and `--rm-legend-dark`, and the checker fails if
 either is ever the text side of a pair whose ground is not one of §3's three.
@@ -235,9 +243,12 @@ python3 build/firefox.py           # every value, text pair and adjacency in the
 python3 build/firefox.py --derive  # the grey ladder, under both of Firefox's numberings
 python3 build/stylus.py            # the all-sites sheet: values, pairs, and what it may not paint
 python3 build/stylus.py --derive   # the roles it may name, and the pairs no rule block states
+python3 build/windows.py           # every value in elevated/windows/, in all five notations
+python3 build/windows.py --derive  # the colours table and the accent ramp
+python3 build/windows.py --registry  # the registry claims, and which of them is unverified
 ```
 
-Three are built. What a checker owes:
+Four are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -301,6 +312,28 @@ And one the third checker added, which only a surface with this reach needs:
   names a content tag only inside `:not()` is not painting it either, so `:not()`
   is stripped before the check: excluding them is that rule's whole job. §0a
   stops being a promise in a comment and becomes a thing that fails.
+
+And two the fourth added, which the first surface needing elevation forced:
+
+- **It says which of its claims it is not making.** Every other surface is measured
+  on the machine the kit is built on. Windows is not, and `build/windows.py` splits
+  on that rather than blurring it: the colour work is a gate that runs anywhere and
+  exits nonzero, and the registry claims — that a key exists on 24H2 and does what
+  `PLATFORM.md` says it does — are a `--registry` table with a status against each
+  and no exit code at all. It is the line `build/firefox.py --coverage` already
+  draws, moved from one optional report to half a surface. A checker that gated on
+  an unverifiable claim would be a false pass, which is worse than a failing one.
+- **Five notations, and the deny-list defaults to suspicion.** Windows stores colour
+  as a bare decimal triple, a quoted decimal triple, an ABGR `DWORD`, an AARRGGBB
+  `.theme` value, and a REG_BINARY run of RGBA quads — and it stores flags, masks
+  and delays in the same `DWORD` and REG_BINARY forms. So the checker is told *by
+  name* which keys are not colours, as a deny-list and not an allow-list: an
+  unrecognised key is read as a colour and demands a ladder, which fails loudly on a
+  key nobody classified. A missed colour is unchecked paint; a flag read as a colour
+  is one line in a list. Both directions were exercised during that surface's own
+  build — the thirty-one quoted triples in `remainder.reg` were going unread, and
+  `UserPreferencesMask` decoded as `#901203`, 1.6° from destructive, and duly failed
+  the pole test.
 
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
@@ -409,6 +442,8 @@ motion, no blur.
 |---|---|
 | `palette.json` | generated **and committed**; guarded by the check in §7 |
 | `elevated/remainder.stylus.json` | generated **and committed**; guarded by `build/stylus.py` |
+| `elevated/windows/remainder.theme` | generated **and committed**; guarded by `build/windows.py` |
+| `elevated/windows/remainder.reg` | generated **and committed**; guarded by `build/windows.py`. ASCII, CRLF, no BOM — Windows reads a `.reg` without a BOM as ANSI, so those two spell their section references out where the rest of the kit writes `§` |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |
