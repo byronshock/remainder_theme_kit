@@ -1,10 +1,14 @@
 """Generate the Remainder overlay icon theme (AUTHORITY.md §4).
 
 Finds every application's real icon the way the desktop does — the .desktop file's Icon= name, resolved
-through the platform's icon-theme chain — projects each pixel to the nearest of the seven values the kit
-authors (build/remainder_space.py: §2's four-step ladder plus ACCENT, SELECT and CURSOR, flat, with the
-gray guard and the 3x3 edge vote), and writes an icon theme that ships only the Applications context and
-inherits the platform's own theme for everything else. Alpha is kept.
+through the platform's icon-theme chain — repaints it along the ramp through the kit's own values
+(build/remainder_space.py: each pixel keeps its lightness exactly and takes hue and chroma from that
+lightness, BLACK → SELECT → ACCENT → LIGHT → WHITE, a duotone), and writes an icon theme that ships only
+the Applications context and inherits the platform's own theme for everything else. Alpha is kept.
+
+An icon therefore comes back as itself in one register: the shape, the shading and which icon is lighter
+than which all survive, and no pixel reads as a signal. What it is not is flat — the repaint emits 667
+distinct values, five of them ones §2 authors, which is the trade remainder_space.py states and proves.
 
 Discovery is the parent kit's, carried over unchanged: which .desktop files exist, how the icon-theme
 chain resolves a name, which entries the panel shows. That half is theme-independent, the same way
@@ -16,9 +20,10 @@ Not committed: the output is the user's brands in the user's own paint, made at 
 
     python3 build/icon_theme.py --out ~/.local/share/icons/remainder [--inherits Cosmic,Pop,Adwaita,hicolor]
                                  [--names a,b,c] [--sizes 32,48,64,96,128,144,192,256] [--lookup Cosmic,Pop,Adwaita,hicolor]
-                                 [--anchors all|neutral]
-Needs Pillow, numpy, cairosvg. `--anchors neutral` drops the three chrome hues; see remainder_space.py
-for why that escape hatch exists (CURSOR is a locator, and teal in a dock icon spends some of that).
+                                 [--ramp duotone|neutral]
+Needs Pillow, numpy, cairosvg. `--ramp neutral` runs the same machinery on the four-step ladder, whose
+chroma is the §2 cast throughout, for a user who wants the dock grey. It is a preference and not the
+safer answer: the duotone reaches no pole and never reaches CURSOR either.
 """
 import argparse, configparser, glob, io, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -109,7 +114,7 @@ def main():
     ap.add_argument('--names', default='', help='comma list; default: every visible .desktop Icon=')
     ap.add_argument('--sizes', default='32,48,64,96,128,144,192,256')
     ap.add_argument('--hidden-prefixes', default='com.system76.', help='comma list; hidden .desktop entries with these icon prefixes are included (applets)')
-    ap.add_argument('--anchors', default='all', choices=sorted(rs.ANCHOR_SETS), help='all seven values, or the neutral ladder alone')
+    ap.add_argument('--ramp', default='duotone', choices=sorted(rs.RAMPS), help='the home-hue duotone, or the neutral ladder alone')
     a = ap.parse_args()
     from PIL import Image
     sizes = [int(x) for x in a.sizes.split(',')]
@@ -125,17 +130,17 @@ def main():
         for s in sizes:
             d = os.path.join(a.out, f'{s}x{s}', 'apps'); os.makedirs(d, exist_ok=True)
             im = master.resize((s, s), Image.LANCZOS) if master.size != (s, s) else master
-            rs.project_image(im, mode='poster', clean=True, which=a.anchors).save(os.path.join(d, n + '.png'))
+            rs.project_image(im, a.ramp).save(os.path.join(d, n + '.png'))
         made.append((n, src))
     dirs = ','.join(f'{s}x{s}/apps' for s in sizes)
     with open(os.path.join(a.out, 'index.theme'), 'w') as f:
-        anc = ', '.join(rs.ANCHOR_SETS[a.anchors])
-        f.write(f'[Icon Theme]\nName=Remainder\nComment=Application icons projected onto the values the kit authors: {anc} (AUTHORITY.md 4)\n'
+        anc = ' -> '.join(rs.RAMPS[a.ramp])
+        f.write(f'[Icon Theme]\nName=Remainder\nComment=Application icons repainted along the kit\'s own lightness ramp: {anc}. Lightness kept (AUTHORITY.md 4)\n'
                 f'Inherits={a.inherits}\nDirectories={dirs}\n\n')
         for s in sizes:
             f.write(f'[{s}x{s}/apps]\nSize={s}\nType=Fixed\nContext=Applications\n\n')
     print(f'remainder icons: {len(made)} made in {a.out} at {len(sizes)} sizes; '
-          f'anchors={a.anchors}; lookup chain {chain}')
+          f'ramp={a.ramp}; lookup chain {chain}')
     for n, src in made: print(f'  {n:40} <- {src}')
     if missing: print(f'  not found ({len(missing)}): ' + ', '.join(missing))
     if absolute: print(f'  absolute Icon= paths, not themeable ({len(absolute)}): ' + ', '.join(f'{f} -> {p}' for f, p in absolute))

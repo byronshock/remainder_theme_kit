@@ -78,13 +78,21 @@ def arcgap(h, lo, hi):
 
 
 # --- vectorised forms: the derivation searches ~10^6 lattice points --------------------
+def from_lab_grid(lab):
+    """OKLab array (..., 3) -> float rgb array (..., 3). May land outside the gamut.
+
+    The rectangular form, for work that interpolates: a straight line between two colours is a
+    line in OKLab, not in OKLCh. Interpolating C and h instead swings the hue of a near-neutral,
+    whose angle is noise -- BLACK and WHITE differ by 4.6 degrees of a hue neither one carries.
+    """
+    lms = (np.asarray(lab, float) @ np.linalg.inv(M2).T) ** 3
+    return from_linear(lms @ np.linalg.inv(M1).T)
+
+
 def from_lch_grid(L, C, h):
     """Arrays of (L, C, h) -> float rgb array (..., 3). Same math as from_lch."""
     L, C, h = np.broadcast_arrays(np.asarray(L, float), np.asarray(C, float), np.asarray(h, float))
-    a, b = C * np.cos(np.radians(h)), C * np.sin(np.radians(h))
-    lab = np.stack([L, a, b], axis=-1)
-    lms = (lab @ np.linalg.inv(M2).T) ** 3
-    return from_linear(lms @ np.linalg.inv(M1).T)
+    return from_lab_grid(np.stack([L, C * np.cos(np.radians(h)), C * np.sin(np.radians(h))], axis=-1))
 
 
 def lch_grid(v):

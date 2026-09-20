@@ -74,8 +74,9 @@ build/cosmic.py           the COSMIC ladders, and the checker for what is commit
 build/firefox.py          the Firefox grey ladder, and the checker for the sheet --
                           every value, every text pair, every adjacency:
                           python3 build/firefox.py [--derive|--coverage]
-build/remainder_space.py  projects any sRGB pixel onto the seven values the kit
-                          authors; OKLab dE, with C_FLOOR as the gray threshold
+build/remainder_space.py  repaints any sRGB pixel along a ramp through the kit's
+                          own values: lightness kept, hue and chroma a function
+                          of it. `--check` sweeps it against §1 and §3
 build/icon_theme.py       the opt-in icon theme (§4). Never commits its output.
 
 worksafe/                 per-user, no elevation
@@ -94,6 +95,7 @@ and are not committed; run their scripts to produce them.
 ```
 python3 build/poles.py --bars              # the derived bars and the pole arcs
 python3 build/derive_palette.py --write    # re-solve palette.json from poles.json
+python3 build/remainder_space.py --check   # the icon ramp against §1 and §3
 python3 build/qa.py                        # look at it (principle 12)
 ```
 
@@ -138,13 +140,25 @@ sh worksafe/cosmic/install.sh --no-ask           # ask nothing, take the default
 the user's call (`AUTHORITY.md` §4, §5). `--fonts` fetches from the two projects themselves at a
 pinned tag and refuses anything whose SHA-256 does not match. `--icons` repaints
 nothing that is not already on the machine and is undone by selecting another
-icon theme; it projects onto all seven values the kit authors, ACCENT, SELECT
-and CURSOR included, which is the intended result rather than a concession. The
-goal is not a colourless interface but a colourful one that does not interfere
-with what you are doing: the hypothesis constrains hue against the signals
-(§0a), and says nothing against colour as such (§0c). `--icons-neutral` drops to
-the neutral ladder for a user who wants the dock grey. The icon generator needs
+icon theme. Every pixel keeps its lightness exactly and takes its hue and chroma
+from that lightness, along a ramp through the kit's own values — BLACK →
+SELECT → ACCENT → LIGHT → WHITE, neutral at both ends and the home hue through
+the middle, a duotone. So an icon keeps its shape, its shading, and its place
+among the other icons; the dock comes back as itself in one register. That is
+the intended result rather than a concession: the goal is not a colourless
+interface but a colourful one that does not interfere with what you are doing,
+since the hypothesis constrains hue against the signals (§0a) and says nothing
+against colour as such (§0c). `--icons-neutral` runs the same machinery on the
+neutral ladder for a user who wants the dock grey. The icon generator needs
 Pillow, numpy and cairosvg — point `REMAINDER_PYTHON` at a venv that has them.
+
+The repaint gives something up, and it is written down where it is made
+(`build/remainder_space.py`): a pixel between two knots is an interpolation and
+not one of the seven values §2 authors. The ramp passes through 667 distinct
+8-bit values, five of them authored exactly. What replaces the stronger claim is
+the one §1 actually sets — every value on the ramp clears every pole and none is
+reserved (§3) — and `python3 build/remainder_space.py --check` proves it by
+sweep rather than asserting it.
 
 The default background is **Jar with Peonies and lid** (China, Ming
 dynasty, 16th century; Fahua ware; Art Institute of Chicago 1938.454, Bequest of

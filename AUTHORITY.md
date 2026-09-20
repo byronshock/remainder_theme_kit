@@ -482,12 +482,37 @@ parent kit:
   is information to someone who wants to be told whose software this is, and
   furniture to someone who already knows and wants a dock that reads as one
   surface. Which it is on a given screen is that user's judgement, not the
-  kit's. `build/icon_theme.py` projects the icons that machine actually has
-  onto the seven values §2 authors and writes an overlay theme. It is opt-in
-  (`install.sh --icons`), reversible by selecting another icon theme, and never
-  committed: the output is the user's own brands in the user's own paint, and
-  the kit has no license to redistribute anybody's brand art. The generator
-  authors nothing — an icon the chain cannot find is skipped, not invented.
+  kit's. `build/icon_theme.py` repaints the icons that machine actually has and
+  writes an overlay theme. It is opt-in (`install.sh --icons`), reversible by
+  selecting another icon theme, and never committed: the output is the user's
+  own brands in the user's own paint, and the kit has no license to redistribute
+  anybody's brand art. The generator authors nothing — an icon the chain cannot
+  find is skipped, not invented.
+
+  **What the repaint keeps is lightness.** Every pixel holds its own lightness
+  and takes its hue and chroma from that lightness, along a ramp whose knots are
+  values §2 authors, ordered by L: BLACK → SELECT → ACCENT → LIGHT → WHITE.
+  Neutral at both ends, the home hue through the middle — a duotone print in the
+  kit's own ink. The shape survives, the shading survives, and which icon is
+  lighter than which survives, which is most of what a dock is read by.
+
+  **This is where an icon stops being made of authored values, and that is a
+  claim being withdrawn.** Until 2026-09-19 the generator sent each pixel to the
+  *nearest* of the seven, flat, so every pixel in a repainted icon was a value
+  this document names. It was a claim about the output that cost the thing icons
+  are for. Over six of this machine's own icons it held per-pixel lightness at
+  r 0.906 and its *ordering* at ρ 0.759 — a quarter of the light-and-dark inside
+  every icon reassigned — and 25.3% of the opaque pixels came back CURSOR teal,
+  spending across a whole dock the one hue §2 keeps for a locator. The ramp
+  gives r 0.997 and ρ 0.994, and reaches CURSOR never.
+
+  What is left is the bar §1 actually sets, and it is narrower rather than
+  weaker: **every value the ramp can emit clears every pole, and none is
+  reserved (§3).** The ramp passes through exactly 667 distinct 8-bit values,
+  five of them authored; it terminates at BLACK and WHITE rather than passing
+  through them, which is what keeps `#000000` and `#FFFFFF` off a repainted
+  icon. `python3 build/remainder_space.py --check` sweeps the ramp and reports
+  all of it, so this is measured and not asserted (§6.10, §6.11).
 - **Modern rendering** — anti-aliased type, 8-bit icons, real shadows,
   resolution-independent points, integer-scaled.
 

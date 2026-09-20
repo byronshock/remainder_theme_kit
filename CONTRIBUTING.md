@@ -286,6 +286,21 @@ surface:
   a Mozilla colour. It is a report, not a gate: it needs Firefox installed, and
   an unset token is a question rather than always a defect.
 
+**The icon theme has a checker too, and it is a different shape.** Its output is
+never committed and never redistributed (§4), and its values are not a ladder, so
+there is no file to scan. What must hold is the bar itself: *every value the
+projection can emit* clears §1 and is not reserved by §3.
+
+```
+python3 build/remainder_space.py --check   # sweep the ramp, both sets of knots
+```
+
+It reports 0 breaching, 0 reserved, 0 outside sRGB, each knot reproduced
+bit-for-bit, the worst lightness error, and the angular slack at the narrowest
+point of the readable band. A generated surface owes the same proof as a
+committed one — it just cannot be checked by reading a file, so the check is a
+sweep of what the generator is capable of rather than an audit of what it did.
+
 ## 9. Measure, don't eyeball (principle 10)
 
 A new value lands with its measurement beside it: the number, what produced it,
