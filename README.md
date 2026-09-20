@@ -98,18 +98,39 @@ palette moves; editing the output is a defect, and so is editing a color in
 
 ## Install
 
-COSMIC (Pop!_OS), per-user, no sudo. Re-runnable, and it saves what it replaces
-under `~/.local/state/remainder`.
+COSMIC (Pop!_OS), per-user, no sudo — it refuses to run under `sudo`, which
+would theme root and leave your own desktop exactly as it is. Re-runnable, and
+it saves what it replaces under `~/.local/state/remainder`.
 
 ```
-sh worksafe/cosmic/install.sh                    # theme, terminal, toolkit, flat BLACK background
-sh worksafe/cosmic/install.sh --fonts            # + Montserrat and Hack, fetched and checksummed
-sh worksafe/cosmic/install.sh --icons            # + this machine's app icons in the kit's values
-sh worksafe/cosmic/install.sh --art              # + one public-domain museum photograph, with credit
+sh worksafe/cosmic/install.sh
 ```
 
-All three extras are off by default and all three are the user's call
-(`AUTHORITY.md` §4, §5). `--fonts` fetches from the two projects themselves at a
+On a terminal that asks three questions before writing anything, and Ctrl-C
+before the last one leaves the machine untouched:
+
+1. **Fonts** — fetch and install Montserrat and Hack? Not asked when both are
+   already on the machine. Default yes.
+2. **Icons** — generate the icon theme from this machine's own icons? Not
+   offered when the generator's dependencies are missing. Default yes.
+3. **Background** — the museum photograph, the flat BLACK field, or leave the
+   wallpaper alone. Default the photograph.
+
+Every question also has a flag, and a flag answers its question in advance so
+that question is not asked. With no terminal on stdin — a pipe, a provisioning
+run — nothing is asked at all and the flags and defaults stand alone:
+
+```
+sh worksafe/cosmic/install.sh --all              # fonts and icons; background stays at the default
+sh worksafe/cosmic/install.sh --fonts --no-icons # one of each
+sh worksafe/cosmic/install.sh --icons-neutral    # icons on the neutral ladder alone
+sh worksafe/cosmic/install.sh --black-field      # the §5 desktop: no photograph
+sh worksafe/cosmic/install.sh --no-wallpaper     # keep whatever wallpaper is already set
+sh worksafe/cosmic/install.sh --no-ask           # ask nothing, take the defaults
+```
+
+`--fonts` and `--icons` stay off unless asked for or answered for, and both are
+the user's call (`AUTHORITY.md` §4, §5). `--fonts` fetches from the two projects themselves at a
 pinned tag and refuses anything whose SHA-256 does not match. `--icons` repaints
 nothing that is not already on the machine and is undone by selecting another
 icon theme; it projects onto all seven values the kit authors, ACCENT, SELECT
@@ -120,7 +141,7 @@ with what you are doing: the hypothesis constrains hue against the signals
 the neutral ladder for a user who wants the dock grey. The icon generator needs
 Pillow, numpy and cairosvg — point `REMAINDER_PYTHON` at a venv that has them.
 
-`--art` sets the background to **Jar with Peonies and lid** (China, Ming
+The default background is **Jar with Peonies and lid** (China, Ming
 dynasty, 16th century; Fahua ware; Art Institute of Chicago 1938.454, Bequest of
 Kate S. Buckingham), fetched from the museum at a pinned IIIF URL, verified
 against a recorded SHA-256, and installed with its credit line beside it. It is
@@ -137,7 +158,10 @@ installer prints it: the object is shot on a light studio ground covering 71.1%
 of the frame at L 0.74–0.80, so WHITE over it measures Lc −35.9 at the median
 against −92.3 on the flat BLACK field. The surround stays BLACK — the image is
 fitted, not zoomed, so the tiling gaps still read as the rule — but the middle of
-the screen does not. Omit `--art` for the §5 desktop.
+the screen does not. It is the one place the kit knowingly ships under a floor
+in §0e, which is why the question states the number before you answer it.
+Answer 2, or pass `--black-field`, for the §5 desktop; `--no-wallpaper` keeps
+your own.
 
 ## Status
 

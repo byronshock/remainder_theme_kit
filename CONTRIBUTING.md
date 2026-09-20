@@ -375,7 +375,7 @@ the v3.003 release byte for byte and the four Montserrat faces did not match
 the repository its license names.
 
 **The kit ships no artwork either, and the rule is the same one.** §5 permits
-photographs as content, and `install.sh --art` fetches one — Art Institute of
+photographs as content, and the installer fetches one — Art Institute of
 Chicago 1938.454, *Jar with Peonies and lid*, which the museum publishes as
 public domain under its Open Access policy — from the museum's own IIIF
 endpoint at a pinned width, against a SHA-256 recorded in the installer, with

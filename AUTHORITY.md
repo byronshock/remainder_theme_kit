@@ -511,8 +511,8 @@ them rather than pretending to measure them:
   a function of what "12pt" renders at, taken to be about 16px effective. If
   that is wrong, every floor moves. It is the kit's weakest input and the
   reason §0c insists on margin.
-- **Wallpaper.** No painting, so no composed desktop. The default is a flat
-  **BLACK** field. The tiling gaps are the rule, and at BLACK they are
+- **Wallpaper.** No painting, so no composed desktop. The field is a flat
+  **BLACK** one. The tiling gaps are the rule, and at BLACK they are
   literally it: the rule is BLACK, so the gap between two windows is the same
   value as the line the kit draws — ΔE 0.0, where a DARK field left the two
   ΔE 23.7 apart and made the claim true only by approximation. It also buys the
@@ -520,6 +520,16 @@ them rather than pretending to measure them:
   on DARK. Dock tiles stay DARK and read against the field at ΔE 23.7, clear of
   the ΔE 17.1 floor. Photographs are content (§0a) and are permitted; nothing
   the kit generates is in color.
+
+  The installer's default background is one such photograph, fitted on the
+  field rather than covering it, so the surround and the tiling gaps are still
+  BLACK and everything above still holds of them. That default is a choice
+  about what a desktop should look like and not a measurement, and it has a
+  price this section will not hide: over the photograph's light studio ground
+  the desktop's own labels fall to Lc −35.9 at the median, under every floor in
+  §0e. It is the one place the kit knowingly ships under one. The installer
+  states the number in the question that offers it, and the flat field is the
+  second answer.
 
 ## 6. Principles
 
