@@ -115,6 +115,23 @@ Measured on 155.0.1 (deb), 2026-09-19, except where noted.
   (`moz-page-nav { --page-nav-...: ... }`). Only components with a real shadow
   root are affected; `--tab-*` and `--urlbar-*` are declared the same way and
   are read in the light DOM, where `:root` reaches them.
+
+  **The same rule bites outside shadow DOM, on ordinary inherited properties.**
+  Firefox declares `font-family` on its popups and `font-weight` on its menu
+  items, so a `font-family` or `font-weight` set on `:root` — with `!important`,
+  from the user origin — never reaches them. Importance does not cross
+  inheritance. Anything inherited that a theme cares about has to be declared on
+  the element that will render it.
+- **To reach the chrome from a script, use Marionette.** `--marionette` opens
+  Firefox's own automation socket (port 2828, length-prefixed JSON); its CHROME
+  context runs privileged JS against `browser.xhtml`, which is the only way to
+  open a XUL popup where the compositor will not let a script synthesise a
+  click. Firefox 155 gates that context behind the extra flag
+  `-remote-allow-system-access`. It works headless.
+- **A headless chrome screenshot does not composite a popup**, even one whose
+  `state` reads `open`, because XUL panels are separate widgets.
+  `getComputedStyle` reads back what the cascade produced and does not care, so
+  it is the better instrument for "what did this surface actually get".
 - **A brand-new profile shows the terms notice**, which dims the entire window —
   chrome included — at 75% black until it is answered. A first screenshot of a
   fresh profile therefore measures every surface at a quarter of its value.

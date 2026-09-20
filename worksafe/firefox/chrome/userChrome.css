@@ -559,9 +559,27 @@ menu, menuitem, menucaption, .menu-iconic, .toolbaritem-combined-buttons > toolb
   border-radius: 0 !important;
 }
 menupopup, panel, .panel-arrowcontent { --panel-border-radius: 0 !important; --arrowpanel-border-radius: 0 !important; }
-.panel-arrowcontent, menupopup, panelview {
+.panel-arrowcontent, menupopup, panelview, panel, #appMenu-popup, #widget-overflow {
   background-color: var(--rm-light) !important; color: var(--rm-black) !important;
   font-weight: 700 !important; border: 0 !important;
+  /* §5's face has to be declared here too. :root sets it and a panel does not inherit it: Firefox declares
+     a font-family ON the popup, and a declared value beats an inherited one however important the inherited
+     one was. The menus computed as the platform sans-serif until this line. */
+  font-family: "Montserrat", sans-serif !important;
+}
+/* The rows inside a panel are a LIST on it, exactly as the sidebar's tree is a list on the sidebar: WHITE,
+   BLACK at 400, Lc 91.8 -- the best pair the kit has, and better than the 61.2 the panel itself must take.
+   Both declarations are here because neither would arrive by inheritance. Firefox declares
+   `.subviewbutton { font-weight: 600 }` ON THE ITEM, and a declared value beats the 700 the panel hands
+   down, so the weight has to be declared here too -- it computed at 600, which is a tier APCA does not
+   define and the kit never authored. Measured by asking the running chrome what it computed, with the
+   menu actually open: build/../scratchpad Marionette probe, 2026-09-19. */
+#appMenu-popup .subviewbutton, panelview .subviewbutton, menupopup > menuitem, menupopup > menu,
+#widget-overflow toolbarbutton {
+  background-color: var(--rm-white) !important;
+  color: var(--rm-black) !important;
+  font-weight: 400 !important;
+  font-family: "Montserrat", sans-serif !important;
 }
 menupopup > menuitem:hover, menupopup > menu:hover, menupopup > menuitem[_moz-menuactive],
 menupopup > menu[_moz-menuactive], .subviewbutton:hover, .subviewbutton[open], .subviewbutton:focus-visible,

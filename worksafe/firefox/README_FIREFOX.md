@@ -130,11 +130,42 @@ does not cross inheritance. `build/firefox.py --coverage` now enumerates every
 separates the tokens whose own default blends from the rest, so the next one of
 these is a line of output instead of a thing to notice by eye.
 
-**What the screen pass still has not covered.** XUL popups — menus, the urlbar
-results list, doorhangers — need a click to open and this machine has no
-input-automation tool on Wayland. Their ground is the same LIGHT that the
-toolbar and the card were sampled at, and every pair in them is measured by
-`build/firefox.py`, but no pixel of one has been counted.
+**The popups are measured too, by asking the chrome rather than photographing
+it.** XUL menus need a click that Wayland will not let a script synthesise, and a
+headless chrome screenshot does not composite a popup even when it is open. But
+the cascade has already run by then, and `getComputedStyle` is its answer — for
+"did the menu actually get LIGHT", the computed value *is* the measurement, and a
+better one than counting pixels: exact, no window needed, and it names the
+element that lost instead of averaging a region. Firefox's own Marionette socket
+opens the menu (`PanelUI.show()` in chrome context) and reads the styles back.
+
+Measured that way with the app menu open, 2026-09-19:
+
+| Element | Ground | Text | Weight | Radius |
+|---|---|---|---|---|
+| the application menu panel | LIGHT | BLACK | 700 | 0 |
+| a panelview inside it | LIGHT | BLACK | 700 | 0 |
+| a menu item | WHITE | BLACK | 400 | 0 |
+| the overflow panel | LIGHT | BLACK | 700 | 0 |
+| the urlbar results list | LIGHT | BLACK | 700 | 0 |
+| the page context menu | LIGHT | BLACK | 700 | 0 |
+
+It found three things a screenshot could not have. The outer `panel` element
+computed **WHITE text on a transparent ground** — invisible on anything the kit
+paints, and waiting for the first child that did not get BLACK explicitly. Menu
+items computed **weight 600**, a tier APCA does not define and the kit never
+authored, because Firefox declares `.subviewbutton { font-weight: 600 }` *on the
+item*. And every popup computed the platform **sans-serif** rather than §5's
+Montserrat.
+
+All three are the same rule, the one `PLATFORM.md` records for `:host`: **a
+declared value beats an inherited one, however important the inherited one was.**
+`:root` can hand a face and a weight down the tree and any element that declares
+its own wins anyway. Three declarations on the popups fixed all three.
+
+A menu item is WHITE on the panel's LIGHT for the reason the sidebar's tree is:
+it is a list on a panel, and BLACK on WHITE is Lc 91.8 where BLACK on LIGHT is
+61.2. The panel is the frame; the rows are the field.
 
 ## Residue
 
