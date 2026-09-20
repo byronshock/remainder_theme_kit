@@ -95,10 +95,10 @@ on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
 the two ARIA states a page uses to say what it means — which is precisely the
 one use §3 permits them. **The all-sites sheet added a third surface and not one
-new value**: the count below was 60 before it landed and is 60 after. `build/firefox.py` is what makes that checkable rather than a claim: the
-sheet names them `--rm-legend-light` and `--rm-legend-dark`, and the checker
-fails if either is ever the text side of a pair whose ground is not one of §3's
-three.
+new value**: the count above was 60 before it landed and is 60 after.
+`build/firefox.py` is what makes that checkable rather than a claim: the sheet
+names them `--rm-legend-light` and `--rm-legend-dark`, and the checker fails if
+either is ever the text side of a pair whose ground is not one of §3's three.
 
 **The kit admits no exception at all.** The only one the authority
 names is platform residue (principle 1), which is tolerated where neither tier
