@@ -13,13 +13,13 @@ which it owes everything structural and parts with on one question
 
 | Role | Hex | L | C | Use |
 |---|---|---|---|---|
-| WHITE | `#F1E4E9` | 0.93 | 0.016 | window backgrounds, fields, lists |
-| LIGHT | `#BAADB2` | 0.76 | 0.016 | panels, buttons, non-key titlebars |
-| DARK | `#4B4045` | 0.38 | 0.017 | dock tiles, disabled text |
-| BLACK | `#10080C` | 0.15 | 0.017 | rules, text, badges, the desktop field |
-| ACCENT | `#763555` | 0.43 | 0.099 | key titlebars, links, toggles, focus |
-| SELECT | `#521436` | 0.31 | 0.099 | selected rows, WHITE text on it |
-| CURSOR | `#007891` | 0.53 | 0.096 | text cursor — the one value at another hue |
+| WHITE | `#EFE5E9` | 0.93 | 0.0120 | window backgrounds, fields, lists |
+| LIGHT | `#B8AEB2` | 0.76 | 0.0127 | panels, buttons, non-key titlebars |
+| DARK | `#4A4145` | 0.39 | 0.0139 | dock tiles, disabled text |
+| BLACK | `#0F090C` | 0.15 | 0.0122 | rules, text, badges, the desktop field |
+| ACCENT | `#773556` | 0.43 | 0.1007 | key titlebars, links, toggles, focus |
+| SELECT | `#531537` | 0.31 | 0.0993 | selected rows, WHITE text on it |
+| CURSOR | `#007891` | 0.53 | 0.0958 | text cursor — the one value at another hue |
 
 Plus the three signal colors, unchanged from De Stijl and the only hues in the
 system that mean anything: SUCCESS `#006B54`, WARNING `#FCD116`,
@@ -54,7 +54,7 @@ PLATFORM.md               theme-independent surface findings; parallel in both k
 
 build/ok.py               sRGB <-> OKLab/OKLCh, WCAG ratio, OKLab dE
 build/apca.py             APCA Lc, the text-contrast metric
-build/poles.py            the pole test:  python3 build/poles.py '#763555'
+build/poles.py            the pole test:  python3 build/poles.py '#773556'
                           the derived bars: python3 build/poles.py --bars
 build/derive_palette.py   solves the palette from the poles:  ... --write
 

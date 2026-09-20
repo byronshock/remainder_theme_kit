@@ -96,13 +96,28 @@ LOAD_BEARING = [('WHITE', 'LIGHT'), ('WHITE', 'DARK'), ('WHITE', 'ACCENT'), ('WH
                 ('BLACK', 'WHITE'), ('BLACK', 'LIGHT'), ('BLACK', 'DARK')]
 
 # CHOSEN: chrome recedes. A surface a user looks at for eight hours must not be a color;
-# it must be a gray that remembers one. Measured against a true neutral at the same lightness,
-# this cast is about 1.6 OKLab dE -- roughly one just-noticeable difference on a large field.
-# That is the intent: present when the two are compared, absent when the surface is alone.
-# Below about 0.014 it stops being perceptible at all and the kit is simply grey; at 0.020,
-# where it started, it reads as a faint pink rather than a warm neutral. Far under C_FLOOR
-# either way, so no user can read a hue in it.
-CAST = 0.016
+# it must be a gray that remembers one.
+#
+# MEASURED, 2026-09-20, on the machine this kit is built on: paired patches, each split down the
+# middle with the cast on one side and a true neutral at the same lightness on the other, at 0.002
+# steps, with a null control at 0.000 where both halves are byte-identical. The seam is PERCEPTIBLE
+# AT 0.004 (dE 0.43) and CLEARLY PERCEPTIBLE AT 0.006 (dE 0.57). The threshold is therefore about
+# three times lower than this file used to assert -- it said "below about 0.014 it stops being
+# perceptible at all", which was a judgement nobody had tested.
+#
+# So 0.0128 is not the smallest cast that can be seen. It is well above that, and the reason is a
+# choice about what the cast is FOR: a stronger hint that a surface is furniture and not a document
+# resting on the furniture. Backed off from 0.016 because that hint does not need to be as loud as
+# it was, and stopped here rather than lower because the hint is the point.
+#
+# 0.0130 was the round number wanted and it DOES NOT DERIVE: the best in-gamut teal at CURSOR's
+# chroma reaches Lc 60.4540 against the WHITE it produces, and the solver demands 60.0 + MARGIN.
+# It misses by 0.046 of an Lc point. 0.0128 is the nearest value below it and leaves CURSOR Lc 60.9,
+# four times the headroom 0.0135 would have left. Reachable casts are not a range -- CURSOR's floor
+# against an 8-bit WHITE makes them islands, and this is the top of the one below 0.013.
+#
+# Far under C_FLOOR either way, so no user can read a hue in it.
+CAST = 0.0128
 # CHOSEN: the two things that must be noticed -- the key titlebar and the selected row --
 # are allowed a real hue. Just above C_FLOOR, so they are honestly hue-bearing and have to
 # pass the pole test rather than escape it as neutrals. Far below a signal's own chroma
@@ -161,6 +176,15 @@ def ladder(C, hue=None):
     keep = np.all((v >= -0.5) & (v <= 255.5), axis=-1)
     v, L = v[keep], _L[keep]
     q = np.clip(np.round(v), 0, 255)
+    # And drop anything the clip turned into a different colour. The tolerance above admits a value that
+    # is just outside the gamut, and clipping it to 0..255 moves it off the chroma and hue that were asked
+    # for -- at the cursor's chroma near the black end it yields #000009, which is chroma 0.044 at hue 264
+    # and reads as a near-black, not a teal. Nothing shipped picks one: the solver takes the LIGHTEST value
+    # that clears its floor, so a near-black outlier never wins. But it is in the ladder, it answers
+    # questions asked of the ladder wrongly, and a future floor could make it the only candidate.
+    Cr = ok.lch_grid(q)[1]
+    true = np.abs(Cr - C) <= 0.005
+    q, L = q[true], L[true]
     return L, [ok.hexs(x) for x in q], ok.luminance_grid(q)
 
 

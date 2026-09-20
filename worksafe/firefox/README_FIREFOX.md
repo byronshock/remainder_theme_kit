@@ -26,20 +26,20 @@ Measured on **Firefox 155.0.1** (deb) on COSMIC, 2026-09-19.
 
 | Surface | Value | Text |
 |---|---|---|
-| tab strip, key window | ACCENT `#763555` | WHITE, 400 — Lc −78.5 |
-| tab strip, non-key window | LIGHT `#BAADB2` | BLACK, 700 — Lc 61.2 |
-| the current tab | LIGHT `#BAADB2` | BLACK, 700 |
-| a hovered tab | BLACK `#10080C` | WHITE, 400 — Lc −92.3 |
-| toolbars, bookmarks bar | LIGHT `#BAADB2` | BLACK, 700 |
-| address and search fields | WHITE `#F1E4E9` | BLACK, 400 — Lc 91.8 |
-| menus, panels, the results list | LIGHT `#BAADB2` | BLACK, 700 |
-| buttons on a panel | WHITE `#F1E4E9` | BLACK, 400 |
-| hover, and the selected row | SELECT `#521436` | WHITE, 400 — Lc −87.5 |
-| pressed | BLACK `#10080C` | WHITE |
-| a toggle that is on | ACCENT `#763555` | WHITE |
-| focus ring, links | ACCENT `#763555` | — links keep the underline (§3) |
+| tab strip, key window | ACCENT `#773556` | WHITE, 400 — Lc −78.5 |
+| tab strip, non-key window | LIGHT `#B8AEB2` | BLACK, 700 — Lc 61.2 |
+| the current tab | LIGHT `#B8AEB2` | BLACK, 700 |
+| a hovered tab | BLACK `#0F090C` | WHITE, 400 — Lc −92.3 |
+| toolbars, bookmarks bar | LIGHT `#B8AEB2` | BLACK, 700 |
+| address and search fields | WHITE `#EFE5E9` | BLACK, 400 — Lc 91.8 |
+| menus, panels, the results list | LIGHT `#B8AEB2` | BLACK, 700 |
+| buttons on a panel | WHITE `#EFE5E9` | BLACK, 400 |
+| hover, and the selected row | SELECT `#531537` | WHITE, 400 — Lc −87.5 |
+| pressed | BLACK `#0F090C` | WHITE |
+| a toggle that is on | ACCENT `#773556` | WHITE |
+| focus ring, links | ACCENT `#773556` | — links keep the underline (§3) |
 | the caret | CURSOR `#007891` | Lc 60.7 on WHITE |
-| disabled | its own ground | DARK `#4B4045` |
+| disabled | its own ground | DARK `#4A4145` |
 
 Every nesting alternates WHITE and LIGHT, ΔE 17.1 — the separator §5 names and
 the floor §2 derives from it. Nothing draws a line: §5 has no rule thinner than
@@ -96,7 +96,7 @@ blends, six remain, and all six are shadows or the modal scrim.
 
 Sampled by region from a `cosmic-screenshot` of two running windows — one key on
 `about:preferences`, one not — at 3840×2160 and 150%, 2026-09-19. The distinct
-values over 3% of any region are `#521436 #763555 #BAADB2 #F1E4E9`, and
+values over 3% of any region are `#531537 #773556 #B8AEB2 #EFE5E9`, and
 `build/poles.py` exits zero on all four:
 
 | Region | Authored | Modal |

@@ -307,9 +307,9 @@ else
 mkdir -p "$PICS"
 python3 - "$BGPNG" <<'PY'
 import struct, sys, zlib
-out, w, h = sys.argv[1], 16, 16                     # BLACK #10080C (§2, §5). Zoom fills any output.
+out, w, h = sys.argv[1], 16, 16                     # BLACK #0F090C (§2, §5). Zoom fills any output.
 def chunk(t, d): return struct.pack('>I', len(d)) + t + d + struct.pack('>I', zlib.crc32(t + d) & 0xffffffff)
-row = b'\x00' + bytes([0x10, 0x08, 0x0C]) * w
+row = b'\x00' + bytes([0x0F, 0x09, 0x0C]) * w
 png = (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 2, 0, 0, 0))
        + chunk(b'IDAT', zlib.compress(row * h, 9)) + chunk(b'IEND', b''))
 open(out, 'wb').write(png)
@@ -397,7 +397,7 @@ BGMODE="Zoom"
 if [ "$BGCHOICE" = art ]; then
   if install_art; then
     BGSRC="$ART_FILE"
-    BGMODE="Fit((0.062745, 0.031373, 0.047059))"   # BLACK #10080C: 16/255, 8/255, 12/255
+    BGMODE="Fit((0.058824, 0.035294, 0.047059))"   # BLACK #0F090C: 16/255, 8/255, 12/255
   else
     say "artwork NOT installed -- nothing unverified was written; keeping the flat BLACK field"
     ART_FAILED=1

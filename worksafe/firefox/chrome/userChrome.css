@@ -21,12 +21,12 @@
 
 :root {
   /* §2 and §3. The kit's ten authored values; build/firefox.py checks each against palette.json. */
-  --rm-white:  #F1E4E9;   /* window fields, in-window lists, the urlbar             */
-  --rm-light:  #BAADB2;   /* toolbars, panels, menus, buttons, non-key titlebar     */
-  --rm-dark:   #4B4045;   /* disabled and secondary text                            */
-  --rm-black:  #10080C;   /* text, marks, the hovered tab                           */
-  --rm-accent: #763555;   /* key titlebar, links, toggles, nav indicators, focus    */
-  --rm-select: #521436;   /* hover, selected rows, selected text                    */
+  --rm-white:  #EFE5E9;   /* window fields, in-window lists, the urlbar             */
+  --rm-light:  #B8AEB2;   /* toolbars, panels, menus, buttons, non-key titlebar     */
+  --rm-dark:   #4A4145;   /* disabled and secondary text                            */
+  --rm-black:  #0F090C;   /* text, marks, the hovered tab                           */
+  --rm-accent: #773556;   /* key titlebar, links, toggles, nav indicators, focus    */
+  --rm-select: #531537;   /* hover, selected rows, selected text                    */
   --rm-cursor: #007891;   /* the text caret, and nothing else (§2)                  */
   --rm-success:     #006B54;
   --rm-warning:     #FCD116;

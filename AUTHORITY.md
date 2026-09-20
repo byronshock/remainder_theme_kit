@@ -101,7 +101,7 @@ Stijl of. The chosen constants are:
 | Constant | Value | Why |
 |---|---|---|
 | `HOME_HUE` | 351.0° | exposure, not geometry (§1) |
-| `CAST` | 0.016 | the neutrals' cast (§2) |
+| `CAST` | 0.0128 | the neutrals' cast — measured, then chosen above it (§2) |
 | `CHROME` | 0.1 | the chrome hues' chroma (§2) |
 | `CURSOR_HUE` | 219.1° | a locator, not furniture (§2) |
 | `CURSOR_CHROMA` | 0.096 | forced by the teal gamut, not chosen freely |
@@ -133,7 +133,7 @@ range. It is not a magenta anyway, for the second reason:
 
 Magenta is a chroma phenomenon before it is a hue one. Every named magenta
 sits above chroma **0.18**. The kit authors at **0.1** and
-**0.016**, and at those levels the same hues are mauve and
+**0.0128**, and at those levels the same hues are mauve and
 dusty rose. The neon palette an early derivation returned failed on chroma
 (0.196–0.292), not on hue. **The chrome ceiling is the magenta guard**, and an
 angular one would buy nothing it can hold.
@@ -162,7 +162,7 @@ hides. The kit's UI renders at about 16px effective (§2 typography):
 | 15 | the visibility floor; nothing below it |
 
 One consequence, recorded rather than hidden: **the kit no longer passes a
-naive WCAG audit.** `WHITE` on `ACCENT` is 7.1:1, under WCAG AA for normal
+naive WCAG audit.** `WHITE` on `ACCENT` is 7.0:1, under WCAG AA for normal
 text, while APCA rates it Lc 78.5 — correct for the bold titlebar text it
 actually carries. The kit follows the metric that models reading.
 
@@ -217,7 +217,7 @@ A color is **clear** if its chroma is below `C_FLOOR`, or its hue clears
 every arc by `DELTA_REQ`. Chrome must be clear. Nothing else is chrome.
 
 ```
-python3 build/poles.py '#763555' '#FF6B6B'
+python3 build/poles.py '#773556' '#FF6B6B'
 python3 build/poles.py --bars
 ```
 
@@ -283,22 +283,51 @@ solved against the floors in §0e; the chosen constants are listed in §0c.
 ### Neutrals — the cast
 
 Chrome recedes. A surface a user looks at for eight hours must not be a color;
-it must be a gray that remembers one. Chroma **0.016** (chosen): measured
-against a true neutral at the same lightness this is about 1.6 OKLab ΔE,
-roughly one just-noticeable difference on a large field. That is the intent —
-present when the two are compared, absent when the surface is alone. Below
-about 0.014 it stops being perceptible at all; at 0.020 it reads as a faint
-pink rather than a warm neutral.
+it must be a gray that remembers one. Chroma **0.0128** (chosen).
+
+**The threshold is measured, and it is far lower than this section used to
+claim.** Paired patches, each split down the middle with the cast on one side
+and a true neutral at the same lightness on the other, at 0.002 steps, with a
+null control at 0.000 where both halves are byte-identical. Read on this kit's
+own display, 2026-09-20: the seam is **perceptible at 0.004** (ΔE 0.43) and
+**clearly perceptible at 0.006** (ΔE 0.57). What stood here before — "below
+about 0.014 it stops being perceptible at all" — was a judgement nobody had
+tested, and it was wrong by a factor of three. It is retired to
+`CONTRIBUTING.md` §9 with the rest of the failed trials.
+
+So 0.0128 is not the least cast that can be seen; it is three times it, and the
+reason is what the cast is *for*. A stronger hint that a surface is **furniture,
+and not a document resting on the furniture**. Backed off from 0.016 because
+that hint does not need to be as loud as it was, and stopped here rather than
+lower because the hint is the point.
+
+**0.0130 was the round number wanted and it does not derive.** The best in-gamut
+teal at CURSOR's chroma reaches Lc 60.4540 against the WHITE that cast produces,
+where the solver demands 60.0 plus its margin — it misses by 0.046 of an Lc
+point. Reachable casts are not a range but islands, because CURSOR's floor is
+read against a WHITE quantised to 8 bits; 0.0128 is the top of the island below
+0.013, and it leaves CURSOR Lc 60.9 where 0.0135 would have left 60.6.
 
 | Role | Hex | L | C | Use |
 |---|---|---|---|---|
-| WHITE | `#F1E4E9` | 0.93 | 0.016 | window backgrounds, fields, lists |
-| LIGHT | `#BAADB2` | 0.76 | 0.016 | panels, buttons, non-key titlebars |
-| DARK | `#4B4045` | 0.38 | 0.017 | dock tiles, disabled text |
-| BLACK | `#10080C` | 0.15 | 0.017 | rules, text, badges, the desktop field |
+| WHITE | `#EFE5E9` | 0.93 | 0.0120 | window backgrounds, fields, lists |
+| LIGHT | `#B8AEB2` | 0.76 | 0.0127 | panels, buttons, non-key titlebars |
+| DARK | `#4A4145` | 0.39 | 0.0139 | dock tiles, disabled text |
+| BLACK | `#0F090C` | 0.15 | 0.0122 | rules, text, badges, the desktop field |
 
 The four-step ladder is NeXTSTEP AppKit structure, inherited from De Stijl as
 convention. **The steps are borrowed; the values are derived or declared.**
+
+**The kit authors at 351.0° and renders within a band around it, not on the
+line.** Hue is an angle taken from two small numbers, and at the cast's chroma
+those numbers are small enough that rounding to 8 bits moves the angle: the four
+neutrals land at 351.0°, 351.1°, 349.1°, 347.0° — a spread of 4.1°, none of it authored and none of it
+avoidable while the output is sRGB. It costs nothing. Every one of them is far
+under `C_FLOOR`, so the pole test passes them as carrying no readable hue and
+asks no clearance of them at all; the clearances reported for them move by a
+degree or two between casts for this reason alone, and reading that as drift is
+reading quantisation as intent. The three chrome hues carry enough chroma that
+the same rounding moves them by a few tenths.
 
 `WHITE_L` and `LIGHT_L` are both pinned, and that is deliberate: the surface
 floor below is derived from WHITE against LIGHT, so a floating LIGHT means a
@@ -312,7 +341,7 @@ text floor above. APCA soft-clamps the black end — below a threshold, darker
 text buys almost nothing — so darkening BLACK is nearly free: it *raised*
 BLACK on WHITE from 90.6 to 91.8 while roughly doubling DARK's margins.
 The cost is headroom against pure `#000000`, which §3 reserves for legend:
-ΔE 20.9 → **14.9**. Still clearly short of it, and spent deliberately.
+ΔE 20.9 → **15.0**. Still clearly short of it, and spent deliberately.
 
 DARK is solved differently from the rest: it is pulled lighter so the BLACK
 rule reads against it, and darker for its own white labels. It takes the point
@@ -328,8 +357,8 @@ accent is not competing with an error dialog for attention.
 
 | Role | Hex | L | C | Use |
 |---|---|---|---|---|
-| ACCENT | `#763555` | 0.43 | 0.099 | key titlebars, links, toggles, nav indicators, focus |
-| SELECT | `#521436` | 0.31 | 0.099 | selected rows and selected text, WHITE on it |
+| ACCENT | `#773556` | 0.43 | 0.1007 | key titlebars, links, toggles, nav indicators, focus |
+| SELECT | `#531537` | 0.31 | 0.0993 | selected rows and selected text, WHITE on it |
 
 **Selection is a dark ground carrying light text, not a pale tint.** A pale
 selection cannot do both jobs at this chroma: every tint light enough to carry
@@ -347,7 +376,7 @@ what communicates "selected." A soft edge against the titlebar hides nothing.
 
 | Role | Hex | L | C | Use |
 |---|---|---|---|---|
-| CURSOR | `#007891` | 0.53 | 0.096 | text cursor indicator, terminal cursor |
+| CURSOR | `#007891` | 0.53 | 0.0958 | text cursor indicator, terminal cursor |
 
 ACCENT, SELECT and the neutrals are furniture — read once, then unseen. A text
 cursor is a **locator**: its whole purpose is to be found fast, repeatedly, on
@@ -368,12 +397,12 @@ simultaneous margins: +0.004 chroma, 0.8° inside the guard edge, +0.7 Lc.
 
 | Pair | Lc | Floor | Margin | Carries |
 |---|---|---|---|---|
-| BLACK on WHITE | 91.8 | 90 | +1.8 | body text on the window field, 16px/400 |
-| BLACK on LIGHT | 61.2 | 60 | +1.2 | panel and button text, 16px/700 bold (§2) |
+| BLACK on WHITE | 91.9 | 90 | +1.9 | body text on the window field, 16px/400 |
+| BLACK on LIGHT | 61.3 | 60 | +1.3 | panel and button text, 16px/700 bold (§2) |
 | WHITE on DARK | -81.7 | 75 | +6.7 | dock tile labels, 16px/400 |
 | WHITE on ACCENT | -78.5 | 60 | +18.5 | titlebar text, 16px/700 bold (§2) |
 | WHITE on SELECT | -87.5 | 75 | +12.5 | text on a selected row, 16px/400 |
-| CURSOR on WHITE | 60.7 | 60 | +0.7 | the text cursor: a mark, wants to be seen |
+| CURSOR on WHITE | 60.9 | 60 | +0.9 | the text cursor: a mark, wants to be seen |
 
 Solved with a margin so each pair still clears after rounding to 8 bits.
 Three pairs sit near their floor for structural reasons, not by choice: LIGHT
@@ -400,9 +429,9 @@ Load-bearing boundaries, weakest first:
 | Pair | ΔE |
 |---|---|
 | WHITE / LIGHT | 17.1 |
-| BLACK / DARK | 23.7 |
+| BLACK / DARK | 23.6 |
 | LIGHT / ACCENT | 34.4 |
-| LIGHT / DARK | 37.5 |
+| LIGHT / DARK | 37.4 |
 | WHITE / CURSOR | 41.5 |
 
 The remaining 6 clear by 30 or more.
@@ -417,10 +446,10 @@ than as a line drawn on it.
 
 | Exempt pair | ΔE | Why |
 |---|---|---|
-| ACCENT / SELECT | 11.8 | selection reads against the rows around it, not the titlebar above |
-| SELECT / BLACK | 18.0 | rule meeting chrome at a window edge |
-| ACCENT / BLACK | 29.0 | rule meeting chrome at a window edge |
-| DARK / SELECT | 11.2 | they do not touch |
+| ACCENT / SELECT | 11.7 | selection reads against the rows around it, not the titlebar above |
+| SELECT / BLACK | 18.4 | rule meeting chrome at a window edge |
+| ACCENT / BLACK | 29.2 | rule meeting chrome at a window edge |
+| DARK / SELECT | 11.3 | they do not touch |
 
 ## 3. Semantic state — the axiom
 

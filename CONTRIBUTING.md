@@ -52,7 +52,7 @@ Every color the kit authors as chrome is **clear**: its chroma is below
 chroma. Nothing else is chrome.
 
 ```
-python3 build/poles.py '#763555' '#FF6B6B'
+python3 build/poles.py '#773556' '#FF6B6B'
 ```
 
 It prints each value with its nearest pole family, the gap, and what that
@@ -344,6 +344,8 @@ right".
 | solving `BLACK_L` | L 0.21 | squeezed DARK into a corridor 0.076 wide (§2) |
 | an even eleven-slot COSMIC ramp | DARK off by ΔE 0.1, LIGHT by 1.4 | the platform would paint unauthored values (§8) |
 | WCAG 2.x contrast | four pairs identical at "AAA 7.1:1" | APCA separates them Lc 51.7 to 78.9; two were display-type only (§0e) |
+| "below 0.014 the cast stops being perceptible" | a declared threshold | measured 2026-09-20 at **0.004**, three times lower; §2 now carries the reading (§9) |
+| a cast of 0.0130, the round number | does not derive | CURSOR's best teal reaches Lc 60.4540 where the solver demands 60.5 — reachable casts are islands, not a range (§2) |
 
 A value with no measurement beside it is a guess, and the next person cannot
 tell it from a measured one.
@@ -359,6 +361,18 @@ using every authored value in the role it actually plays — so "is this pleasan
 to look at for eight hours" can be asked of something that looks like a screen.
 SVG, so it needs nothing installed and diffs as text. The raster beside it is
 not committed (§11).
+
+**The sheet reads its opinions out of `palette.json` rather than holding any.**
+Both the text colour for a ground and the *weight* that ground demands are
+derived there: an authored floor of Lc 60 is APCA's 16px/700 tier, and anything
+at 75 or 90 is a body tier at 400. This is not tidiness — it is how the picture
+stops drifting from the numbers. It has drifted twice. Once when SELECT flipped
+from a pale ground carrying BLACK to a dark one carrying WHITE and the mock went
+on drawing BLACK on it; and once when it drew an unselected panel row as BLACK
+on LIGHT at regular weight, Lc 61.2 against a 400-weight floor of 75 — the exact
+pair `build/firefox.py` fails a rule for. A proof sheet that contradicts the
+authority is worse than none, because it is the picture someone checks the kit
+against.
 
 On a surface that installs, the proof sheet is not enough: the theme a toolkit
 builds is not the theme that was imported. COSMIC derives surfaces no file

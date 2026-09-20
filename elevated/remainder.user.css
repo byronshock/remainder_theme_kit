@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Remainder
 @namespace      github.com/byronshock/remainder_theme_kit
-@version        0.1.3
+@version        0.1.6
 @description    Remainder for websites: WHITE ground and documents, LIGHT fields and panels, ACCENT links kept underlined, SELECT selection carrying WHITE, the CURSOR caret, one BLACK rule at 22px, Montserrat and Hack, no curves, no hairlines. Tier: elevated — no elevation on this surface, but its reach is every site.
 @author         Byron Shock, Ph.D.
 ==/UserStyle== */
@@ -39,6 +39,24 @@
    images off non-media, inline too — but not off sprite icons, or the icon vanishes and leaves its label.
    L5 font rules carry no !important: with it, every icon-font glyph renders as tofu.
 
+   0.1.6: the palette moved. CAST 0.016 -> 0.0128, so every neutral and both chrome hues are one or two
+          code values along; nothing about this sheet's structure changed and no pair moved off its floor.
+   0.1.5: 0.1.4 fixed the wrong half. The text rule reached every descendant and the ground rule reached
+          one level -- `tbody tr:hover > td` -- so an element between them could repaint the ground while
+          the text still flipped, and a mail client does exactly that: it nests a table inside the row's
+          cell, the documents rule paints table/tbody/td WHITE, and the row came back WHITE on WHITE.
+          Measured across a real inbox row: SELECT on the checkbox and star cells, WHITE from x 436 on.
+          Now the ROW paints and every descendant goes transparent so it shows through, and
+          text-decoration-color travels with the colour -- an ACCENT underline on the dark ground was all
+          that was left visible when the text went.
+   0.1.4: a selected row in a mail client was BLACK on SELECT -- Lc 0.0, invisible, and measured at the
+          pixel off a screenshot of a real inbox: glyph cores #0F090C on a #531537 ground. The selection
+          rules paint eleven grounds and only seven of them had a matching descendant rule, so the text
+          inside the other four kept whatever was declared on it. The one that mattered is `tbody
+          tr:hover`, which is every table-based list there is. The deeper cause is this sheet arguing
+          with itself: 0.1.1 added a container rule that forces BLACK on every div, and a div inside a
+          hovered row declares that BLACK and beats the WHITE it would have inherited. The descendant
+          list now mirrors the ground list.
    0.1.3: text fields were doing what the buttons were. A native text input is painted by the widget theme
           too, so every well on every site rendered #FFFFFF -- the one value §3 refuses outright, in the
           place a user looks at most. Measured at 21,193 px across two inputs on one fixture page. The
@@ -72,12 +90,12 @@
 @-moz-document url-prefix("http"), url-prefix("file") {
 
 :root {
-  --rm-white:  #F1E4E9;
-  --rm-light:  #BAADB2;
-  --rm-dark:   #4B4045;
-  --rm-black:  #10080C;
-  --rm-accent: #763555;
-  --rm-select: #521436;
+  --rm-white:  #EFE5E9;
+  --rm-light:  #B8AEB2;
+  --rm-dark:   #4A4145;
+  --rm-black:  #0F090C;
+  --rm-accent: #773556;
+  --rm-select: #531537;
   --rm-cursor: #007891;
   --rm-success:     #006B54;
   --rm-warning:     #FCD116;
@@ -303,14 +321,37 @@ a[role="button"], a[class*="btn" i], a[class*="button" i], nav a, header a, foot
 /* The current thing, and the thing under the pointer, are one state and one value (§2). */
 /* A row's own cells have to be named, not just the row: td is a document above and paints WHITE straight
    over a selected tr. The fixture's selected row came back WHITE 98% and the frame held no SELECT at all. */
-mark, option:checked, [aria-current], [aria-selected="true"], [role="menuitem"]:hover, [role="option"]:hover, [role="menu"] li:hover, [role="listbox"] li:hover, tbody tr:hover > td, tbody tr:hover > th, li[aria-selected="true"], tr[aria-selected="true"], tr[aria-selected="true"] > td, tr[aria-selected="true"] > th, [aria-current] > td, [aria-current] > th, [role="option"][aria-selected="true"], [role="row"][aria-selected="true"], [role="row"][aria-selected="true"] > [role="cell"], [role="tab"][aria-selected="true"] {
+/* THE CONTAINER PAINTS AND EVERYTHING INSIDE IT GOES TRANSPARENT. Naming the cells instead of the row
+   was not enough, and 0.1.4's descendant rule made it worse rather than better: the text rule reached all
+   the way down while the ground rule reached one level, so an element in between could repaint the ground
+   and the text would still have flipped. That is what a mail client does -- it nests a table inside the
+   row's cell, the documents rule above paints `table, tbody, td` WHITE, and a hovered row came back WHITE
+   text on a WHITE ground. Measured across a real inbox row: the checkbox and star cells were SELECT and
+   everything from x 436 on was WHITE, with the text invisible on it.
+   So the row paints, and every descendant is made transparent so the row shows through. The one cost is
+   that a chip with its own inline background loses it for as long as the row is hovered; its text still
+   reads, WHITE on SELECT, and the row is a state the user is holding rather than a surface they are
+   reading. text-decoration-color goes with it, or a link's underline stays ACCENT on the dark ground --
+   which is exactly what was left showing when the text went. */
+mark, option:checked, [aria-current], [aria-selected="true"], [role="menuitem"]:hover, [role="option"]:hover, [role="menu"] li:hover, [role="listbox"] li:hover, tbody tr:hover, li[aria-selected="true"], tr[aria-selected="true"], [role="option"][aria-selected="true"], [role="row"][aria-selected="true"], [role="tab"][aria-selected="true"] {
   background-color: var(--rm-select) !important;
   color: var(--rm-white) !important;
   -webkit-text-fill-color: var(--rm-white) !important;
+  text-decoration-color: var(--rm-white) !important;
 }
-mark *, [aria-current] *, [aria-selected="true"] *, [role="menuitem"]:hover *, [role="option"]:hover *, li[aria-selected="true"] *, tr[aria-selected="true"] *, [role="option"][aria-selected="true"] *, [role="row"][aria-selected="true"] *, [role="tab"][aria-selected="true"] * {
+/* EVERY ground above needs this list, and the one that was missing from it is the one a mail client
+   uses: a hovered table row. The ground flipped to SELECT and the text stayed BLACK -- Lc 0.0, the one
+   number in the kit that means invisible -- and the cause was this sheet arguing with itself. The
+   container rule above forces BLACK on every div so a site's own colour cannot survive on the new
+   ground; a div inside a hovered row then DECLARES that BLACK, and beats the WHITE it would otherwise
+   have inherited from the td. Inheritance loses to declaration, again, and this time it was the kit's
+   own two rules on either side of it. So the descendant list mirrors the ground list exactly: a ground
+   that can hold children is named here with ` *`, at a specificity that outranks the container rule. */
+mark *, [aria-current] *, [aria-selected="true"] *, [role="menuitem"]:hover *, [role="option"]:hover *, [role="menu"] li:hover *, [role="listbox"] li:hover *, tbody tr:hover *, li[aria-selected="true"] *, tr[aria-selected="true"] *, [role="option"][aria-selected="true"] *, [role="row"][aria-selected="true"] *, [role="tab"][aria-selected="true"] * {
+  background-color: transparent !important;
   color: var(--rm-white) !important;
   -webkit-text-fill-color: var(--rm-white) !important;
+  text-decoration-color: var(--rm-white) !important;
 }
 /* The caret, at last on a ground the kit set. §2 gives CURSOR exactly one job — a locator, found fast and
    repeatedly on a field of text — and this is the only sheet in the kit whose reach is every field a user
