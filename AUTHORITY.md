@@ -536,6 +536,22 @@ them rather than pretending to measure them:
   a function of what "12pt" renders at, taken to be about 16px effective. If
   that is wrong, every floor moves. It is the kit's weakest input and the
   reason §0c insists on margin.
+
+  **The cuts are Medium and ExtraBold**, not Regular and Bold, and the reason is
+  the same margin. Montserrat Regular reads thin at 16px, and weight is the one
+  input here that is *safe in one direction only*: every floor in the kit gets
+  easier as the rendered weight goes up and harder as it comes down. The pair
+  with nothing to lose is BLACK on LIGHT at Lc 61.2 — +1.2 over APCA's 16px/700
+  tier, on a ground §2 pins because `SURFACE_FLOOR` is derived from it — so a
+  lighter bold could not be paid for by moving a colour. Both cuts moved the
+  safe way: 400 → 500 and 700 → 800. The stylesheets still declare 400 and 700
+  and are untouched; CSS font matching resolves those to the installed 500 and
+  800, which keeps the declared weight the one the checkers measure against and
+  makes the rendered weight heavier than that floor assumes. Choosing the other
+  direction would have made `build/firefox.py`'s weight-aware floor a false
+  pass, which is worse than a failing one. Verified on the running chrome,
+  2026-09-19: a tab label at declared 700 renders Montserrat ExtraBold and the
+  toolbar at 400 renders Montserrat Medium.
 - **Wallpaper.** No painting, so no composed desktop. The field is a flat
   **BLACK** one. The tiling gaps are the rule, and at BLACK they are
   literally it: the rule is BLACK, so the gap between two windows is the same

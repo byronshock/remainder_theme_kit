@@ -221,11 +221,22 @@ HACK_LICENSE_URL="https://raw.githubusercontent.com/source-foundry/Hack/$HACK_TA
 HACK_LICENSE_SHA=1f61bb7c790c59b4b0ecdf304628b94e42ae4c8020094a8c3da73381ab212623
 MONT_TAG=v7.222
 MONT_RAW="https://raw.githubusercontent.com/JulietaUla/Montserrat/$MONT_TAG"
-# file:sha256 — the four faces §5 asks for, plus the licence the OFL requires to travel with them
-MONT_FILES="fonts/ttf/Montserrat-Regular.ttf:6eabd0fb8e3066b6155bac338ef5a6c35b9963ab3f39be7c67edc4a99d870699
-fonts/ttf/Montserrat-Bold.ttf:4e6d93bc38122c371acb8dc0dbefbf2649c235191e1be136bb5720546d719808
-fonts/ttf/Montserrat-Italic.ttf:928e6fc816a1502dc21514f38ae5f9e6d59ca6a857fa96eeb1e63756aa3e6233
-fonts/ttf/Montserrat-BoldItalic.ttf:9a2f1e3179e3a9254cb09c0cb2f7fccab0ad00863ddcb5cb5abf89c036125dda
+# file:sha256 — the four faces §5 asks for, plus the licence the OFL requires to travel with them.
+# The cuts are MEDIUM and EXTRABOLD, not Regular and Bold, and that is a choice with a measured direction.
+# Montserrat Regular reads thin at the ~16px §5 assumes. Every contrast floor in the kit gets EASIER as the
+# rendered weight goes up and harder as it comes down, and the pair with no room to lose is BLACK on LIGHT
+# at Lc 61.2 -- +1.2 over APCA's 16px/700 tier, on a ground §2 pins because SURFACE_FLOOR is derived from
+# it. So the safe direction is heavier, and both cuts moved that way: 400 -> 500 and 700 -> 800.
+# The stylesheets are untouched and still say font-weight 400 and 700. CSS font matching resolves 400 to
+# the 500 face and 700 to the 800 face when those are the ones installed, so the declared weight stays the
+# one build/firefox.py measures its floors against and the rendered weight is heavier than that floor
+# assumes. Going the other way -- a bold LIGHTER than 700 -- would have made that checker a false pass,
+# which is worse than a failing one.
+# Re-recorded from the authoritative download at the pinned tag, 2026-09-19.
+MONT_FILES="fonts/ttf/Montserrat-Medium.ttf:7ce96811837174f00c087b73332aed3f04a19069248ab46213d9ea05ff879cbc
+fonts/ttf/Montserrat-ExtraBold.ttf:1b364c3400bf7b1cc2c47a25dd0d3edd8331da451412aa5539080f78f8f70b63
+fonts/ttf/Montserrat-MediumItalic.ttf:c1715ca387d44de2216a7b3e298aa7ec80d89619aead93ba4db6ae8d5bd37abf
+fonts/ttf/Montserrat-ExtraBoldItalic.ttf:f034db8c7857e3b7d719c52830fd9760237498697b450997343d19afa513023c
 OFL.txt:41f82bb4d24b304f30f7136bc47abdd083782e4265c984160f5649d1e78ea49c"
 
 install_fonts() {
@@ -244,6 +255,12 @@ install_fonts() {
   verify "$TMP/Hack-LICENSE.md" "$HACK_LICENSE_SHA" || return 1
   cp "$TMP/Hack-LICENSE.md" "$FONTS/hack/LICENSE.md"
 
+  # Clear the family first. A face this kit installed under an earlier set of cuts does not go away on its
+  # own, and CSS font matching takes an EXACT weight over a near one -- leave Regular on the machine and
+  # font-weight 400 keeps resolving to it, so changing the cuts would do nothing at all and look like it
+  # had worked. Only this kit's own directory is touched; a Montserrat the user installed elsewhere is
+  # theirs and is not the kit's to remove.
+  rm -f "$FONTS/montserrat"/*.ttf
   say "fetching Montserrat $MONT_TAG from JulietaUla/Montserrat"
   echo "$MONT_FILES" | while IFS=: read -r path sha; do
     [ -n "$path" ] || continue

@@ -574,8 +574,14 @@ menupopup, panel, .panel-arrowcontent { --panel-border-radius: 0 !important; --a
    down, so the weight has to be declared here too -- it computed at 600, which is a tier APCA does not
    define and the kit never authored. Measured by asking the running chrome what it computed, with the
    menu actually open: build/../scratchpad Marionette probe, 2026-09-19. */
+/* The label is a child, and it declares its own weight -- so naming the button was not enough. The item
+   computed 400 and the <label> inside it still computed 600, which is the same rule one level deeper: a
+   declared value beats an inherited one. Measured by reading back the element that actually HOLDS the text
+   rather than the container, which is the only way the weight and the rendered face are the same fact. */
 #appMenu-popup .subviewbutton, panelview .subviewbutton, menupopup > menuitem, menupopup > menu,
-#widget-overflow toolbarbutton {
+#widget-overflow toolbarbutton,
+#appMenu-popup .subviewbutton label, panelview .subviewbutton label, menupopup > menuitem label,
+menupopup > menu label, #widget-overflow toolbarbutton label {
   background-color: var(--rm-white) !important;
   color: var(--rm-black) !important;
   font-weight: 400 !important;
