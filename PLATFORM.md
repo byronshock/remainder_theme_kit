@@ -98,6 +98,13 @@ values, and tiling gaps are all settable per-user with no sudo.
   which reads no theme file at all, prints the identical pair. Do not suppress
   them in an installer; a real import failure would go with them.
 
+- **The compositor draws a 2 px outline around every window** at 150% (one
+  logical pixel), native and foreign alike, in a value derived from the theme
+  and not settable by a window's own theme. Measured 2026-09-20 on a COSMIC
+  Files window and on two Electron windows in the same frame: the same value
+  on all three. A pixel pass over a window's edge finds it; it is the
+  compositor's, not the window's.
+
 **Cannot reach:** this libcosmic paints header bars with the window
 background, so a header bar cannot differ from the field and every window
 reads as non-key. Toggles, nav indicators, check marks and focus rings all
@@ -202,6 +209,88 @@ Measured on 155.0.1 (deb), 2026-09-19, except where noted.
 
 **Cannot reach:** a running window's dock icon is the one the window
 supplies. GTK dialogs (file picker) are GTK's.
+
+## VS Code
+
+Measured on 1.137.0 (Flatpak `com.visualstudio.code`, commit 645f29cc), 2026-09-20,
+on COSMIC.
+
+- A colour theme is an extension: a folder holding a `package.json` with
+  `contributes.themes` and the theme JSON it points at. **A folder copied into
+  the extensions directory is picked up** — the scanner lists it and writes its
+  own `extensions.json` beside it — so no `.vsix` and no CLI is needed to
+  install one. It is seen on the next window reload or start.
+- Where each packaging keeps things (per user, no elevation):
+  `~/.vscode/extensions` and `~/.config/Code/User/settings.json` (deb, rpm, tar);
+  `~/.var/app/com.visualstudio.code/data/vscode/extensions` and
+  `~/.var/app/com.visualstudio.code/config/Code/User/settings.json` (Flatpak);
+  `~/.vscode-insiders` and `~/.config/Code - Insiders` (Insiders);
+  `~/.vscode-oss` and `~/.config/VSCodium` (VSCodium);
+  `~/.var/app/com.vscodium.codium/data/codium` and `…/config/VSCodium` (VSCodium
+  Flatpak).
+- **`settings.json` is JSON with comments and trailing commas**, and VS Code
+  watches it: an edit on disk is applied to a running instance without a
+  restart. Theme files are read the same way.
+- **The whole colour vocabulary is readable off the installed build.** In
+  `resources/app/out/vs/workbench/workbench.desktop.main.js` the minified
+  `registerColor` is `se("id",{light:…,dark:…,hcDark:…,hcLight:…},…)`, a
+  variable bound to the call (`rn=se("editor.background",…)`) is how another
+  id's default refers to it, the terminal slots are a table
+  (`"terminal.ansiRed":{index:1,defaults:{light:…}}`), and the git extension
+  contributes its own under `contributes.colors`. 977 ids on 1.137. A default
+  that names another id resolves through the *theme's* value of that id.
+  A default of `null` paints nothing.
+- **A theme names what it names and the registry's light default fills the
+  rest.** An unset id is not "unstyled"; it is the platform's colour.
+- **`editor.selectionForeground` is honoured only under a high-contrast theme
+  type**: the `inline-selected-text` span is created when `isHighContrast(
+  themeType)`. In a `vs` (light) theme the editor selection is a fill behind
+  text that keeps its own colour. The same is true of `selection.background`
+  for text outside the editor. The **terminal** is different: xterm.js takes
+  `terminal.selectionForeground` whatever the theme type.
+- **A theme sets no font weight.** The workbench renders labels at 400; only
+  `.pane-header` (11px) and a few badges render bold, and the status bar is
+  12px in a 22px strip. What a theme can decide is colour.
+- **The workbench face is not a setting.** It is `system-ui, Ubuntu, Droid Sans,
+  sans-serif` on Linux, which Chromium resolves through the desktop's font
+  setting and otherwise through fontconfig's `sans-serif` alias — on this
+  machine Noto Sans. `editor.fontFamily`, `terminal.integrated.fontFamily` and
+  a few view-specific keys are settings; the chrome's face is reached only by
+  fontconfig or the desktop.
+- **`terminal.integrated.minimumContrastRatio` defaults to 4.5** — a WCAG
+  luminance ratio the terminal enforces by *repainting* any slot that falls
+  under it against the background. A terminal scheme arrives on screen altered
+  unless it is set to 1.
+- Borders are 1 px and their width is not themeable; every `*.border` id can
+  be made transparent. Corner radii are not themeable.
+- Chromium reorders argv into switches then operands, so `--user-data-dir DIR`
+  shows in a process list as `--user-data-dir … DIR`; VS Code reads it
+  correctly either way. `window.activeBorder` and `window.inactiveBorder` are
+  never drawn on Linux (`updateWindowBorder` returns early there); the window's
+  edge is the compositor's. **A Flatpak VS Code has a private `/tmp`**: a
+  `--user-data-dir` under `/tmp` is created inside the sandbox, empty, and
+  nothing put there from outside is seen. A test profile goes under `$HOME`.
+- **A profile with no settings opens an onboarding window before the
+  workbench** — `welcomeOnboarding`, "Welcome to Visual Studio Code / Sign in to
+  use GitHub Copilot / Continue without Signing In", in a window of its own that
+  no theme reaches. With `chat.disableAIFeatures` and `workbench.startupEditor`
+  set it did not appear; which of the two suppresses it was not isolated.
+- Settings that remove what the platform puts in the way, all present on 1.137
+  with their defaults readable off the bundle: `workbench.startupEditor`,
+  `workbench.tips.enabled`, `workbench.welcomePage.walkthroughs.openOnInstall`,
+  `workbench.editor.empty.hint`, `extensions.ignoreRecommendations`,
+  `update.showReleaseNotes`, `workbench.enableExperiments`,
+  `workbench.settings.enableNaturalLanguageSearch`, `telemetry.telemetryLevel`,
+  `telemetry.feedback.enabled`, `chat.disableAIFeatures`,
+  `workbench.reduceMotion`. Editor options are registered by bare name
+  (`"smoothScrolling"`, not `"editor.smoothScrolling"`), so a search of the
+  bundle for the full id misses them.
+- `window.titleBarStyle` defaults to `custom` on Linux, so the title bar is
+  the theme's to paint by key state; with `native` the compositor paints it.
+
+**Cannot reach:** the workbench face (above); font weight; border widths and
+radii; the onboarding window; the file icons' own colours, other than by
+choosing an icon theme (`vs-minimal` is monochrome and takes `icon.foreground`).
 
 ## Claude Code
 

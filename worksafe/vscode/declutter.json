@@ -1,0 +1,26 @@
+// Remainder — VS Code, the larger half (AUTHORITY.md §0): what the platform put in the user's way, removed.
+// Merged into settings.json by install.sh unless --no-declutter. No colour in this file, and build/vscode.py
+// proves it rather than asserting it. Every shipped default was read off Flatpak com.visualstudio.code
+// 1.137.0 on 2026-09-20 (python3 build/vscode.py --settings re-reads the build you have).
+{
+  // recommendations, tips, welcome pages, release notes
+  "workbench.startupEditor": "none",                         // shipped default "welcomePage"
+  "workbench.tips.enabled": false,                           // shipped default true
+  "workbench.welcomePage.walkthroughs.openOnInstall": false, // shipped default true
+  "workbench.editor.empty.hint": "hidden",                   // shipped default "text": a tip in every empty editor
+  "extensions.ignoreRecommendations": true,                  // shipped default false
+  "update.showReleaseNotes": false,                          // shipped default true: a page after every update
+
+  // experiments, natural-language settings search, telemetry, the feedback prompts
+  "workbench.enableExperiments": false,                      // shipped default true
+  "workbench.settings.enableNaturalLanguageSearch": false,   // shipped default true: the query leaves the machine
+  "telemetry.telemetryLevel": "off",                         // shipped default "all"
+  "telemetry.feedback.enabled": false,                       // shipped default true
+
+  // the chat sidebar, its title-bar button and the prompts to set it up. worksafe/firefox/user.js turns off
+  // browser.ml.chat.enabled for the same reason: a chatbot in the sidebar, on by default.
+  "chat.disableAIFeatures": true,                            // shipped default false
+
+  // §0: motion
+  "workbench.reduceMotion": "on"                             // shipped default "auto"
+}

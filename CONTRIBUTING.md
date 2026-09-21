@@ -98,6 +98,17 @@ because Windows' table is a table of roles and §2 already names a value for eve
 role in it. Each of the five clears destructive by about 31° where its own chroma
 requires 10.6.
 
+**Re-measured again 2026-09-20, after the VS Code surface landed**, by the same
+method: **66 distinct**, 62 before it. The four it added are content or signal by
+construction and every one is inside a pole on purpose (§3 below): the three pale
+tints a diff draws behind code — `#4FFFD1` `#FF9E9B` `#FFD841`, one per semantic
+hue, solved by `build/vscode.py tint()` — and `charts.orange` `#843000`, solved from
+the platform's own exemplar the way an ANSI slot is solved from xterm's. The 965
+workbench ids the theme decides land on 30 values, and 26 of those the kit already
+had: §2's seven, §3's three and their two legend values, the twelve ANSI slots from
+`build/cosmic.py` unchanged, two slots of the COSMIC neutral ladder, and
+`#00000000`, which is `transparent` as VS Code spells it and paints nothing.
+
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
@@ -246,9 +257,14 @@ python3 build/stylus.py --derive   # the roles it may name, and the pairs no rul
 python3 build/windows.py           # every value in elevated/windows/, in all five notations
 python3 build/windows.py --derive  # the colours table and the accent ramp
 python3 build/windows.py --registry  # the registry claims, and which of them is unverified
+python3 build/vscode.py            # every value, pair, adjacency and token in the committed theme
+python3 build/vscode.py --derive   # the tints, the orange, the ANSI reuse, and the token scheme
+python3 build/vscode.py --write    # regenerate the theme JSON from the role table
+python3 build/vscode.py --coverage # the installed build's colour registry against the theme (a report)
+python3 build/vscode.py --settings # the settings the kit sets, against the installed build (a report)
 ```
 
-Four are built. What a checker owes:
+Five are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -334,6 +350,32 @@ And two the fourth added, which the first surface needing elevation forced:
   build — the thirty-one quoted triples in `remainder.reg` were going unread, and
   `UserPreferencesMask` decoded as `#901203`, 1.6° from destructive, and duly failed
   the pole test.
+
+And three the fifth added, which a platform that hands a theme 977 ids and nothing
+else forced:
+
+- **It gates on the platform's defaults, recorded.** A VS Code theme names what it
+  names and the registry's own light default fills the rest — and on 1.137 that
+  default is a pole-bearing or a reserved literal for 299 ids: info-blue for focus,
+  links, badges and buttons, `#FFFFFF` for the editor. An unset id there is not
+  "unstyled"; it is a Microsoft colour showing through. `build/vscode.py` records
+  those ids with their date and the build they were read from, so the gate runs on
+  a machine with no VS Code, and `--coverage` re-reads the live registry off the
+  installed bundle to report what was renamed or added since — the line
+  `build/firefox.py --coverage` draws, with the recorded half made a gate.
+- **It measures the platform's own weights.** BLACK on LIGHT is the 16px/700 tier,
+  and VS Code sets no weight from a theme: labels render at 400 and only section
+  headers at 700, read off `workbench.desktop.main.css`. So the checker's pair
+  table carries the tier each pair actually renders at, and the surface is shaped
+  by the answer — read text on WHITE, LIGHT for what carries icons, headers and
+  marks. A checker that assumed §2's weights would have passed a sidebar full of
+  file names at Lc 61.3 against a floor of 75.
+- **It admits one alpha and tells a colour from an opacity.** `#00000000` is how
+  VS Code spells `transparent`, and every `*.border` between two surfaces takes it;
+  any other alpha is a blend and fails, as in the sheets. Two ids take a colour
+  whose only read channel is its alpha (`editorUnnecessaryCode.opacity`,
+  `minimap.foregroundOpacity`); the checker leaves them to the platform by name and
+  fails the theme if it paints them.
 
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
@@ -430,6 +472,16 @@ the window fields separately, and say which is which. Measured 2026-09-19 on a
 value; by region, the panel was 96.6% exactly LIGHT, the gaps 100% exactly
 BLACK, and nothing in either was inside a pole.
 
+On VS Code the pass runs in a profile of its own, so the kit's own install is
+untouched: `sh worksafe/vscode/install.sh --into DIR` with DIR under `$HOME` (a
+Flatpak VS Code has a private `/tmp`, and a profile put there is created inside
+the sandbox, empty), then the app with `--user-data-dir=DIR --extensions-dir=DIR/extensions`,
+then `cosmic-screenshot` and the regions — title bar, activity bar, tab strip,
+sidebar, editor, status bar — sampled separately. Measured 2026-09-20: every
+region's modal value is the one the theme names for it, the values over 3% of
+any region all pass `build/poles.py`, and the one unauthored value over 3% is the
+2 px outline COSMIC draws around every window, native ones included.
+
 What the pass is looking for: no hue in chrome that reads as a signal (§1); the
 three semantic hues present only where the meaning is (§3); one rule, the same
 width everywhere, carrying no state (§5); the cursor findable at a glance on a
@@ -444,6 +496,7 @@ motion, no blur.
 | `elevated/remainder.stylus.json` | generated **and committed**; guarded by `build/stylus.py` |
 | `elevated/windows/remainder.theme` | generated **and committed**; guarded by `build/windows.py` |
 | `elevated/windows/remainder.reg` | generated **and committed**; guarded by `build/windows.py`. ASCII, CRLF, no BOM — Windows reads a `.reg` without a BOM as ANSI, so those two spell their section references out where the rest of the kit writes `§` |
+| `worksafe/vscode/remainder/themes/remainder-color-theme.json` | generated **and committed**; guarded by `build/vscode.py`. JSON with a comment header, as VS Code reads it; the role table in `build/vscode.py` is the source |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |

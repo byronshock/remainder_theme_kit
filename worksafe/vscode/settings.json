@@ -1,0 +1,43 @@
+// Remainder — VS Code settings: the theme, the type, and the caret. worksafe/vscode/settings.json is merged
+// key by key into your settings.json by install.sh, which backs the file up first. Implements AUTHORITY.md
+// §2, §5 and §0e, and PLATFORM.md VS Code. Every shipped default quoted here was read off the installed build
+// -- Flatpak com.visualstudio.code 1.137.0, 2026-09-20 -- by python3 build/vscode.py --settings, which reports
+// whether the build you have still registers each key. This file carries no colour; the theme does.
+{
+  // the theme, and no switching to a dark one with the desktop: §2 is a light palette.
+  "workbench.colorTheme": "Remainder",
+  "workbench.preferredLightColorTheme": "Remainder",
+  "window.autoDetectColorScheme": false,                    // shipped default false; pinned
+
+  // §4: file icons. The default set (vs-seti) draws each file type in Seti's own colours -- blue, yellow,
+  // green, orange -- which are poles doing no semantic work in the explorer. Those glyphs are Seti's, not
+  // brands, so §4's brand rule does not hold them; the minimal set draws one glyph in icon.foreground.
+  // --keep-file-icons leaves this key alone.                  shipped default "vs-seti"
+  "workbench.iconTheme": "vs-minimal",
+
+  // §2: the key titlebar. With the native style the compositor paints it (and on COSMIC every window
+  // reads as non-key -- PLATFORM.md); custom is what the theme paints ACCENT / WHITE by key state.
+  "window.titleBarStyle": "custom",                          // shipped default "custom" on Linux; pinned
+
+  // §5: mono Hack, at the size every floor in §0e assumes (~16 px effective). The workbench's own face is
+  // not a setting -- PLATFORM.md VS Code records where it comes from.
+  "editor.fontFamily": "Hack, monospace",                    // shipped default the platform's monospace stack
+  "editor.fontSize": 16,                                     // shipped default 14
+  "terminal.integrated.fontFamily": "Hack, monospace",
+  "terminal.integrated.fontSize": 16,                        // shipped default 14
+
+  // §0e: WCAG 2.x contrast is used nowhere. The terminal's default (4.5) is a luminance ratio the terminal
+  // applies by REPAINTING any slot that falls under it -- the derived ANSI ladder would arrive on screen
+  // altered by the metric the kit rejected. 1 turns it off; the slots' shortfalls are recorded in
+  // build/cosmic.py rather than hidden.                      shipped default 4.5
+  "terminal.integrated.minimumContrastRatio": 1,
+
+  // §2: the caret is a locator and needs no band under it; §0: no motion.
+  "editor.cursorBlinking": "solid",                          // shipped default "blink"
+  "terminal.integrated.cursorBlinking": false,               // shipped default false; pinned beside the editor's
+  "editor.renderLineHighlight": "none",                      // shipped default "line"
+
+  // §5: there is no line thinner than the rule. Indentation is read from the indent.
+  "editor.guides.indentation": false,                        // shipped default true
+  "workbench.tree.renderIndentGuides": "none"                // shipped default "onHover"
+}
