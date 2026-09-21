@@ -12,7 +12,8 @@ kit had not met yet. Both were measured off the installed build (Flatpak com.vis
     -- so on this platform LIGHT can carry a header, an icon or a mark, and not a label a user reads.
     Every ground that carries read text here is WHITE (BLACK on it Lc 91.9), LIGHT is the ground of
     the icon strips and the tab strip, and the one rule §5 draws is the status bar: 22 px of BLACK
-    with WHITE on it, which is the rule's own width.
+    with WHITE on it -- half the rule's 44 dp, at a height the platform fixes and a theme cannot
+    change; recorded as residue (§4), not echoed.
 
   THE EDITOR SELECTION CANNOT CARRY ITS OWN TEXT. `editor.selectionForeground` is applied only under
     a high-contrast theme type (the `inline-selected-text` span is created when `isHighContrast(
@@ -809,7 +810,7 @@ COLORS = [
     ('terminalSymbolIcon.tagForeground', B, ''),
 
     # -- the status bar: the rule (§5) --------------------------------------------------------------------
-    ('statusBar.background', B, '22 px of BLACK carrying WHITE (Lc -92.4): the one rule this surface draws, at the rule\'s own width'),
+    ('statusBar.background', B, '22 px of BLACK carrying WHITE (Lc -92.4): the one rule this surface draws, at the height the platform fixes -- half the rule\'s 44 dp'),
     ('statusBar.foreground', W, ''),
     ('statusBar.border', NONE, ''),
     ('statusBar.focusBorder', W, ''),
@@ -1622,7 +1623,8 @@ THEME_HEADER = """// Remainder for VS Code -- the colour theme. AUTHORITY.md is 
 // The shape: read text sits on WHITE; LIGHT carries the icon strips, the tab strip and the headers
 // the platform renders bold; the key titlebar is ACCENT; selection and hover are SELECT carrying WHITE
 // wherever the platform lets the text follow the ground, and LIGHT where it does not (the editor);
-// the caret is CURSOR; the status bar is the rule: 22 px of BLACK. No line is drawn between surfaces.
+// the caret is CURSOR; the status bar is the rule at the 22 px the platform fixes, half its 44 dp width.
+// No line is drawn between surfaces.
 """
 
 

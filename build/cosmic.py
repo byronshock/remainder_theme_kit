@@ -257,16 +257,18 @@ def check_config(reg):
     return bad
 
 
-# --- 4. the key window's mark (§2, §5) -------------------------------------------------------
-# CHOSEN: 8 dp, in CURSOR. cosmic-comp draws `active_hint` in `window_hint` on the focused window
-# only, in the gap, from the window's edge outward -- measured 2026-09-21 at 150%: 1.5 px per dp,
-# every pixel the exact value, the window unmoved (PLATFORM.md). So the mark is drawn inside the
-# rule's width the way the caret is drawn inside a line of text, and the constraint is that the
-# rule survives beside it: 8 of the gap's 22 dp are the mark and 14 stay BLACK. 22 was tried and
-# looked at, and the rule vanished around the key window (CONTRIBUTING.md §9). 8 is also a whole
-# number of device pixels at 100, 125, 150, 175 and 200%, so the mark's edge is never a blended
-# value. The checker holds the .ron to both: the width, and that the hue is CURSOR and no other.
-HINT_DP = 8
+# --- 4. the rule, and the key window's mark in it (§2, §5) ----------------------------------------
+# The rule is 44 dp: the 1 cm x 1 cm handle zone entire (§5), which the .ron spends as gaps (0, 44)
+# -- outer 0, inner the rule, one rule everywhere. CHOSEN, in CURSOR: 11 dp, a quarter of the rule.
+# cosmic-comp draws `active_hint` in `window_hint` on the focused window only, in the gap, from the
+# window's edge outward -- measured 2026-09-21 at 150%: 1.5 px per dp, every pixel the exact value,
+# the window unmoved (PLATFORM.md). So the mark is drawn inside the rule's width the way the caret
+# is drawn inside a line of text, and the constraint is that the rule survives beside it: 11 of the
+# gap's 44 dp are the mark and 33 stay BLACK. The rule's own width was tried and looked at, and the
+# rule vanished around the key window (CONTRIBUTING.md §9). The checker holds the .ron to all three:
+# the gap, the width, and that the hue is CURSOR and no other.
+RULE_DP = 44
+HINT_DP = 11
 _HINT = re.compile(r'active_hint:\s*(\d+)')
 _GAPS = re.compile(r'gaps:\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)')
 _WHINT = re.compile(r'window_hint:\s*Some\("(#[0-9A-Fa-f]{6})[0-9A-Fa-f]{2}"\)')
@@ -279,7 +281,9 @@ def check_hint(text):
     if not (h and g and w):
         print('\nthe key window\'s mark: active_hint, gaps or window_hint is missing from the .ron'); return 1
     hint, inner, hue = int(h.group(1)), int(g.group(2)), w.group(1).upper()
-    print(f'\nthe key window\'s mark (§2, §5): active_hint {hint} dp in window_hint {hue}, inside a {inner} dp gap')
+    print(f'\nthe rule and the key window\'s mark (§2, §5): gaps ({g.group(1)}, {inner}), active_hint {hint} dp in window_hint {hue}')
+    if (int(g.group(1)), inner) != (0, RULE_DP):
+        print(f'  gaps are ({g.group(1)}, {inner}); §5\'s rule is {RULE_DP} dp, spent as (0, {RULE_DP})'); bad += 1
     if hint != HINT_DP:
         print(f'  active_hint is {hint}; the kit chooses {HINT_DP}'); bad += 1
     if not 0 < hint < inner:
@@ -362,10 +366,11 @@ def _print_derivations():
                 print(f"  ! {slot} {tier} {hx}: {note}")
     print("  neutral slots: normal black BLACK, normal white LIGHT, bright black DARK, "
           "bright white WHITE\n    -- §2's four-step ladder onto the four neutral ANSI slots.")
-    print(f"\n=== the key window's mark: CURSOR, {HINT_DP} dp of the 22 dp gap, from the window's edge outward ===")
+    print(f"\n=== the key window's mark: CURSOR, {HINT_DP} dp of the {RULE_DP} dp rule, from the window's edge outward ===")
     print(f"  as a mark against the field it bounds: on WHITE Lc {apca.lc(CURSOR, WHITE):.1f}, on LIGHT Lc {apca.lc(CURSOR, LIGHT):.1f}")
     print(f"  against the rule outside it, recorded and not claimed: on BLACK Lc {apca.lc(CURSOR, BLACK):.1f} (dE {ok.delta_e(CURSOR, BLACK):.1f})")
-    print(f"  8 dp renders to {8 * 1.5:.0f} px at 150%; the rule keeps {22 - HINT_DP} dp beside the key window. CHOSEN (§5).")
+    print(f"  {HINT_DP} dp renders to 16 and 17 px at 150% (the half pixel lands on one side or the other, unblended);")
+    print(f"  the rule keeps {RULE_DP - HINT_DP} dp beside the key window. CHOSEN, a quarter of the rule (§5).")
     print(f"  ANSI white as TEXT on the WHITE field is Lc {apca.lc(LIGHT, WHITE):.1f}: a light-field "
           "terminal cannot\n    make that slot read, and the kit does not pretend otherwise.")
 

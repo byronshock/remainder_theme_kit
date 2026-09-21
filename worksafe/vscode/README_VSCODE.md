@@ -68,9 +68,10 @@ terminal's selection is SELECT carrying WHITE, Lc −87.5, as §2 authors it.
 | secondary buttons, badges, key caps, disabled | DARK `#4A4145` | WHITE — Lc −81.7 |
 | **the status bar** | BLACK `#0F090C` | WHITE — Lc −92.4 |
 
-The status bar is the rule (§5): 22 px of BLACK carrying WHITE, which is the
-rule's own width, and on COSMIC the tiling gap below it is the same value — the
-BLACK runs on past the window's edge, ΔE 0.0, as §5 says it should.
+The status bar is the rule (§5): 22 px of BLACK carrying WHITE. Its height is
+the platform's and not a theme's — half the rule's 44 dp, recorded as residue
+(§4) rather than echoed — and on COSMIC the tiling gap below it is the same
+value: the BLACK runs on past the window's edge, ΔE 0.0, as §5 says it should.
 
 No line is drawn between surfaces. Every `*.border` between two grounds is
 `#00000000`, which is `transparent` as VS Code spells it, and the tone changes
@@ -221,7 +222,8 @@ Tolerated, never echoed (§4). `PLATFORM.md` is the record:
 - **Weight.** Section headers are bold and nothing else is; the theme cannot
   change it, and the surface is shaped around it (above).
 - **Borders are 1 px** and their width is not themeable; they are made
-  transparent, never widened.
+  transparent, never widened. The status bar's 22 px is fixed the same way:
+  the one rule this surface draws is half the rule's width, and stays so.
 - **The onboarding window.** A profile with no settings at all opened
   "Welcome to Visual Studio Code / Sign in to use GitHub Copilot" before the
   workbench, in a window of its own that no theme reaches. With the kit's

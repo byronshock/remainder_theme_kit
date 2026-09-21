@@ -566,7 +566,12 @@ painting and those derivations have no source. Remainder therefore **declares**
 them rather than pretending to measure them:
 
 - **Geometry.** One rule, BLACK, drawn outside the field it bounds, the same
-  everywhere on a screen, carrying no state. Reference width 22 density-independent pixels (dp/pt) , a 44 pt, 1 cm effective hit box, taken from the sizing guidelines by input modality according to Fitt's Law to enable touch surfaces. References will follow.
+  everywhere on a screen, carrying no state. Reference width **44 dp/pt**: the
+  1 cm × 1 cm handle zone the sizing guidelines by input modality give a touch
+  target (Fitts's law), entire. It stood at 22 — half the zone, on the reading
+  that a gap is reached from either side — and that was the wrong reading of
+  the same result: the gap *is* the handle, so the gap is the zone. Corrected
+  2026-09-21. References will follow.
 
   There is no thinner rule. **A separator that wants to be lighter than the
   rule is not a rule; it is a change of field tone — WHITE against LIGHT — and
@@ -575,18 +580,22 @@ them rather than pretending to measure them:
   the floor every other load-bearing boundary must clear.
 
   **The key window is marked in the rule, not by it.** Beside the key window
-  the innermost **8 dp** of the rule's width is CURSOR (§2), drawn from the
-  window's edge outward, and the remaining 14 dp is the rule as everywhere
-  else — the window does not move, the gap does not change width, the hit box
-  holds. A mark drawn in the rule, as the caret is drawn in the text. The 8 is
-  chosen (§0c): narrower than the rule so the rule survives beside it and still
-  reads as one rule around every window, and a whole number of device pixels
-  at every quarter-step scale, so the mark's edge is never a blended value.
-  22 — the rule's own width — was tried and looked at on 2026-09-21: the key
-  window's rule turned CURSOR entirely and touched the panel and its
-  neighbours, which is the rule carrying state, and this section does not
-  allow it. Measured on COSMIC at 150% the same day: 12 px, every pixel
-  `#007891` exactly, drawn in the gap and not over the window (`PLATFORM.md`).
+  the innermost **11 dp** of the rule's width is CURSOR (§2), drawn from the
+  window's edge outward, and the remaining 33 dp is the rule as everywhere
+  else — the window does not move, the gap does not change width, the handle
+  zone holds. A mark drawn in the rule, as the caret is drawn in the text. The
+  11 is chosen (§0c): a quarter of the rule, so the rule survives beside it
+  and still reads as one rule around every window. The rule's own width was
+  tried and looked at on 2026-09-21: the key window's rule turned CURSOR
+  entirely and touched the panel and its neighbours, which is the rule
+  carrying state, and this section does not allow it. Measured on COSMIC at
+  150% the same day: every pixel `#007891` exactly, drawn in the gap and not
+  over the window; 11 dp is 16.5 device pixels there, and the half lands on
+  one side or the other — 16 px on two sides, 17 on the other two, none of it
+  blended. What the platform adds and the kit cannot reach is recorded, not
+  echoed (§4): cosmic-comp rounds the band's outer corners to a radius equal
+  to its thickness, and no theme radius — ours are all 0 — touches it
+  (`PLATFORM.md`).
 - **Typography.** UI Montserrat, mono Hack, 12pt system
   size. **This is load-bearing and unmeasured**: every contrast floor in §0e is
   a function of what "12pt" renders at, taken to be about 16px effective. If
@@ -613,8 +622,8 @@ them rather than pretending to measure them:
   literally it: the rule is BLACK, so the gap between two windows is the same
   value as the line the kit draws — ΔE 0.0, where a DARK field left the two
   ΔE 23.7 apart and made the claim true only by approximation. Beside the key
-  window the innermost 8 dp of that gap is the CURSOR mark (Geometry, above)
-  and the other 14 dp is still the rule. It also buys the
+  window the innermost 11 dp of that gap is the CURSOR mark (Geometry, above)
+  and the other 33 dp is still the rule. It also buys the
   desktop's own labels margin, WHITE on BLACK measuring Lc −92.3 against −81.7
   on DARK. Dock tiles stay DARK and read against the field at ΔE 23.7, clear of
   the ΔE 17.1 floor. Photographs are content (§0a) and are permitted; nothing

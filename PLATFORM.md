@@ -97,8 +97,14 @@ values, and tiling gaps are all settable per-user with no sudo.
   the window does not move or shrink, and at `active_hint` = the inner gap the
   band fills the gap and touches the neighbours. Painted at the exact value, no
   blending. Measured 2026-09-21 at 150%: 8 dp → 12 px, 22 dp → 33 px, 67,912 of
-  67,920 pixels the exact value. A hint therefore makes the gap carry focus to
-  exactly the extent of its width, which is the trade a theme makes with it.
+  67,920 pixels the exact value; 11 dp → 16.5, and the half pixel lands on one
+  side or the other — 16 px on two sides, 17 on the other two, still unblended.
+  **The band's outer corners are rounded to a radius equal to its thickness**
+  (profile measured: 12 px band, 12 px radius; 16 px band, 16 px radius), and
+  the theme's `corner_radii` — all 0 here — do not reach it; the inner corners
+  are square and the window itself is not clipped. A hint therefore makes the
+  gap carry focus to exactly the extent of its width, which is the trade a
+  theme makes with it.
 - Background is per output, not per workspace.
 - Toolkit config (`com.system76.CosmicTk`): fonts, density, header size.
 - `cosmic-randr` reports output size and scale, so an installer can compute
@@ -262,7 +268,8 @@ on COSMIC.
   `terminal.selectionForeground` whatever the theme type.
 - **A theme sets no font weight.** The workbench renders labels at 400; only
   `.pane-header` (11px) and a few badges render bold, and the status bar is
-  12px in a 22px strip. What a theme can decide is colour.
+  12px in a 22px strip whose height is not a setting. What a theme can decide
+  is colour.
 - **The workbench face is not a setting.** It is `system-ui, Ubuntu, Droid Sans,
   sans-serif` on Linux, which Chromium resolves through the desktop's font
   setting and otherwise through fontconfig's `sans-serif` alias — on this

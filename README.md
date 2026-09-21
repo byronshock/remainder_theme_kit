@@ -252,7 +252,7 @@ theme, the type and the caret, and §0's declutter — the welcome page, tips,
 recommendations, release notes, experiments, telemetry, the chat sidebar, motion.
 The platform sets no font weight from a theme, so on this surface read text sits
 on WHITE and LIGHT carries the icon strips and the headers the platform renders
-bold; the status bar is the rule, 22 px of BLACK. The editor cannot recolour
+bold; the status bar is the rule at the 22 px the platform fixes — half its 44 dp width. The editor cannot recolour
 selected text outside a high-contrast theme, so its selection is LIGHT — measured,
 and recorded as the platform's shortfall — while the terminal's is SELECT
 carrying WHITE. Details, the ladders, the on-screen pass and what is left over:

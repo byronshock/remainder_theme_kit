@@ -14,8 +14,9 @@ against palette.json and §5 rather than by looking at it:
   by approximation. So there is no rule drawn around the window here. The surround is the rule.
   DARK keeps its own job in the picture, on the dock tiles §5 gives it.
 
-  THE RULE IS 22. §5's reference width, which the COSMIC theme spends as gaps (0, 22) and the
-  all-sites sheet spends on hr. The sheet was drawing 14.
+  THE RULE IS 44. §5's reference width -- the 1 cm handle zone entire, since 2026-09-21; it was 22,
+  half of it -- which the COSMIC theme spends as gaps (0, 44) and the all-sites sheet spends on hr.
+  The sheet once drew 14.
 
   THE WEIGHT IS NOT DECORATION AND IS NOT DECLARED HERE EITHER. A ground whose authored floor
   is Lc 60 is APCA's 16px/700 tier and its text is 700; a ground authored at 75 or 90 is a body
@@ -73,9 +74,9 @@ SEM = [('SUCCESS', '#006B54', '#FFFFFF'), ('WARNING', '#FCD116', '#000000'),
 # kit's faces here would put a value in the picture this kit never chose.
 UI = "Montserrat, sans-serif"
 MONO = "Hack, monospace"
-RULE = 22                                                  # §5's reference width
-HINT = 8                                                   # §5: the key window's mark, CURSOR, drawn in the rule
-W, H = 1060, 728
+RULE = 44                                                  # §5's reference width
+HINT = 11                                                  # §5: the key window's mark, CURSOR, a quarter of the rule
+W, H = 1120, 772
 o = []
 
 
