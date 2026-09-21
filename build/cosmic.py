@@ -259,16 +259,19 @@ def check_config(reg):
 
 # --- 4. the rule, and the key window's mark in it (§2, §5) ----------------------------------------
 # The rule is 44 dp: the 1 cm x 1 cm handle zone entire (§5), which the .ron spends as gaps (0, 44)
-# -- outer 0, inner the rule, one rule everywhere. CHOSEN, in CURSOR: 11 dp, a quarter of the rule.
-# cosmic-comp draws `active_hint` in `window_hint` on the focused window only, in the gap, from the
-# window's edge outward -- measured 2026-09-21 at 150%: 1.5 px per dp, every pixel the exact value,
-# the window unmoved (PLATFORM.md). So the mark is drawn inside the rule's width the way the caret
-# is drawn inside a line of text, and the constraint is that the rule survives beside it: 11 of the
-# gap's 44 dp are the mark and 33 stay BLACK. The rule's own width was tried and looked at, and the
-# rule vanished around the key window (CONTRIBUTING.md §9). The checker holds the .ron to all three:
-# the gap, the width, and that the hue is CURSOR and no other.
+# -- outer 0, inner the rule, one rule everywhere. CHOSEN, in CURSOR: 4 dp, the smallest width that
+# renders whole and uniform at every quarter-step scale, is found from the corner of the eye, and
+# keeps the platform's rounding small. cosmic-comp draws `active_hint` in `window_hint` on the
+# focused window only, in the gap, from the window's edge outward -- measured 2026-09-21 at 150%:
+# 1.5 px per dp, every pixel the exact value, the window unmoved, the band's outer corners rounded
+# to a radius equal to its thickness (PLATFORM.md). So the mark is drawn inside the rule's width the
+# way the caret is drawn inside a line of text, and the constraint is that the rule survives beside
+# it: 4 of the gap's 44 dp are the mark and 40 stay BLACK. The rule's own width was tried and looked
+# at, and the rule vanished around the key window; 8 and 11 were shipped and retired for the rounding
+# (CONTRIBUTING.md §9). The checker holds the .ron to all three: the gap, the width, and that the hue
+# is CURSOR and no other.
 RULE_DP = 44
-HINT_DP = 11
+HINT_DP = 4
 _HINT = re.compile(r'active_hint:\s*(\d+)')
 _GAPS = re.compile(r'gaps:\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)')
 _WHINT = re.compile(r'window_hint:\s*Some\("(#[0-9A-Fa-f]{6})[0-9A-Fa-f]{2}"\)')
@@ -369,8 +372,8 @@ def _print_derivations():
     print(f"\n=== the key window's mark: CURSOR, {HINT_DP} dp of the {RULE_DP} dp rule, from the window's edge outward ===")
     print(f"  as a mark against the field it bounds: on WHITE Lc {apca.lc(CURSOR, WHITE):.1f}, on LIGHT Lc {apca.lc(CURSOR, LIGHT):.1f}")
     print(f"  against the rule outside it, recorded and not claimed: on BLACK Lc {apca.lc(CURSOR, BLACK):.1f} (dE {ok.delta_e(CURSOR, BLACK):.1f})")
-    print(f"  {HINT_DP} dp renders to 16 and 17 px at 150% (the half pixel lands on one side or the other, unblended);")
-    print(f"  the rule keeps {RULE_DP - HINT_DP} dp beside the key window. CHOSEN, a quarter of the rule (§5).")
+    print(f"  {HINT_DP} dp renders to {HINT_DP * 1.5:.0f} px at 150%, whole and uniform at every quarter-step scale; corner cut 5/3/2/1/1 px;")
+    print(f"  the rule keeps {RULE_DP - HINT_DP} dp beside the key window. CHOSEN, the smallest width that is found (§5).")
     print(f"  ANSI white as TEXT on the WHITE field is Lc {apca.lc(LIGHT, WHITE):.1f}: a light-field "
           "terminal cannot\n    make that slot read, and the kit does not pretend otherwise.")
 

@@ -75,7 +75,7 @@ SEM = [('SUCCESS', '#006B54', '#FFFFFF'), ('WARNING', '#FCD116', '#000000'),
 UI = "Montserrat, sans-serif"
 MONO = "Hack, monospace"
 RULE = 44                                                  # §5's reference width
-HINT = 11                                                  # §5: the key window's mark, CURSOR, a quarter of the rule
+HINT = 4                                                   # §5: the key window's mark, CURSOR, the smallest width that is found
 W, H = 1120, 772
 o = []
 

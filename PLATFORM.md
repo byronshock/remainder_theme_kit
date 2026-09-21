@@ -98,7 +98,10 @@ values, and tiling gaps are all settable per-user with no sudo.
   band fills the gap and touches the neighbours. Painted at the exact value, no
   blending. Measured 2026-09-21 at 150%: 8 dp → 12 px, 22 dp → 33 px, 67,912 of
   67,920 pixels the exact value; 11 dp → 16.5, and the half pixel lands on one
-  side or the other — 16 px on two sides, 17 on the other two, still unblended.
+  side or the other — 16 px on two sides, 17 on the other two, still unblended;
+  1 dp → 1 px on the sides and 2 on the top and bottom; 2 → 3; 3 → 5; 4 → 6,
+  and a multiple of 4 dp is whole at every quarter-step scale. Exact at every
+  width: no blended pixel at 1, 2, 3, 4, 8, 11 or 22 dp.
   **The band's outer corners are rounded to a radius equal to its thickness**
   (profile measured: 12 px band, 12 px radius; 16 px band, 16 px radius), and
   the theme's `corner_radii` — all 0 here — do not reach it; the inner corners

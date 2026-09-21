@@ -111,14 +111,18 @@
     // goes -- and the key window is that state at screen scale, as the caret is at field scale. COSMIC
     // draws active_hint on the focused window only, in window_hint, IN THE GAP from the window's edge
     // outward (measured 2026-09-21 at 150%: 1.5 px per dp, every pixel the exact value, the window
-    // itself unmoved). 11 dp is CHOSEN: a quarter of the 44 dp rule, so 33 dp of BLACK rule remain
-    // beside the key window and the rule still reads as one rule everywhere. The rule's own width
-    // was tried and looked at: the key window's rule turned CURSOR entirely and touched the panel
-    // and its neighbours, which is the rule carrying state, and §5 does not allow it. Two things the
-    // platform adds, tolerated and recorded (PLATFORM.md): at 150% the half pixel of 16.5 lands on
-    // one side or the other, so the band is 16 px on two sides and 17 on the other two, none of it
-    // blended; and cosmic-comp rounds the band's outer corners to a radius equal to its thickness,
-    // which no theme radius reaches -- ours are all 0. build/cosmic.py checks both fields.
-    active_hint: 11,
+    // itself unmoved). 4 dp is CHOSEN, and it is the smallest width that does three things: renders
+    // whole and uniform at every quarter-step scale (4, 5, 6, 7, 8 px at 100-200%; 1 dp came out 1 px
+    // on the sides and 2 on the top, 11 dp 16 and 17); is found from the corner of the eye, which is
+    // the mark's job -- 6 px here is 0.82 mm, about 8.6 arcmin at 65 cm, and its contrast against the
+    // gap is the highest in the kit (Michelson 0.96, the quantity a line is detected by); and keeps
+    // the platform's one residue small -- cosmic-comp rounds the band's outer corners to a radius
+    // equal to its thickness, which no theme radius reaches (ours are all 0), so at 6 px the corner
+    // loses 5/3/2/1/1 px on its first five rows and reads square. 40 dp of BLACK rule remain beside
+    // the key window. The rule's own width was tried and looked at: the key window's rule turned
+    // CURSOR entirely and touched the panel and its neighbours, which is the rule carrying state,
+    // and §5 does not allow it; 8 and 11 were shipped and retired for the rounding (CONTRIBUTING.md
+    // §9). build/cosmic.py checks both fields.
+    active_hint: 4,
     window_hint: Some("#007891FF"),
 )
