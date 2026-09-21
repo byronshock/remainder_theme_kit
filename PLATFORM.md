@@ -325,6 +325,152 @@ on COSMIC.
 radii; the onboarding window; the file icons' own colours, other than by
 choosing an icon theme (`vs-minimal` is monochrome and takes `icon.foreground`).
 
+## Qt (qt5ct, qt6ct, and the KDE colour scheme)
+
+Measured on qt5ct 1.5 with Qt 5.15.13 and qt6ct 0.9 with Qt 6.4.2 (the Pop!_OS
+24.04 packages), on COSMIC, 2026-09-21, and read off the sources of those
+versions — Debian's, and qtbase `v5.15.13-lts-lgpl` and `v6.4.2` — and off
+libcosmic and cosmic-settings-daemon at master.
+
+- A Qt application takes its colours from a **palette** — `QPalette`, 21 colour
+  roles on Qt 5.12 to 6.5, 22 from 6.6 (`Accent`), in three groups: active,
+  inactive, disabled — and a **style** paints every control from it. On Linux
+  the palette arrives through a platform theme plugin named by
+  `QT_QPA_PLATFORMTHEME`, and the two a user can configure without elevation
+  are qt5ct and qt6ct. qt6ct's plugin registers under both `qt6ct` and
+  `qt5ct`, so one variable serves both toolkits, which `start-cosmic` relies
+  on: it prefers `cosmic` (CuteCosmic, `libcutecosmictheme.so`, not installed
+  here) and otherwise sets `QT_QPA_PLATFORMTHEME=qt5ct` when either plugin is
+  on disk. Ubuntu's X session does the same in `/etc/X11/Xsession.d/99qt5ct`
+  unless the desktop is KDE.
+- Config: `~/.config/qt5ct/qt5ct.conf` and `~/.config/qt6ct/qt6ct.conf` —
+  `[Appearance] style`, `custom_palette`, `color_scheme_path`, `icon_theme`,
+  `standard_dialogs`; `[Fonts] general`, `fixed`; `[Interface] gui_effects` and
+  the rest. Schemes live in `~/.config/qt{5,6}ct/colors/*.conf`, with samples in
+  `/usr/share/qt{5,6}ct/colors/`. Both plugins watch their config file and
+  re-apply it to running applications. `style` defaults to Fusion when absent.
+  `custom_palette=true` is required, or the scheme path is read and ignored.
+- **The scheme file** is `[ColorScheme]` with `active_colors`,
+  `disabled_colors` and `inactive_colors`, each a comma-separated list of
+  `#AARRGGBB` in `QPalette::ColorRole` order: WindowText, Button, Light,
+  Midlight, Dark, Mid, Text, BrightText, ButtonText, Base, Window, Shadow,
+  Highlight, HighlightedText, Link, LinkVisited, AlternateBase, NoRole,
+  ToolTipBase, ToolTipText, PlaceholderText, and Accent. **qt5ct 1.5 accepts
+  exactly `NColorRoles` entries — 21 — and silently ignores a list of any
+  other length**, leaving the style's default palette in place. qt6ct 0.9
+  accepts `>= NColorRoles` and, built against Qt 6.6 or later, pads a
+  21-entry list with Highlight as Accent, so one 22-entry file serves every
+  Qt 6. The alpha byte is honoured: a translucent entry blends.
+- **Fonts** are `QFont::toString()` strings. The 10-field Qt 5 form —
+  `family,pointsize,-1,stylehint,weight,style,underline,strikeout,fixedpitch,rawmode`
+  — is read by Qt 6 too, which converts the legacy weight scale (50 is
+  Normal) to OpenType (400). The 16-field Qt 6 form is not read by Qt 5.
+- `gui_effects` is a list; the empty list — which qt5ct's own dialog writes
+  as `@Invalid()` — turns every menu, combo box, tool tip and tool box
+  animation and fade off.
+- **Fusion derives its chrome from the palette rather than painting it**, in
+  Qt's 16-bit HSV arithmetic (`QColor::lighter` and `darker` with integer
+  factors, float32 conversions, and a colour that stays in whichever spec it
+  was last set in — `lighter()` on an HSV colour never touches RGB). Every
+  outline is Window darkened by 40%. A button face is Button lightened by
+  `100 + max(1, (180 − grey) / 6)` percent with its saturation cut to three
+  quarters, darkened 4%, and drawn as a gradient from 124% to 102% of that;
+  a hovered face skips the 4%, a pressed face is darkened 10%, and a
+  dialog's default button first mixes a tenth of Highlight.darker(125)
+  .lighter(130) into the face. The tab pane and the selected tab are the
+  button colour lightened 4% (and 4% again at the top); unselected tabs are
+  it darkened 8% then 16%; table headers run 104% to 98%; the scrollbar
+  groove is 93–95%, its slider 108% to 100%; a menu is Base lightened 8%
+  inside Window darkened 60%; tool bars and menu bars run Window lightened
+  4% down to Window; a check box is Base darkened 15% down to Base with the
+  mark in Text darkened 20%; the focus frame and the default button's
+  outline are Highlight darkened 25%, value capped at 160 through HSL; a
+  progress fill is Highlight lightened 20% down to Highlight, outlined in the
+  darker of the outline and Highlight darkened 40%. Every constant is
+  identical in 5.15.13 and 6.4.2, and the rendered bytes were confirmed on
+  screen for both. What the palette does not reach at all is painted as a
+  blend: white at 30/255 inside every control, white 90 and black 60 on grips
+  and tool bar edges, black 18 inside edits, the keyboard focus rectangle at
+  80/255, the outline at 180 and 40 on scrollbars, arrows at 160, black 15
+  under a tab pane, and a group box's interior, which is a translucent pixmap
+  (`fusion_groupbox.png`). QCommonStyle frames a tool tip in `ToolTipText`,
+  1 px. A text cursor is drawn in `Text`; no role reaches it. Corner radii
+  (2 px on buttons, edits and tabs) and line widths are the style's.
+- `QMdiArea` paints its background in `Dark`; qt5ct's and qt6ct's own preview
+  is one.
+- **Glyphs render with subpixel antialiasing** here: a vertical stem carries
+  a blue fringe on one side and an orange one on the other. A pixel pass over
+  a label finds saturated blue and orange columns that are the rasteriser's,
+  not the palette's.
+- **COSMIC exports a Qt palette of its own** when the toolkit setting
+  `apply_theme_global` is on — off in libcosmic's own default, **on in the
+  system default Pop!_OS ships**
+  (`/usr/share/cosmic/com.system76.CosmicTk/v1/apply_theme_global`).
+  cosmic-settings-daemon then writes, at start, on every theme change, on
+  every mode switch and on auto-switch: `~/.config/qt{5,6}ct/colors/
+  CosmicLight.conf` and `CosmicDark.conf` (`# GENERATED BY COSMIC`),
+  `~/.local/share/color-schemes/CosmicLight.colors` and `CosmicDark.colors`,
+  `~/.config/kdeglobals`, and the GTK export; and it runs `flatpak override
+  --user --filesystem` for `xdg-config/gtk-3.0:ro`, `xdg-config/gtk-4.0:ro`,
+  `xdg-config/kdeglobals:ro` and `xdg-data/color-schemes:ro`, **removing
+  `QT_QPA_PLATFORMTHEME=kde` from the global override** if it finds it. In
+  `qt5ct.conf` and `qt6ct.conf` it keeps a marker, `cosmic_qt_version` (2 at
+  present): below that version it sets `color_scheme_path`,
+  `custom_palette=true`, `icon_theme=breeze` (or `breeze-dark`) and
+  `standard_dialogs=xdgdesktopportal` unconditionally; at that version it
+  rewrites only a `color_scheme_path` that contains "Cosmic" and an
+  `icon_theme` that contains "breeze". **Measured 2026-09-21: a foreign
+  scheme path with the marker present survived a theme re-import — the file's
+  keys were re-ordered and nothing else changed. kdeglobals has no such
+  guard: the same re-import rewrote every colour group and `[General]
+  ColorScheme` back to CosmicLight.** Turning the setting off runs the reset:
+  it removes `cosmic_qt_version`, `color_scheme_path` and `icon_theme` from
+  both confs whenever the marker is present, whoever wrote the path, and
+  deletes its own `.colors` files; kdeglobals is reset only if its
+  `ColorScheme` is CosmicLight or CosmicDark. The GTK export goes with it.
+  (libcosmic `cosmic-theme/src/output/qt56ct_output.rs` and `qt_output.rs`,
+  cosmic-settings-daemon `src/theme.rs`.) The daemon's INI writer drops
+  comments and re-orders keys. Its export is a derivation of the COSMIC
+  theme, not a copy of it: measured on this desktop, 4 of its 21 active roles
+  were values the theme names.
+- **A Flatpak on the KDE runtime** (`org.kde.Platform`) has no qt5ct plugin
+  inside its sandbox and inherits the session's `QT_QPA_PLATFORMTHEME=qt5ct`,
+  so Qt falls back to the generic theme and the application paints Qt's stock
+  palette (`#EFEFEF` Window, `#FFFFFF` Base). Measured 2026-09-21 on
+  `org.kde.isoimagewriter` (runtime 6.11): unset, or `xdgdesktopportal`, the
+  same; `gtk3` reads the GTK theme; **`kde` — KDEPlasmaPlatformTheme6, which
+  the runtime ships — reads `~/.config/kdeglobals`** and the scheme applies.
+  `flatpak override --user --env=QT_QPA_PLATFORMTHEME=kde APP` sets it per
+  application; the global override is stripped by COSMIC's daemon at every
+  login (above). `flatpak override --unset-env` records an unset rather than
+  removing the entry.
+- **The KDE colour scheme** (`kcolorscheme.cpp`, KF6):
+  `[Colors:View|Window|Button|Selection|Tooltip|Complementary|Header]`, each
+  with `BackgroundNormal`, `BackgroundAlternate`,
+  `ForegroundNormal|Inactive|Active|Link|Visited|Negative|Neutral|Positive`,
+  `DecorationFocus|Hover`, values as decimal triples; `[Colors:Header]
+  [Inactive]`; `[ColorEffects:Disabled]` and `[ColorEffects:Inactive]` —
+  Intensity, Color and Contrast effects with amounts, and by default a
+  disabled foreground is the text faded 65% into its ground; `[General]
+  ColorScheme` and `Name`; `[KDE] contrast`; `[WM]` for the decoration.
+  `createApplicationPalette` maps View to Base and Text, Window to Window and
+  WindowText, Button to Button and ButtonText, Selection to Highlight,
+  HighlightedText and Accent, Tooltip to the tool tip roles, View's
+  InactiveText to PlaceholderText and its Link and Visited to Link and
+  LinkVisited; Light, Midlight, Mid, Dark and Shadow are shades computed from
+  Window's background and `contrast`. Applications read kdeglobals directly; a
+  `.colors` file under `~/.local/share/color-schemes/` is what Plasma's
+  settings list. The KDE styles paint `Button` flat. `[KDE]
+  widgetStyle=qt6ct-style` is what COSMIC writes; that style is qt6ct's proxy
+  and is absent inside a Flatpak.
+- On Wayland Qt asks for server-side decorations; on COSMIC the title bar is
+  the compositor's (COSMIC, above).
+
+**Cannot reach:** the caret's colour (drawn in `Text`); Fusion's line widths,
+radii and blends; the title bar on COSMIC; the palette of a Flatpak without the
+per-application override; and kdeglobals on COSMIC across a theme change while
+`apply_theme_global` is on.
+
 ## Claude Code
 
 Custom theme JSON in `~/.claude/themes/`, selected with `/theme`, or

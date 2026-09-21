@@ -109,6 +109,16 @@ had: §2's seven, §3's three and their two legend values, the twelve ANSI slots
 `build/cosmic.py` unchanged, two slots of the COSMIC neutral ladder, and
 `#00000000`, which is `transparent` as VS Code spells it and paints nothing.
 
+**Re-measured again 2026-09-21, after the Qt surface landed.** The sixth added
+no value at all: its 63 palette slots — 21 roles in three groups, 22 in the
+qt6ct file — and the 13 groups of its KDE scheme land on nine values the kit
+already had: §2's seven, `neutral_6` and `neutral_9` of the COSMIC ladder, and
+the three ANSI normals as text that means error, warning and done. What it did
+add is two notations the method above misreads: `#AARRGGBB` lists, where
+`cut -c1-7` takes the alpha for part of the colour and reports seven values
+that do not exist, and decimal triples, which a hex scan does not see at all.
+`build/qt.py` reads both, and the count is unchanged read correctly.
+
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
@@ -262,9 +272,13 @@ python3 build/vscode.py --derive   # the tints, the orange, the ANSI reuse, and 
 python3 build/vscode.py --write    # regenerate the theme JSON from the role table
 python3 build/vscode.py --coverage # the installed build's colour registry against the theme (a report)
 python3 build/vscode.py --settings # the settings the kit sets, against the installed build (a report)
+python3 build/qt.py                # every value, pair, adjacency and Fusion-derived value in the three scheme files
+python3 build/qt.py --derive       # the role table, the ladders, Fusion's derivations, and the Button trials
+python3 build/qt.py --write        # regenerate the qt5ct, qt6ct and KDE schemes from the role table
+python3 build/qt.py --installed    # the live machine: platform theme, plugins, the schemes in use, measured (a report)
 ```
 
-Five are built. What a checker owes:
+Six are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -377,6 +391,37 @@ else forced:
   `minimap.foregroundOpacity`); the checker leaves them to the platform by name and
   fails the theme if it paints them.
 
+And three the sixth added, which a platform that paints derivations of the
+theme rather than the theme forced:
+
+- **It models the platform's derivation and measures the model on screen.**
+  Fusion paints none of the palette's values as given: every outline is Window
+  darkened by 40%, every button face a lightened, desaturated gradient of
+  Button, every menu Base lightened 8%, in Qt's own 16-bit HSV arithmetic. So
+  `build/qt.py` emulates `QColor` — the integer factors, the float32
+  conversions, the spec a colour is left in — computes every value the style
+  will paint from the committed palette, and holds each to the same bar as an
+  authored one: clear of every pole, not reserved, and carrying its text at the
+  tier. That is what chose the Button input: fed LIGHT, the modelled face
+  carried BLACK at Lc 63 at its bottom and every tab page at 66; fed
+  `neutral_9`, 76 and 83. Then the on-screen pass sampled the real window and
+  found the model's bytes exactly — `#ABA4A6` for the outline, `#CDC6C9` for
+  an unselected tab, `#3B0F27` around the progress bar — on Qt 5 and Qt 6
+  alike. A model that is not checked against the pixels is a claim.
+- **It reads what another writer will do to the same files.** COSMIC's daemon
+  exports its own Qt palette into the same two config files and into
+  kdeglobals, and it does so at every login and every theme change. The
+  checker's `--installed` report measures whatever the live config actually
+  points at, and the installer states, from the daemon's own marker, whether
+  the kit's scheme path will survive the next export (it does, in qt5ct.conf
+  and qt6ct.conf) or not (kdeglobals). A surface that shares its files with a
+  daemon owes the user the daemon's contract, measured, not a hope.
+- **A third notation, and the first with an alpha the platform honours.** The
+  KDE scheme writes decimal triples and the qt5ct scheme `#AARRGGBB`; a
+  translucent entry in the latter is blended by the style, so the checker
+  admits `FF` and nothing else, and the `--installed` report says how many of
+  a foreign scheme's roles are values the kit authors — four of COSMIC's 21.
+
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
 there is no file to scan. What must hold is the bar itself: *every value the
@@ -426,6 +471,8 @@ right".
 | the mark at 8 dp, then at 11 (a quarter of the rule) | corners rounded to 12 and 16 px — cosmic-comp rounds the band to a radius equal to its thickness, and no theme radius reaches it; 11 also rendered 16 px on two sides and 17 on the others | the smallest width that renders whole and uniform at every quarter-step scale and is found from the corner of the eye: 4 dp, 6 px here, the corner cut 5/3/2/1/1 px, 2026-09-21 (§5) |
 | the rule at 22 dp | a gap that made a 44 pt hit box only when both windows' edges were counted; awkward on screen | the gap is the handle zone, so it is the zone: 44 dp, 2026-09-21 (§5) |
 | `list.hoverBackground` SELECT, carrying WHITE by `list.hoverForeground` | BLACK on SELECT, Lc 0.0, in an extension's chat webview | a webview sets the ground alone and its text inherits `foreground`; an id whose platform default is a faint tint is a tint, so hover is LIGHT, 2026-09-21 |
+| Qt's `Button` as LIGHT, §2's own assignment | Fusion lightens and desaturates what it is fed and paints a gradient: BLACK on the face's bottom stop Lc 63, on every tab page 66 (`build/qt.py --derive`) | the input is chosen against the derivation: `neutral_9` carries BLACK at 76 and 83 there; WHITE was tried and clips to `#FFFFFF`, DARK leaves WHITE at −70 on the face. 2026-09-21 |
+| the KDE `Button` set as LIGHT, flat | BLACK on it Lc 61.3 at the 400 the styles render, and nothing else the set names reads on it: ACCENT 45, DARK 48, the ANSI red 47 | DARK carrying WHITE, Lc −81.7, the pair `build/vscode.py` gives its secondary button; every text role on the set is WHITE. 2026-09-21 |
 
 A value with no measurement beside it is a guess, and the next person cannot
 tell it from a measured one.
@@ -487,6 +534,20 @@ region's modal value is the one the theme names for it, the values over 3% of
 any region all pass `build/poles.py`, and the one unauthored value over 3% is the
 2 px outline COSMIC draws around every window, native ones included.
 
+On Qt the pass runs in a config directory of its own: `sh worksafe/qt/install.sh
+--into DIR`, then `XDG_CONFIG_HOME=DIR qt6ct` (and `qt5ct`), which are Qt
+applications themselves — a tab widget, buttons, a combo box, an edit, a
+progress bar — painted through the very plugin every other Qt application
+uses. COSMIC re-tiles every window when one opens, so a whole-screen diff finds
+the whole screen; anchor the crop on a value the model predicts and nothing
+else on the desktop paints (the tab page), and read pixel columns through each
+control against the model's stops. Measured 2026-09-21 on both toolkits: the
+outline, the tab outline, the unselected tab, the tab page, the selected tab's
+top, the progress outline and the default button's outline are the modelled
+bytes exactly; the gradient faces agree with their stops to the sampling of
+the first and last rows. The blue and orange in the glyphs are subpixel
+rendering (`PLATFORM.md`).
+
 What the pass is looking for: no hue in chrome that reads as a signal (§1); the
 three semantic hues present only where the meaning is (§3); one rule, the same
 width everywhere, carrying no state (§5); the cursor findable at a glance on a
@@ -502,6 +563,7 @@ motion, no blur.
 | `elevated/windows/remainder.theme` | generated **and committed**; guarded by `build/windows.py` |
 | `elevated/windows/remainder.reg` | generated **and committed**; guarded by `build/windows.py`. ASCII, CRLF, no BOM — Windows reads a `.reg` without a BOM as ANSI, so those two spell their section references out where the rest of the kit writes `§` |
 | `worksafe/vscode/remainder/themes/remainder-color-theme.json` | generated **and committed**; guarded by `build/vscode.py`. JSON with a comment header, as VS Code reads it; the role table in `build/vscode.py` is the source |
+| `worksafe/qt/qt5ct/colors/remainder.conf`, `worksafe/qt/qt6ct/colors/remainder.conf`, `worksafe/qt/kde/Remainder.colors` | generated **and committed**; guarded by `build/qt.py`. One role table, three notations: 21 `#AARRGGBB` per group for qt5ct, 22 for qt6ct, decimal triples for KDE |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |
