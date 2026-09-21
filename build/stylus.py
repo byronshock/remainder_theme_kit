@@ -59,7 +59,7 @@ COLOUR_PROPS = ('color', 'background', 'background-color', 'fill', 'stroke', 'bo
                 'outline', 'outline-color', 'caret-color', 'text-decoration-color', '-webkit-text-fill-color')
 NOT = re.compile(r':not\([^)]*\)')
 # §5 declares the rule's reference width, and the sheet is the one place in the kit that draws it in pixels.
-RULE_PX = 22
+RULE_PX = 44
 
 
 def _subjects(sel):
@@ -206,8 +206,8 @@ def _print_derivations():
     for t, g, floor, why in PAIRS:
         print(f"  {t:7} on {g:7} Lc {apca.lc(ROLES[t], ROLES[g]):7.1f}  floor {floor:3.0f}   {why}")
     print(f"\n=== the rule (§5) ===")
-    print(f"  hr is {RULE_PX}px of BLACK. §5's reference width is 22 dp/pt, a 44 pt hit box; the parent")
-    print(f"  kit's 28 came from measuring its painting, and there is no painting here (§5).")
+    print(f"  hr is {RULE_PX}px of BLACK. §5's reference width is 44 dp/pt, the 1 cm handle zone entire; the")
+    print(f"  parent kit's 28 came from measuring its painting, and there is no painting here (§5).")
 
 
 if __name__ == '__main__':

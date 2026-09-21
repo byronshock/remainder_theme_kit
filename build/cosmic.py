@@ -257,6 +257,48 @@ def check_config(reg):
     return bad
 
 
+# --- 4. the rule, and the key window's mark in it (§2, §5) ----------------------------------------
+# The rule is 44 dp: the 1 cm x 1 cm handle zone entire (§5), which the .ron spends as gaps (0, 44)
+# -- outer 0, inner the rule, one rule everywhere. CHOSEN, in CURSOR: 4 dp, the smallest width that
+# renders whole and uniform at every quarter-step scale, is found from the corner of the eye, and
+# keeps the platform's rounding small. cosmic-comp draws `active_hint` in `window_hint` on the
+# focused window only, in the gap, from the window's edge outward -- measured 2026-09-21 at 150%:
+# 1.5 px per dp, every pixel the exact value, the window unmoved, the band's outer corners rounded
+# to a radius equal to its thickness (PLATFORM.md). So the mark is drawn inside the rule's width the
+# way the caret is drawn inside a line of text, and the constraint is that the rule survives beside
+# it: 4 of the gap's 44 dp are the mark and 40 stay BLACK. The rule's own width was tried and looked
+# at, and the rule vanished around the key window; 8 and 11 were shipped and retired for the rounding
+# (CONTRIBUTING.md §9). The checker holds the .ron to all three: the gap, the width, and that the hue
+# is CURSOR and no other.
+RULE_DP = 44
+HINT_DP = 4
+_HINT = re.compile(r'active_hint:\s*(\d+)')
+_GAPS = re.compile(r'gaps:\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)')
+_WHINT = re.compile(r'window_hint:\s*Some\("(#[0-9A-Fa-f]{6})[0-9A-Fa-f]{2}"\)')
+
+
+def check_hint(text):
+    """The key window's mark, as remainder.ron writes it. Returns the defect count."""
+    bad = 0
+    h, g, w = _HINT.search(text), _GAPS.search(text), _WHINT.search(text)
+    if not (h and g and w):
+        print('\nthe key window\'s mark: active_hint, gaps or window_hint is missing from the .ron'); return 1
+    hint, inner, hue = int(h.group(1)), int(g.group(2)), w.group(1).upper()
+    print(f'\nthe rule and the key window\'s mark (§2, §5): gaps ({g.group(1)}, {inner}), active_hint {hint} dp in window_hint {hue}')
+    if (int(g.group(1)), inner) != (0, RULE_DP):
+        print(f'  gaps are ({g.group(1)}, {inner}); §5\'s rule is {RULE_DP} dp, spent as (0, {RULE_DP})'); bad += 1
+    if hint != HINT_DP:
+        print(f'  active_hint is {hint}; the kit chooses {HINT_DP}'); bad += 1
+    if not 0 < hint < inner:
+        print(f'  a mark of {hint} dp in a {inner} dp gap leaves no rule beside the key window (§5)'); bad += 1
+    if hue != CURSOR.upper():
+        print(f'  window_hint is {hue}; the mark is CURSOR {CURSOR} and no other value (§2)'); bad += 1
+    if not bad:
+        print(f'  ok: {inner - hint} dp of rule remain beside the key window; the mark is CURSOR, '
+              f'Lc {apca.lc(CURSOR, WHITE):.1f} against the field it bounds')
+    return bad
+
+
 def check():
     reg = authored()
     files = [f for f in ('remainder.ron', 'remainder-term.ron') if os.path.exists(os.path.join(COSMIC, f))]
@@ -289,6 +331,8 @@ def check():
             fam, gap, req = P.clearance(hx)
             tag = 'neutral' if not P.readable(hx) else f'{gap:5.1f}/{req:4.1f} {fam}'
             print(f"  {hx} x{n:<3} {str(role):38} {tag:24} {note}")
+        if fn == 'remainder.ron':
+            bad += check_hint(text)
     bad += check_config(reg)
     bad += check_installer(reg)
     print(f"\npole test: {'every value clears' if not bad else str(bad) + ' DEFECT(S)'}")
@@ -325,6 +369,11 @@ def _print_derivations():
                 print(f"  ! {slot} {tier} {hx}: {note}")
     print("  neutral slots: normal black BLACK, normal white LIGHT, bright black DARK, "
           "bright white WHITE\n    -- §2's four-step ladder onto the four neutral ANSI slots.")
+    print(f"\n=== the key window's mark: CURSOR, {HINT_DP} dp of the {RULE_DP} dp rule, from the window's edge outward ===")
+    print(f"  as a mark against the field it bounds: on WHITE Lc {apca.lc(CURSOR, WHITE):.1f}, on LIGHT Lc {apca.lc(CURSOR, LIGHT):.1f}")
+    print(f"  against the rule outside it, recorded and not claimed: on BLACK Lc {apca.lc(CURSOR, BLACK):.1f} (dE {ok.delta_e(CURSOR, BLACK):.1f})")
+    print(f"  {HINT_DP} dp renders to {HINT_DP * 1.5:.0f} px at 150%, whole and uniform at every quarter-step scale; corner cut 5/3/2/1/1 px;")
+    print(f"  the rule keeps {RULE_DP - HINT_DP} dp beside the key window. CHOSEN, the smallest width that is found (§5).")
     print(f"  ANSI white as TEXT on the WHITE field is Lc {apca.lc(LIGHT, WHITE):.1f}: a light-field "
           "terminal cannot\n    make that slot read, and the kit does not pretend otherwise.")
 

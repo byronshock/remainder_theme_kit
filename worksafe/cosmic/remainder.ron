@@ -100,14 +100,29 @@
     frosted_panel: false,
     frosted_applets: false,
     frosted_maximized_apps: false,
-    // §5: the rule's reference width is 22 dp/pt, which §5 records as a 44 pt (about 1 cm) effective
-    // hit box, taken from the sizing guidelines by input modality so that a gap is a touch target and
-    // not only a line. Flat 22 at every output: dp is logical, so it is the same rule on 1080p and on
-    // 4K at 150%. The pair is (outer, inner); cosmic-comp draws outer + inner at a screen edge and
-    // inner alone between two windows, so outer is 0 and inner is the rule: one rule everywhere.
-    gaps: (0, 22),
-    // §5: the rule carries no state. COSMIC draws its hint on the focused window only, so a hint
-    // would make the gap carry focus.
-    active_hint: 0,
-    window_hint: Some("#0F090CFF"),
+    // §5: the rule's reference width is 44 dp/pt -- the 1 cm x 1 cm handle zone the sizing guidelines
+    // by input modality give a touch target, entire. It was 22, half the zone, on the reading that a
+    // gap is reached from either side; the gap IS the handle, so it is the zone (corrected 2026-09-21).
+    // Flat 44 at every output: dp is logical, so it is the same rule on 1080p and on 4K at 150%. The
+    // pair is (outer, inner); cosmic-comp draws outer + inner at a screen edge and inner alone between
+    // two windows, so outer is 0 and inner is the rule: one rule everywhere.
+    gaps: (0, 44),
+    // §2, §5: the key window's mark. CURSOR is the one hue the kit assigns to a state -- where input
+    // goes -- and the key window is that state at screen scale, as the caret is at field scale. COSMIC
+    // draws active_hint on the focused window only, in window_hint, IN THE GAP from the window's edge
+    // outward (measured 2026-09-21 at 150%: 1.5 px per dp, every pixel the exact value, the window
+    // itself unmoved). 4 dp is CHOSEN, and it is the smallest width that does three things: renders
+    // whole and uniform at every quarter-step scale (4, 5, 6, 7, 8 px at 100-200%; 1 dp came out 1 px
+    // on the sides and 2 on the top, 11 dp 16 and 17); is found from the corner of the eye, which is
+    // the mark's job -- 6 px here is 0.82 mm, about 8.6 arcmin at 65 cm, and its contrast against the
+    // gap is the highest in the kit (Michelson 0.96, the quantity a line is detected by); and keeps
+    // the platform's one residue small -- cosmic-comp rounds the band's outer corners to a radius
+    // equal to its thickness, which no theme radius reaches (ours are all 0), so at 6 px the corner
+    // loses 5/3/2/1/1 px on its first five rows and reads square. 40 dp of BLACK rule remain beside
+    // the key window. The rule's own width was tried and looked at: the key window's rule turned
+    // CURSOR entirely and touched the panel and its neighbours, which is the rule carrying state,
+    // and §5 does not allow it; 8 and 11 were shipped and retired for the rounding (CONTRIBUTING.md
+    // §9). build/cosmic.py checks both fields.
+    active_hint: 4,
+    window_hint: Some("#007891FF"),
 )

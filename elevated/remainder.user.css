@@ -1,8 +1,8 @@
 /* ==UserStyle==
 @name           Remainder
 @namespace      github.com/byronshock/remainder_theme_kit
-@version        0.1.6
-@description    Remainder for websites: WHITE ground and documents, LIGHT fields and panels, ACCENT links kept underlined, SELECT selection carrying WHITE, the CURSOR caret, one BLACK rule at 22px, Montserrat and Hack, no curves, no hairlines. Tier: elevated — no elevation on this surface, but its reach is every site.
+@version        0.1.7
+@description    Remainder for websites: WHITE ground and documents, LIGHT fields and panels, ACCENT links kept underlined, SELECT selection carrying WHITE, the CURSOR caret, one BLACK rule at 44px, Montserrat and Hack, no curves, no hairlines. Tier: elevated — no elevation on this surface, but its reach is every site.
 @author         Byron Shock, Ph.D.
 ==/UserStyle== */
 
@@ -29,7 +29,8 @@
    - Text on a LIGHT ground is 700. BLACK on LIGHT is Lc 61.2, which is APCA's 16px/700 tier and not its
      body tier, so the weight changes exactly where the ground changes — the same rule the Firefox chrome
      surface keeps, and for the same measurement.
-   - The rule is 22px: §5's reference width, where the parent kit's 28 came from its painting.
+   - The rule is 44px: §5's reference width, the 1 cm handle zone entire, where the parent kit's 28 came from
+     its painting. It was 22px until 0.1.7, half the zone.
 
    THE ONLY LITERAL COLOURS IN THIS FILE ARE THE --rm-* DEFINITIONS. build/stylus.py proves it.
 
@@ -39,6 +40,8 @@
    images off non-media, inline too — but not off sprite icons, or the icon vanishes and leaves its label.
    L5 font rules carry no !important: with it, every icon-font glyph renders as tofu.
 
+   0.1.7: the rule is 44px. §5's reference width is the 1 cm handle zone entire, 44 dp, where 22 was half of
+          it; --rm-rule and hr follow, and nothing else in the sheet moved.
    0.1.6: the palette moved. CAST 0.016 -> 0.0128, so every neutral and both chrome hues are one or two
           code values along; nothing about this sheet's structure changed and no pair moved off its floor.
    0.1.5: 0.1.4 fixed the wrong half. The text rule reached every descendant and the ground rule reached
@@ -102,7 +105,7 @@
   --rm-destructive: #AF1E2D;
   --rm-legend-light: #FFFFFF;
   --rm-legend-dark:  #000000;
-  --rm-rule: 22px;
+  --rm-rule: 44px;
   --rm-ui:   Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --rm-mono: Hack, "DejaVu Sans Mono", monospace;
 }

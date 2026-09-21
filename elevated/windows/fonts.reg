@@ -1,0 +1,34 @@
+Windows Registry Editor Version 5.00
+
+; Remainder for Windows -- the typeface substitution. OPT-IN, and HKLM: this is the one thing in
+; the kit that needs the elevation the directory is named for. PLATFORM.md records it as out of
+; reach per-user -- "Segoe UI Variable in system chrome (needs HKLM FontSubstitutes)" -- which
+; under CONTRIBUTING sec. 1 makes it a residue that elevation removes rather than one to tolerate.
+;
+; DO NOT MERGE THIS UNTIL MONTSERRAT IS INSTALLED. A substitution pointing at a face that is not
+; on the machine makes Windows fall back, and the fallback is not a face anybody chose. The kit
+; ships no fonts (CONTRIBUTING sec. 12): get Montserrat from the repository its own licence names,
+; github.com/JulietaUla/Montserrat, and install the faces before merging this.
+;
+; AUTHORITY.md sec. 5 declares Montserrat for UI and Hack for mono, and records that the cuts are
+; MEDIUM and EXTRABOLD rather than Regular and Bold -- Regular reads thin at 16px, and weight is
+; safe in one direction only: every contrast floor in the kit gets easier as rendered weight goes
+; up. Windows picks the cut by name from the installed family, so install the Medium and ExtraBold
+; faces and the substitution lands on them.
+;
+; This file is the whole substitution and it is separately reversible: delete these values and
+; Windows goes back to Segoe UI. install.cmd only merges it when asked with --fonts.
+;
+; ASCII, CRLF, no BOM -- see remainder.theme's header for why.
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\FontSubstitutes]
+"Segoe UI"="Montserrat"
+"Segoe UI Light"="Montserrat"
+"Segoe UI Semibold"="Montserrat"
+"Segoe UI Semilight"="Montserrat"
+"Segoe UI Black"="Montserrat"
+"Segoe UI Historic"="Montserrat"
+"Segoe UI Variable"="Montserrat"
+"Segoe UI Variable Display"="Montserrat"
+"Segoe UI Variable Small"="Montserrat"
+"Segoe UI Variable Text"="Montserrat"

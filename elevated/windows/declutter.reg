@@ -1,0 +1,80 @@
+Windows Registry Editor Version 5.00
+
+; Remainder for Windows -- the declutter. AUTHORITY.md sec. 0 is the authority for this file.
+;
+; NO COLOUR IS SET HERE, and build/windows.py proves it rather than trusting the claim: it reads
+; every notation a colour could hide in and reports this file as carrying none. Painting is
+; remainder.theme and remainder.reg. This file is the OTHER half, and AUTHORITY.md calls it the
+; larger one -- "the point is to save users from Windows, and the skin is the smaller half. The
+; larger half is removing what the platform put in the user's way."
+;
+; Every value here is HKCU and reversible: set it back to 1 for anything you want returned, or
+; restore the backup install.cmd writes before it merges. PLATFORM.md names this file.
+;
+; ASCII, CRLF, no BOM -- see remainder.theme's header for why.
+
+; --- recommendations, tips and the welcome experience ------------------------------------------
+; The numbered SubscribedContent keys are how Windows addresses its own suggestion surfaces.
+; The numbers are Microsoft's and are not documented; they are recorded here with what each is
+; believed to carry, and PLATFORM.md is where a correction belongs once one is observed.
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager]
+"SubscribedContent-338389Enabled"=dword:00000000
+"SubscribedContent-310093Enabled"=dword:00000000
+"SubscribedContent-338387Enabled"=dword:00000000
+"SubscribedContent-338393Enabled"=dword:00000000
+"SubscribedContent-353694Enabled"=dword:00000000
+"SubscribedContent-353696Enabled"=dword:00000000
+"SubscribedContentEnabled"=dword:00000000
+"ContentDeliveryAllowed"=dword:00000000
+"SystemPaneSuggestionsEnabled"=dword:00000000
+"SoftLandingEnabled"=dword:00000000
+"RotatingLockScreenEnabled"=dword:00000000
+"RotatingLockScreenOverlayEnabled"=dword:00000000
+"SilentInstalledAppsEnabled"=dword:00000000
+"OemPreInstalledAppsEnabled"=dword:00000000
+"PreInstalledAppsEnabled"=dword:00000000
+"PreInstalledAppsEverEnabled"=dword:00000000
+"FeatureManagementEnabled"=dword:00000000
+
+; "Let's finish setting up your device" -- the full-screen prompt after an update.
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\UserProfileEngagement]
+"ScoobeSystemSettingEnabled"=dword:00000000
+
+; --- the taskbar and Start ---------------------------------------------------------------------
+; Taskbar left. Widgets, chat and task view off. Start stops recommending and stops keeping the
+; two lists it recommends from.
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced]
+"TaskbarAl"=dword:00000000
+"TaskbarDa"=dword:00000000
+"TaskbarMn"=dword:00000000
+"ShowTaskViewButton"=dword:00000000
+"ShowCopilotButton"=dword:00000000
+"Start_IrisRecommendations"=dword:00000000
+"Start_TrackDocs"=dword:00000000
+"Start_TrackProgs"=dword:00000000
+; A file extension is information about the file, and hiding it is the platform deciding the
+; user does not need to know what they are about to open.
+"HideFileExt"=dword:00000000
+"LaunchTo"=dword:00000001
+
+; --- search ------------------------------------------------------------------------------------
+; The search box comes off the taskbar; web results and the rotating "search highlights" go.
+; Search over this machine stays exactly as it was -- what is removed is the part that is not
+; about this machine.
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search]
+"SearchboxTaskbarMode"=dword:00000000
+"BingSearchEnabled"=dword:00000000
+"CortanaConsent"=dword:00000000
+
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\SearchSettings]
+"IsDynamicSearchBoxEnabled"=dword:00000000
+
+; --- news, feeds and notification defaults -----------------------------------------------------
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Feeds]
+"ShellFeedsTaskbarViewMode"=dword:00000002
+
+; The suggestion toast, which is the notification channel the tips arrive on. Notifications a
+; program you installed sends are untouched: this is the platform advertising to you, not your
+; software talking to you.
+[HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.Suggested]
+"Enabled"=dword:00000000

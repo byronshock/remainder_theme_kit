@@ -14,8 +14,9 @@ against palette.json and §5 rather than by looking at it:
   by approximation. So there is no rule drawn around the window here. The surround is the rule.
   DARK keeps its own job in the picture, on the dock tiles §5 gives it.
 
-  THE RULE IS 22. §5's reference width, which the COSMIC theme spends as gaps (0, 22) and the
-  all-sites sheet spends on hr. The sheet was drawing 14.
+  THE RULE IS 44. §5's reference width -- the 1 cm handle zone entire, since 2026-09-21; it was 22,
+  half of it -- which the COSMIC theme spends as gaps (0, 44) and the all-sites sheet spends on hr.
+  The sheet once drew 14.
 
   THE WEIGHT IS NOT DECORATION AND IS NOT DECLARED HERE EITHER. A ground whose authored floor
   is Lc 60 is APCA's 16px/700 tier and its text is 700; a ground authored at 75 or 90 is a body
@@ -73,8 +74,9 @@ SEM = [('SUCCESS', '#006B54', '#FFFFFF'), ('WARNING', '#FCD116', '#000000'),
 # kit's faces here would put a value in the picture this kit never chose.
 UI = "Montserrat, sans-serif"
 MONO = "Hack, monospace"
-RULE = 22                                                  # §5's reference width
-W, H = 1060, 728
+RULE = 44                                                  # §5's reference width
+HINT = 4                                                   # §5: the key window's mark, CURSOR, the smallest width that is found
+W, H = 1120, 772
 o = []
 
 
@@ -95,12 +97,16 @@ rect(0, 0, W, H, C['BLACK'])
 DOCK = 78                                                  # §5: dock tiles stay DARK on the field
 for i in range(4):
     rect(RULE, RULE + i * (DOCK + 10), DOCK, DOCK, C['DARK'])
-text(RULE, H - RULE - 4, f"dock tiles DARK on the BLACK field — dE {SEP['BLACK_DARK']:.1f}",
+text(RULE, H - RULE - 4, f"dock tiles DARK on the BLACK field — dE {SEP['BLACK_DARK']:.1f}   ·   "
+     f"the key window's mark: CURSOR, {HINT} dp of the {RULE} dp rule (§5)",
      legend('DARK'), 11, weight('DARK'))
 
 x0 = RULE * 2 + DOCK
 y0, x1, y1 = RULE, W - RULE, H - RULE - 26
 TB = 48
+# §2, §5: the mock window is the key window, so it carries the mark -- CURSOR, HINT dp of the
+# rule's width, drawn from the window's edge outward, the rest of the gap still BLACK.
+rect(x0 - HINT, y0 - HINT, x1 - x0 + 2 * HINT, y1 - y0 + 2 * HINT, C['CURSOR'])
 rect(x0, y0, x1 - x0, TB, C['ACCENT'])                     # key titlebar
 text(x0 + 18, y0 + 31, 'Remainder — a palette chosen for what it is far from',
      legend('ACCENT'), 17, weight('ACCENT'))

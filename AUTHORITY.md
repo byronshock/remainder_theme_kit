@@ -376,7 +376,7 @@ what communicates "selected." A soft edge against the titlebar hides nothing.
 
 | Role | Hex | L | C | Use |
 |---|---|---|---|---|
-| CURSOR | `#007891` | 0.53 | 0.0958 | text cursor indicator, terminal cursor |
+| CURSOR | `#007891` | 0.53 | 0.0958 | text cursor indicator, terminal cursor, the key window's frame (§5) |
 
 ACCENT, SELECT and the neutrals are furniture — read once, then unseen. A text
 cursor is a **locator**: its whole purpose is to be found fast, repeatedly, on
@@ -392,6 +392,21 @@ at the lightness Lc 60 demands that is the gamut ceiling. It clears `C_FLOOR`
 by 0.004, so the cursor is still honestly hue-bearing — but that is the whole
 margin there is. **It is the least robust value in the kit**, living on three
 simultaneous margins: +0.004 chroma, 0.8° inside the guard edge, +0.7 Lc.
+
+**CURSOR is the one hue the kit assigns to a state, and the state is *where
+input goes*.** In a field of text that is the caret. On a screen of windows it
+is the key window, and the kit marks it with the same hue: a CURSOR band drawn
+in the rule beside the key window (§5). There is one caret and one key window,
+so the locator hue is never on screen twice for two reasons — the frame and
+the caret inside it are one statement at two scales. Nothing about this makes
+CURSOR a ground: WHITE on it is Lc −64.9 and BLACK on it 29.1, under every
+text tier, so it marks a key window and never paints its titlebar. As a mark it
+is read against the field it bounds — Lc 60.9 on WHITE, 30.3 on LIGHT, both
+over APCA's 30 for a mark — and it is recorded, not claimed, against the BLACK
+rule on its other side: Lc −26.8, under that tier by 3.2, which is the side
+the eye is not on — and Lc is a text metric (§0e). A line is detected by its
+luminance contrast, and against the rule the mark's is Michelson 0.96, the
+highest in the kit; that, not Lc, is why the mark can be as thin as it is (§5).
 
 ### Contrast, measured
 
@@ -553,13 +568,43 @@ painting and those derivations have no source. Remainder therefore **declares**
 them rather than pretending to measure them:
 
 - **Geometry.** One rule, BLACK, drawn outside the field it bounds, the same
-  everywhere on a screen, carrying no state. Reference width 22 density-independent pixels (dp/pt) , a 44 pt, 1 cm effective hit box, taken from the sizing guidelines by input modality according to Fitt's Law to enable touch surfaces. References will follow.
+  everywhere on a screen, carrying no state. Reference width **44 dp/pt**: the
+  1 cm × 1 cm handle zone the sizing guidelines by input modality give a touch
+  target (Fitts's law), entire. It stood at 22 — half the zone, on the reading
+  that a gap is reached from either side — and that was the wrong reading of
+  the same result: the gap *is* the handle, so the gap is the zone. Corrected
+  2026-09-21. References will follow.
 
   There is no thinner rule. **A separator that wants to be lighter than the
   rule is not a rule; it is a change of field tone — WHITE against LIGHT — and
   draws no line.** That tone change is a boundary the kit relies on to divide
   two surfaces with nothing drawn between them, which is why §2 takes it as
   the floor every other load-bearing boundary must clear.
+
+  **The key window is marked in the rule, not by it.** Beside the key window
+  the innermost **4 dp** of the rule's width is CURSOR (§2), drawn from the
+  window's edge outward, and the remaining 40 dp is the rule as everywhere
+  else — the window does not move, the gap does not change width, the handle
+  zone holds. A mark drawn in the rule, as the caret is drawn in the text. The
+  rule's own width was tried and looked at on 2026-09-21: the key window's
+  rule turned CURSOR entirely and touched the panel and its neighbours, which
+  is the rule carrying state, and this section does not allow it.
+
+  The 4 is chosen (§0c), and it is the smallest width that does three things.
+  It renders **whole and uniform at every quarter-step scale** — 4, 5, 6, 7,
+  8 device pixels at 100–200% — where 1 dp came out one pixel on the sides
+  and two on the top, and 11 dp sixteen and seventeen. It is **found from the
+  corner of the eye**, which is what a mark is for: 6 px on this display is
+  0.82 mm, about 8.6 arcmin at 65 cm, and a line is detected by its luminance
+  contrast, which against the gap is Michelson 0.96 — the highest contrast in
+  the kit, and the reason the mark can be this thin. And it keeps the one
+  residue the platform adds small: cosmic-comp rounds the band's outer corners
+  to a radius equal to its thickness, which no theme radius — ours are all 0 —
+  touches (§4, `PLATFORM.md`), so at 6 px the corner loses 5/3/2/1/1 px on its
+  first five rows and reads square, where at 16 px it read rounded. Measured
+  on COSMIC at 150% on 2026-09-21: 6 px on all four sides, every pixel
+  `#007891` exactly, drawn in the gap and not over the window, 60 px of rule
+  outside it. 8 and 11 dp were shipped before it and retired for the rounding.
 - **Typography.** UI Montserrat, mono Hack, 12pt system
   size. **This is load-bearing and unmeasured**: every contrast floor in §0e is
   a function of what "12pt" renders at, taken to be about 16px effective. If
@@ -585,7 +630,9 @@ them rather than pretending to measure them:
   **BLACK** one. The tiling gaps are the rule, and at BLACK they are
   literally it: the rule is BLACK, so the gap between two windows is the same
   value as the line the kit draws — ΔE 0.0, where a DARK field left the two
-  ΔE 23.7 apart and made the claim true only by approximation. It also buys the
+  ΔE 23.7 apart and made the claim true only by approximation. Beside the key
+  window the innermost 4 dp of that gap is the CURSOR mark (Geometry, above)
+  and the other 40 dp is still the rule. It also buys the
   desktop's own labels margin, WHITE on BLACK measuring Lc −92.3 against −81.7
   on DARK. Dock tiles stay DARK and read against the field at ΔE 23.7, clear of
   the ΔE 17.1 floor. Photographs are content (§0a) and are permitted; nothing
@@ -616,7 +663,9 @@ them rather than pretending to measure them:
 7. A boundary that must read, must read at least as well as the separator the
    kit already trusts to do that job (§2).
 8. State is carried by the three semantic hues (§3) when the meaning is
-   present, and otherwise by tone and geometry. No chrome hue means anything.
+   present; *where input goes* — the caret in a field, the key window on a
+   screen — by CURSOR, the one hue the kit assigns to a state (§2); and
+   otherwise by tone and geometry. No chrome hue means anything.
 9. Content is exempt and may use any color, poles included (§0a).
 10. Measure, don't eyeball.
 11. Deriving a number beats declaring one; declaring one openly beats dressing
