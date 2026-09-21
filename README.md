@@ -19,7 +19,7 @@ which it owes everything structural and parts with on one question
 | BLACK | `#0F090C` | 0.15 | 0.0122 | rules, text, badges, the desktop field |
 | ACCENT | `#773556` | 0.43 | 0.1007 | key titlebars, links, toggles, focus |
 | SELECT | `#531537` | 0.31 | 0.0993 | selected rows, WHITE text on it |
-| CURSOR | `#007891` | 0.53 | 0.0958 | text cursor — the one value at another hue |
+| CURSOR | `#007891` | 0.53 | 0.0958 | text cursor, and the key window's frame — the one value at another hue |
 
 Plus the three signal colors, unchanged from De Stijl and the only hues in the
 system that mean anything: SUCCESS `#006B54`, WARNING `#FCD116`,

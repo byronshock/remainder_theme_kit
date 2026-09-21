@@ -106,8 +106,15 @@
     // 4K at 150%. The pair is (outer, inner); cosmic-comp draws outer + inner at a screen edge and
     // inner alone between two windows, so outer is 0 and inner is the rule: one rule everywhere.
     gaps: (0, 22),
-    // §5: the rule carries no state. COSMIC draws its hint on the focused window only, so a hint
-    // would make the gap carry focus.
-    active_hint: 0,
-    window_hint: Some("#0F090CFF"),
+    // §2, §5: the key window's mark. CURSOR is the one hue the kit assigns to a state -- where input
+    // goes -- and the key window is that state at screen scale, as the caret is at field scale. COSMIC
+    // draws active_hint on the focused window only, in window_hint, IN THE GAP from the window's edge
+    // outward (measured 2026-09-21 at 150%: 1.5 px per dp, every pixel the exact value, the window
+    // itself unmoved). 8 dp is CHOSEN: narrower than the 22 dp rule, so 14 dp of BLACK rule remains
+    // beside the key window and the rule still reads as one rule everywhere; and a whole number of
+    // device pixels at every quarter-step scale. 22 -- the rule's own width -- was tried and looked
+    // at: the key window's rule turned CURSOR entirely and touched the panel and its neighbours,
+    // which is the rule carrying state, and §5 does not allow it. build/cosmic.py checks both fields.
+    active_hint: 8,
+    window_hint: Some("#007891FF"),
 )

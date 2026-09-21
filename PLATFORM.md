@@ -92,8 +92,13 @@ values, and tiling gaps are all settable per-user with no sudo.
 - Light/dark and auto-switch are theme inputs.
 - Tiling gaps: COSMIC adds its outer gap to the inner one at a screen edge,
   so set outer 0 and inner to the wanted gap for one consistent gap.
-- `active_hint` 0, or the focused window alone gets a hint and the gap
-  carries state.
+- `active_hint` draws a band of `window_hint` around the **focused window
+  only**, `active_hint` dp wide, **in the gap from the window's edge outward**:
+  the window does not move or shrink, and at `active_hint` = the inner gap the
+  band fills the gap and touches the neighbours. Painted at the exact value, no
+  blending. Measured 2026-09-21 at 150%: 8 dp → 12 px, 22 dp → 33 px, 67,912 of
+  67,920 pixels the exact value. A hint therefore makes the gap carry focus to
+  exactly the extent of its width, which is the trade a theme makes with it.
 - Background is per output, not per workspace.
 - Toolkit config (`com.system76.CosmicTk`): fonts, density, header size.
 - `cosmic-randr` reports output size and scale, so an installer can compute
