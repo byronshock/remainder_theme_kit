@@ -8,8 +8,9 @@
 // Nothing here is a blend and nothing carries an alpha but that one.
 //
 // The shape: read text sits on WHITE; LIGHT carries the icon strips, the tab strip and the headers
-// the platform renders bold; the key titlebar is ACCENT; selection and hover are SELECT carrying WHITE
-// wherever the platform lets the text follow the ground, and LIGHT where it does not (the editor);
+// the platform renders bold; the key titlebar is ACCENT; selection is SELECT carrying WHITE wherever the
+// platform lets the text follow the ground, and LIGHT where it does not (the editor); hover is a LIGHT tint,
+// because extension webviews paint list.hoverBackground alone and let the text inherit `foreground`;
 // the caret is CURSOR; the status bar is the rule at the 22 px the platform fixes, half its 44 dp width.
 // No line is drawn between surfaces.
 {
@@ -189,8 +190,8 @@
     "list.inactiveSelectionBackground": "#531537",
     "list.inactiveSelectionForeground": "#EFE5E9",
     "list.inactiveSelectionIconForeground": "#EFE5E9",
-    "list.hoverBackground": "#531537",
-    "list.hoverForeground": "#EFE5E9",
+    "list.hoverBackground": "#B8AEB2",
+    "list.hoverForeground": "#0F090C",
     "list.focusBackground": "#00000000",
     "list.focusForeground": "#0F090C",
     "list.focusOutline": "#773556",

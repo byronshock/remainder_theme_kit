@@ -60,7 +60,8 @@ terminal's selection is SELECT carrying WHITE, Lc −87.5, as §2 authors it.
 | the tab strip | LIGHT `#B8AEB2` | — the tabs on it are WHITE |
 | the active tab | WHITE `#EFE5E9` | BLACK, under a 2 px ACCENT bar |
 | inactive tabs | WHITE `#EFE5E9` | DARK — Lc 78.9 |
-| selected and hovered rows, menu items, palette rows, suggestions | SELECT `#531537` | WHITE — Lc −87.5 |
+| selected rows, menu items, palette rows, suggestions | SELECT `#531537` | WHITE — Lc −87.5 |
+| hovered rows | LIGHT `#B8AEB2` | text keeps its colour — Lc 61.3 (below) |
 | the editor selection | LIGHT `#B8AEB2` | code keeps its colour — Lc 61.3 (above) |
 | the terminal selection | SELECT `#531537` | WHITE — Lc −87.5 |
 | the caret, the terminal cursor | CURSOR `#007891` | Lc 60.9 on WHITE |
@@ -84,7 +85,7 @@ thinner than the rule while the platform draws none wider than 1 px. The
 it is the control's own glyph, like a checkbox's box, and takes BLACK — inputs,
 dropdowns, checkboxes, the command centre's well.
 
-## Five decisions worth naming
+## Six decisions worth naming
 
 **Read text goes on WHITE, and that is a measurement.** The kit's structure is
 WHITE fields inside LIGHT panels with bold labels on the panels. This platform
@@ -140,6 +141,19 @@ type in Seti's own colours — blue, yellow, green, orange — which are poles d
 no semantic work in the explorer. §4 keeps a *brand's* art, and Seti's glyphs
 are not brands. `vs-minimal` draws one glyph in `icon.foreground`;
 `--keep-file-icons` leaves the choice alone.
+
+**Hover is a tint, because extension webviews say so.** The first cut made
+hover SELECT carrying WHITE, as on every other surface, and the platform's own
+lists paired it correctly with `list.hoverForeground`. An extension's chat
+panel did not: the Qwen Code companion's webview maps its `--accent` token to
+`--vscode-list-hoverBackground` and its utility class sets the background
+alone, so the message bubble came up BLACK on SELECT — Lc 0.0, measured off
+the screen on 2026-09-21. A theme cannot reach a webview's CSS; the only lever
+is the id's value, and the id's platform default is a faint tint (`#F0F0F0`),
+which is why webview authors treat it as one. So `list.hoverBackground` is
+LIGHT and `list.hoverForeground` BLACK: a fill under text that keeps its
+colour, Lc 61.3, in the same table as the editor selection. Selection stays
+SELECT — its default is a strong blue with white text, and authors pair it.
 
 ## The ladders
 
@@ -234,6 +248,13 @@ Tolerated, never echoed (§4). `PLATFORM.md` is the record:
 - **Shadows.** Seven `*.shadow` ids are left unset and paint a blend: real
   shadows, which §4 permits. `--coverage` lists them so the set is checked
   rather than remembered.
+- **Extension webviews.** They receive the theme as `--vscode-*` custom
+  properties and map them onto their own tokens however they like; what a
+  theme can do is give the ids they treat as tints a tint (hover, above). What
+  it cannot do is make a webview pair a ground with its foreground id, so
+  `--muted` on `sideBarSectionHeader.background` with `descriptionForeground`
+  comes out DARK on LIGHT, Lc 48.4 — the platform's own secondary-on-panel
+  pair, under the body tier, and the webview's choice.
 - **Two opacities** — `editorUnnecessaryCode.opacity`,
   `minimap.foregroundOpacity` — take a colour whose only read channel is its
   alpha, and are left to the platform by name.

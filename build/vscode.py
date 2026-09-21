@@ -372,8 +372,8 @@ COLORS = [
     ('list.inactiveSelectionBackground', S, 'the same when the list is not focused; focus is shown by the outline'),
     ('list.inactiveSelectionForeground', W, ''),
     ('list.inactiveSelectionIconForeground', W, ''),
-    ('list.hoverBackground', S, 'hover is SELECT, as on every other surface'),
-    ('list.hoverForeground', W, ''),
+    ('list.hoverBackground', L, 'hover is a LIGHT tint here, not SELECT: extension webviews use this id as a static ground and set it alone, so their text inherits `foreground` -- measured 2026-09-21, BLACK on SELECT in a chat panel'),
+    ('list.hoverForeground', B, 'follows: BLACK on LIGHT, Lc 61.3, a fill under text that keeps its colour (HIGHLIGHTS)'),
     ('list.focusBackground', NONE, 'a focused, unselected row is marked by its outline'),
     ('list.focusForeground', B, ''),
     ('list.focusOutline', A, ''),
@@ -1249,7 +1249,6 @@ PAIRS = [
     ('panelSectionHeader.foreground', 'panelSectionHeader.background', 60, 'a panel section header, 11px/700'),
     ('list.activeSelectionForeground', 'list.activeSelectionBackground', 75, 'the selected row'),
     ('list.inactiveSelectionForeground', 'list.inactiveSelectionBackground', 75, 'the selected row of an unfocused list'),
-    ('list.hoverForeground', 'list.hoverBackground', 75, 'the hovered row'),
     ('list.highlightForeground', 'sideBar.background', 75, 'filter matches on a row'),
     ('list.focusHighlightForeground', 'list.activeSelectionBackground', 75, 'filter matches on the selected row'),
     ('list.errorForeground', 'sideBar.background', 75, 'a file with errors'),
@@ -1348,6 +1347,7 @@ HIGHLIGHTS = [
     ('editor.selectionBackground', 'editor.foreground', 'the editor selection'),
     ('editor.inactiveSelectionBackground', 'editor.foreground', 'the selection of an unfocused editor'),
     ('selection.background', 'foreground', 'text selected outside the editor'),
+    ('list.hoverBackground', 'list.hoverForeground', 'the hovered row: a tint, because extension webviews use the id as one'),
     ('editorStickyScrollHover.background', 'editor.foreground', 'a hovered sticky line'),
     ('terminalStickyScrollHover.background', 'terminal.foreground', 'a hovered sticky terminal line'),
     ('peekViewResult.matchHighlightBackground', 'peekViewResult.fileForeground', 'a match in a peek result'),
@@ -1621,8 +1621,9 @@ THEME_HEADER = """// Remainder for VS Code -- the colour theme. AUTHORITY.md is 
 // Nothing here is a blend and nothing carries an alpha but that one.
 //
 // The shape: read text sits on WHITE; LIGHT carries the icon strips, the tab strip and the headers
-// the platform renders bold; the key titlebar is ACCENT; selection and hover are SELECT carrying WHITE
-// wherever the platform lets the text follow the ground, and LIGHT where it does not (the editor);
+// the platform renders bold; the key titlebar is ACCENT; selection is SELECT carrying WHITE wherever the
+// platform lets the text follow the ground, and LIGHT where it does not (the editor); hover is a LIGHT tint,
+// because extension webviews paint list.hoverBackground alone and let the text inherit `foreground`;
 // the caret is CURSOR; the status bar is the rule at the 22 px the platform fixes, half its 44 dp width.
 // No line is drawn between surfaces.
 """

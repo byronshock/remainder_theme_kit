@@ -307,6 +307,17 @@ on COSMIC.
 - `window.titleBarStyle` defaults to `custom` on Linux, so the title bar is
   the theme's to paint by key state; with `native` the compositor paints it.
 
+- **Extension webviews receive the theme as `--vscode-*` custom properties**
+  and map them onto their own tokens: the Qwen Code companion 0.24.2's webview
+  maps `--accent` to `list.hoverBackground`, `--muted` to
+  `sideBarSectionHeader.background`, `--secondary` to `input.background`,
+  `--card` to `editorWidget.background`, `--background` to
+  `sideBar.background`, and its utility classes set the background alone, so
+  the text inherits `foreground`. An id whose platform default is a faint tint
+  is therefore read by webviews as a tint under the base foreground, whatever
+  its own foreground id says. Measured 2026-09-21: BLACK on a SELECT-valued
+  `list.hoverBackground` in that panel.
+
 **Cannot reach:** the workbench face (above); font weight; border widths and
 radii; the onboarding window; the file icons' own colours, other than by
 choosing an icon theme (`vs-minimal` is monochrome and takes `icon.foreground`).

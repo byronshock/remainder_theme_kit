@@ -424,6 +424,7 @@ right".
 | DWM `ColorizationColor` as an ABGR DWORD, like `AccentColor` | `dword:00563577`, which the checker read back as ACCENT | the key is AARRGGBB like the `.theme`'s (`0xC40078D7` is Microsoft's default); a checker cannot verify its own reading of a notation, and the parent kit's `theme.reg` caught it by parity (§8, §11), 2026-09-21 |
 | `active_hint` at the rule's own width, in CURSOR | the key window's rule turned CURSOR entirely, touching the panel and its neighbours | the rule carries no state (§5); a quarter of the rule — 11 of 44 dp — leaves 33 dp of rule beside the key window, looked at 2026-09-21 |
 | the rule at 22 dp | a gap that made a 44 pt hit box only when both windows' edges were counted; awkward on screen | the gap is the handle zone, so it is the zone: 44 dp, 2026-09-21 (§5) |
+| `list.hoverBackground` SELECT, carrying WHITE by `list.hoverForeground` | BLACK on SELECT, Lc 0.0, in an extension's chat webview | a webview sets the ground alone and its text inherits `foreground`; an id whose platform default is a faint tint is a tint, so hover is LIGHT, 2026-09-21 |
 
 A value with no measurement beside it is a guess, and the next person cannot
 tell it from a measured one.
