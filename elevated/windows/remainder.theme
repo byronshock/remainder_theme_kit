@@ -61,7 +61,8 @@ Pattern=
 
 ; AutoColorization=0 keeps Windows from sampling a wallpaper for the accent: there is
 ; no wallpaper, and an accent derived from a photograph is a value nobody authored.
-; ColorizationColor is AARRGGBB here -- the ONLY place in this surface that is not ABGR.
+; ColorizationColor is AARRGGBB here, and so is the DWM ColorizationColor DWORD that
+; remainder.reg writes -- the shell copies this value into that key. AccentColor is ABGR.
 [VisualStyles]
 Path=%SystemRoot%\resources\themes\Aero\Aero.msstyles
 ColorStyle=NormalColor

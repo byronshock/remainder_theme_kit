@@ -421,6 +421,7 @@ right".
 | WCAG 2.x contrast | four pairs identical at "AAA 7.1:1" | APCA separates them Lc 51.7 to 78.9; two were display-type only (§0e) |
 | "below 0.014 the cast stops being perceptible" | a declared threshold | measured 2026-09-20 at **0.004**, three times lower; §2 now carries the reading (§9) |
 | a cast of 0.0130, the round number | does not derive | CURSOR's best teal reaches Lc 60.4540 where the solver demands 60.5 — reachable casts are islands, not a range (§2) |
+| DWM `ColorizationColor` as an ABGR DWORD, like `AccentColor` | `dword:00563577`, which the checker read back as ACCENT | the key is AARRGGBB like the `.theme`'s (`0xC40078D7` is Microsoft's default); a checker cannot verify its own reading of a notation, and the parent kit's `theme.reg` caught it by parity (§8, §11), 2026-09-21 |
 
 A value with no measurement beside it is a guess, and the next person cannot
 tell it from a measured one.

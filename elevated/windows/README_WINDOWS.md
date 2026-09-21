@@ -222,8 +222,8 @@ five notations Windows stores colour in:
 | Notation | Where |
 |---|---|
 | `15 9 12` decimal triple, bare and quoted | `.theme` and `.reg` colour tables |
-| `dword:00563577` ABGR, alpha high | DWM and `Explorer\Accent` |
-| `0XC4773556` AARRGGBB | `.theme` `[VisualStyles] ColorizationColor` |
+| `dword:00563577` ABGR, alpha high | DWM `AccentColor`, `AccentColorInactive`, and `Explorer\Accent` |
+| `0XC4773556` in the `.theme`, `"ColorizationColor"=dword:c4773556` in the `.reg` — AARRGGBB, alpha C4 | `[VisualStyles] ColorizationColor`, and the DWM `ColorizationColor` / `ColorizationAfterglow` DWORDs. The checker tells this DWORD from the ABGR one by its key name, which is why the table quotes it with its key |
 | `hex:ae,67,88,00,…` RGBA quads | `AccentPalette`, REG_BINARY |
 | `#773556` | comments, and `install.cmd`'s instructions |
 
@@ -234,3 +234,17 @@ times over. Two of those notations caught something during this surface's own
 build — the quoted decimal triples in `remainder.reg` were going unread, and
 `UserPreferencesMask` was being decoded as a colour that failed the pole test.
 Both are in the module's comments where they happened.
+
+A third was caught after the surface landed, and **not by the checker**. The DWM
+`ColorizationColor` and `ColorizationAfterglow` DWORDs were written ABGR, like
+`AccentColor` beside them, and the checker passed them — it decoded the DWORD the
+same wrong way the writer had encoded it, so `remainder.reg` agreed with itself and
+would have handed Windows the bytes reversed — `563577` for `773556`. A checker verifies a file against
+its own reading of a notation; it cannot verify the reading. What caught it was the
+parity rule (`CONTRIBUTING.md` §11): the parent kit's `theme.reg` writes the pair
+AARRGGBB — the order the `.theme`'s own `[VisualStyles]` value uses, and the order
+Microsoft's documented default `0xC40078D7` shows — and says so in a comment. Fixed
+2026-09-21; the decoder now tells the two byte orders apart by key name, the way it
+tells a flag from a colour. Two DWORDs under one key, two byte orders, and nothing in
+the value to say which — that is the platform, and it is unverified on a machine like
+everything else here.

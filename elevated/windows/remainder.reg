@@ -44,14 +44,18 @@ Windows Registry Editor Version 5.00
 "InfoWindow"="239 229 233"
 "InfoText"="15 9 12"
 
-; DWM. ABGR DWORDs, alpha in the high byte -- #773556 is dword:00563577.
+; DWM. Two byte orders under one key, and only the key name says which: AccentColor and
+; AccentColorInactive are ABGR, alpha high -- #773556 is dword:00563577.
+; ColorizationColor and ColorizationAfterglow are AARRGGBB, like the .theme value the shell
+; copies into them, with the C4 alpha the documented default 0xC40078D7 carries -- the same
+; #773556 is dword:c4773556. Written ABGR until 2026-09-21; build/windows.py says why.
 ; ColorPrevalence=1 puts the accent on title bars and borders, which is what makes the
 ; key titlebar ACCENT. AccentColorInactive is the non-key one (PLATFORM.md names it).
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM]
 "AccentColor"=dword:00563577
 "AccentColorInactive"=dword:00b2aeb8
-"ColorizationColor"=dword:00563577
-"ColorizationAfterglow"=dword:00563577
+"ColorizationColor"=dword:c4773556
+"ColorizationAfterglow"=dword:c4773556
 "ColorPrevalence"=dword:00000001
 "EnableAeroPeek"=dword:00000000
 

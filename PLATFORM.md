@@ -39,12 +39,19 @@ strip affordances users need and read as an accessibility mode.
   fact an installer and its checker both have to carry. A bare decimal triple
   (`Background=15 9 12`) in a `.theme`; the same value quoted
   (`"Background"="15 9 12"`) in a `.reg`; an **ABGR** `DWORD` with the alpha in the
-  high byte under DWM and `Explorer\Accent` — Microsoft's own default accent
-  `#0078D7` is stored `dword:00d77800`; an **AARRGGBB** value in the `.theme`'s
-  `[VisualStyles] ColorizationColor`, which is the one place the byte order is not
-  reversed; and a REG_BINARY run of RGBA quads in `AccentPalette`. Flags, masks and
-  delays share the `DWORD` and REG_BINARY forms, so nothing can tell a colour from a
-  flag by looking at the value — only by knowing the key.
+  high byte for `AccentColor` and `AccentColorInactive` under DWM and for
+  `Explorer\Accent` — Microsoft's own default accent `#0078D7` is stored
+  `dword:00d77800`; an **AARRGGBB** value for `ColorizationColor` — in the
+  `.theme`'s `[VisualStyles]` and in the DWM `ColorizationColor` /
+  `ColorizationAfterglow` DWORDs alike, the order the documented default
+  `0xC40078D7` shows and the order the parent kit's `theme.reg` has always
+  written; and a REG_BINARY run of RGBA quads in `AccentPalette`. So two DWORDs
+  under the one DWM key carry two byte orders, and flags, masks and delays share
+  the `DWORD` and REG_BINARY forms besides — nothing can tell a colour from a flag,
+  or one order from the other, by looking at the value; only by knowing the key.
+  This kit wrote its `Colorization*` pair ABGR until 2026-09-21 and its checker
+  passed them, having read the notation the same wrong way; the parent kit's
+  comment in `theme.reg` is what caught it.
 
   *(`#0078D7` is Microsoft's own default accent and appears here as the worked
   example of a byte order, which is a platform fact. No value either kit authors is

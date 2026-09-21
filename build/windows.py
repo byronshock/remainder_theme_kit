@@ -28,13 +28,25 @@ because it was written as a RON decimal triple. Windows is that problem five tim
     15 9 12                     REG_SZ decimal triple      [Control Panel\\Colors]
     dword:00563577              DWORD, ABGR, alpha high    DWM AccentColor
     0XC4773556                  AARRGGBB, .theme           [VisualStyles] ColorizationColor
+    dword:c4773556              DWORD, AARRGGBB, alpha C4  DWM ColorizationColor, ColorizationAfterglow
     hex:ae,67,88,00,...         REG_BINARY, RGBA quads     Explorer\\Accent AccentPalette
     #773556                     hex                        comments and the README
 
-Every one of them round-trips: `dec_triple`, `abgr_dword`, `argb_theme` and `rgba_quad` write
-them and `_decode` reads all five back out of every committed file -- including install.cmd,
-which prints two hex values in its closing instructions. A sixth notation appearing in this
-directory belongs here before it ships.
+Every one of them round-trips: `dec_triple`, `abgr_dword`, `argb_theme`, `argb_dword` and
+`rgba_quad` write them and `_decode` reads every one back out of every committed file --
+including install.cmd, which prints two hex values in its closing instructions. A notation not
+listed here appearing in this directory belongs here before it ships.
+
+TWO BYTE ORDERS UNDER ONE REGISTRY KEY, and nothing in the value says which. `AccentColor` and
+`AccentColorInactive` under DWM are ABGR; `ColorizationColor` and `ColorizationAfterglow` under
+the same key are AARRGGBB, the order the .theme's [VisualStyles] value already uses and the
+order Microsoft's documented default `0xC40078D7` shows. Until 2026-09-21 this file wrote the
+Colorization pair ABGR, and its own checker passed them: it decoded the DWORD the same wrong
+way the writer had encoded it, so the file agreed with itself and disagreed with Windows. A
+checker verifies a file against its reading of a notation; it cannot verify the reading. What
+caught it was the parity rule (CONTRIBUTING.md 11) -- the parent kit's theme.reg writes the
+pair AARRGGBB and says so in a comment. The decoder now tells the two apart BY KEY NAME, the
+same way it tells a flag from a colour.
 
     python3 build/windows.py              check every value in elevated/windows/
     python3 build/windows.py --derive     the two ladders, and how each value was reached
@@ -224,6 +236,13 @@ def argb_theme(hx, alpha='C4'):
     return '0X' + alpha + hx[1:].upper()
 
 
+def argb_dword(hx, alpha='c4'):
+    """#RRGGBB -> 'c4773556'. The DWM ColorizationColor and ColorizationAfterglow DWORDs are AARRGGBB
+    too -- the same byte order as the .theme value the shell copies into them, with the C4 alpha the
+    documented default carries. Not ABGR, which is what AccentColor beside them is (the header)."""
+    return (alpha + hx[1:]).lower()
+
+
 def rgba_quad(hx):
     """#RRGGBB -> 'ae,67,88,00'. AccentPalette is eight RGBA quads, REG_BINARY."""
     return ','.join(hx[i:i + 2].lower() for i in (1, 3, 5)) + ',00'
@@ -235,6 +254,8 @@ def rgba_quad(hx):
 # background, in a second notation, caught here by the checker's own output rather than by review.
 _DEC = re.compile(r'^\s*"?[A-Za-z]+"?\s*=\s*"?(\d{1,3})\s+(\d{1,3})\s+(\d{1,3})"?\s*$', re.M)
 _DWORD = re.compile(r'dword:([0-9A-Fa-f]{8})')
+# The two DWORDs that are AARRGGBB rather than ABGR, by NAME -- the value cannot say (the header).
+_DWORD_ARGB = re.compile(r'"(?:ColorizationColor|ColorizationAfterglow)"\s*=\s*dword:([0-9A-Fa-f]{8})')
 _ARGB = re.compile(r'=\s*0[Xx]([0-9A-Fa-f]{8})\b')
 _BIN = re.compile(r'hex:((?:[0-9A-Fa-f]{2},?\s*\\?\s*)+)')
 # The optional trailing pair is an alpha byte. Nothing in elevated/windows/ writes one --
@@ -253,7 +274,14 @@ def _decode(body):
         v = [int(g) for g in m.groups()]
         if all(x <= 255 for x in v):
             out.append(('#%02X%02X%02X' % tuple(v), 'decimal triple'))
+    argb = []
+    for m in _DWORD_ARGB.finditer(body):
+        d = m.group(1).lower()
+        out.append(('#' + d[2:8].upper(), 'dword AARRGGBB'))
+        argb.append(m.span(1))
     for m in _DWORD.finditer(body):
+        if m.span(1) in argb:
+            continue
         d = m.group(1).lower()
         out.append(('#' + (d[6:8] + d[4:6] + d[2:4]).upper(), 'dword ABGR'))
     for m in _ARGB.finditer(body):
@@ -371,7 +399,8 @@ def _theme():
           '',
           '; AutoColorization=0 keeps Windows from sampling a wallpaper for the accent: there is',
           '; no wallpaper, and an accent derived from a photograph is a value nobody authored.',
-          '; ColorizationColor is AARRGGBB here -- the ONLY place in this surface that is not ABGR.',
+          '; ColorizationColor is AARRGGBB here, and so is the DWM ColorizationColor DWORD that',
+          '; remainder.reg writes -- the shell copies this value into that key. AccentColor is ABGR.',
           '[VisualStyles]',
           'Path=%SystemRoot%\\resources\\themes\\Aero\\Aero.msstyles',
           'ColorStyle=NormalColor',
@@ -400,14 +429,18 @@ def _reg():
     for slot, hx, role, why in colors():
         L.append('"%s"="%s"' % (slot, dec_triple(hx)))
     L += ['',
-          '; DWM. ABGR DWORDs, alpha in the high byte -- #773556 is dword:' + abgr_dword(ACCENT) + '.',
+          '; DWM. Two byte orders under one key, and only the key name says which: AccentColor and',
+          '; AccentColorInactive are ABGR, alpha high -- #773556 is dword:' + abgr_dword(ACCENT) + '.',
+          '; ColorizationColor and ColorizationAfterglow are AARRGGBB, like the .theme value the shell',
+          '; copies into them, with the C4 alpha the documented default 0xC40078D7 carries -- the same',
+          '; #773556 is dword:' + argb_dword(ACCENT) + '. Written ABGR until 2026-09-21; build/windows.py says why.',
           '; ColorPrevalence=1 puts the accent on title bars and borders, which is what makes the',
           '; key titlebar ACCENT. AccentColorInactive is the non-key one (PLATFORM.md names it).',
           '[HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM]',
           '"AccentColor"=dword:' + abgr_dword(ACCENT),
           '"AccentColorInactive"=dword:' + abgr_dword(LIGHT),
-          '"ColorizationColor"=dword:' + abgr_dword(ACCENT),
-          '"ColorizationAfterglow"=dword:' + abgr_dword(ACCENT),
+          '"ColorizationColor"=dword:' + argb_dword(ACCENT),
+          '"ColorizationAfterglow"=dword:' + argb_dword(ACCENT),
           '"ColorPrevalence"=dword:00000001',
           '"EnableAeroPeek"=dword:00000000',
           '',
@@ -603,6 +636,9 @@ def check():
 CLAIMS = [
     ('remainder.theme', 'double-click applies it; Settings opens on Themes', 'PLATFORM.md', 'unverified'),
     ('DWM AccentColor', 'ABGR DWORD; the key titlebar', 'PLATFORM.md', 'unverified'),
+    ('DWM ColorizationColor', 'AARRGGBB DWORD, alpha C4 -- not ABGR like AccentColor',
+     'the documented default 0xC40078D7; the parent kit writes it the same way',
+     'unverified -- written ABGR until 2026-09-21, and the checker could not tell'),
     ('DWM AccentColorInactive', 'the non-key titlebar', 'PLATFORM.md names this key', 'unverified'),
     ('DWM ColorPrevalence', '1 = accent on title bars and borders', 'PLATFORM.md', 'unverified'),
     ('Hilight / HotTrackingColor', 'legacy Win32 honours them', 'PLATFORM.md names both', 'unverified'),
@@ -663,10 +699,11 @@ def _print_derivations():
     print('  rather than fixed: stretching the ramp to reach Microsoft\'s lightness would have')
     print('  meant leaving the chroma §2 chose, and CHROME 0.100 is the whole point (§0c).')
 
-    print('\n=== the five notations, round-tripped ===')
+    print('\n=== the five notations, round-tripped (the two DWORD byte orders side by side) ===')
+    print('  %-8s %-9s %-12s %-12s %-12s %-14s' % ('role', 'hex', 'decimal', 'ABGR dword', 'ARGB dword', 'RGBA quad'))
     for hx in (ACCENT, SELECT, LIGHT, BLACK, WHITE, CURSOR):
-        print('  %-8s %-9s %-12s %-12s %-14s' % (ROLE[hx], hx, dec_triple(hx), abgr_dword(hx),
-                                                 rgba_quad(hx)))
+        print('  %-8s %-9s %-12s %-12s %-12s %-14s' % (ROLE[hx], hx, dec_triple(hx), abgr_dword(hx),
+                                                       argb_dword(hx), rgba_quad(hx)))
 
 
 if __name__ == '__main__':
