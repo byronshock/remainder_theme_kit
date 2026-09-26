@@ -119,6 +119,18 @@ method differs in some detail nobody wrote down, and the difference is in the
 set without Obsidian, so it is not this surface's. Worth pinning the method
 beside the next count.)
 
+**The Zettlr surface added none either, 2026-09-26.** Its theme defines the same
+fifteen values as Obsidian's, and `build/zettlr.py` fails if the file carries a
+colour outside those definitions; its settings, installer and declutter write
+none. This count pins its method: every `#RRGGBB` in `worksafe/`, `elevated/`,
+`palette.json` and `poles.json`, Markdown and images skipped; comments stripped —
+`/* … */` in every file, `//` to the end of a line in JSON, RON, scripts and
+registry files, and whole comment lines in shell, RON, registry and batch files;
+an eight-digit value counted by its first six. By that method the kit holds
+**64 distinct values**, with `worksafe/zettlr/` and without it, and without
+`worksafe/obsidian/` as well. None of the obvious variants of the method
+reproduces the 65 or 66 above, so 64 is a new baseline rather than a change.
+
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
@@ -277,9 +289,15 @@ python3 build/obsidian.py --derive # the ramp, and the roles the theme may name
 python3 build/obsidian.py --write  # regenerate the theme and the declutter snippet from the tables
 python3 build/obsidian.py --coverage   # the installed build's variables against the recorded ones (a report)
 python3 build/obsidian.py --screen P   # what a running Obsidian computed, every window (a report)
+python3 build/zettlr.py            # every recorded declaration classified; every value, pair and adjacency
+python3 build/zettlr.py --derive   # Zettlr's grey ramp, snapped, and the roles the theme may name
+python3 build/zettlr.py --write    # regenerate the theme and the declutter from the record and the tables
+python3 build/zettlr.py --record P # re-record Zettlr's own CSS from the installed build and a running window
+python3 build/zettlr.py --coverage # the installed build's stylesheets against the record (a report)
+python3 build/zettlr.py --screen P # what a running Zettlr computed and painted, every window (a report)
 ```
 
-Six are built. What a checker owes:
+Seven are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -418,6 +436,38 @@ forced:
   size, it sets the size the floors assume, and says so as a choice (§0c), so the
   tier the checker applies is the tier on the screen.
 
+And four the seventh added, which a platform that paints from literals forced:
+
+- **It records a platform with nothing to set.** Zettlr's colours are 1,449
+  literal declarations in 76 stylesheets across fourteen windows, and CSS that
+  CodeMirror writes at run time. `build/zettlr.py --record` reads them out of the
+  installed `app.asar` and a running window into a committed record, and the gate
+  classifies every one by role: `NOT CLASSIFIED BY ANY ROW` is this surface's
+  `NOT DERIVED BY ANY LADDER`, and `--coverage` re-reads the installed build
+  against the record. A record is only as whole as what was mounted while it was
+  taken: CodeMirror mounts some CSS only in raw mode, the first record missed it,
+  and the screen found it — so the recorder now reads every editor theme in raw
+  mode too.
+- **It answers each rule only where it was asked.** The theme is one stylesheet
+  every window loads, and Zettlr's are per window, so an answer to one window's
+  rule reached another's editor and put BLACK on DESTRUCTIVE. Each override now
+  names the windows whose bundle loads its rule, in `:where()` so the scoping
+  costs no specificity, and the record keeps the windows beside every block.
+- **It counts what the browser parses.** A selector list split inside a quoted
+  attribute value ended the generated file where it broke — silently, since CSS
+  drops everything after an unclosed string — and about forty rules went missing without
+  a single error. The writer now splits only at top-level commas, the checker
+  parses its own output, and `--screen` reports how many rules the browser read
+  out of the file against how many it holds.
+- **It photographs what it cannot compute.** Computed styles cannot see what
+  Chromium draws itself or what a picture carries. So `--screen` also reads each
+  window's pixels: a readable hue must belong to a family the kit paints — the
+  home hue, CURSOR's, a signal's — and be no more chromatic than the kit's own
+  member of it, since a blend of two kit values gains at most 0.0074. The hue test
+  found a search field's blue clear button; the chroma test catches Chromium's
+  own red under a misspelling, which a hue test passes as DESTRUCTIVE. It also
+  names what no stylesheet reaches: the flags in a language menu are emoji.
+
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
 there is no file to scan. What must hold is the bar itself: *every value the
@@ -540,6 +590,20 @@ the modal scrim, which §4 permits, and no text pair under its tier. The Setting
 window was probed once, before its last two changes (`README_OBSIDIAN.md`), and
 is the first thing the next pass should look at.
 
+On Zettlr the pass is the probe and a photograph, on a display of its own:
+`sh worksafe/zettlr/install.sh --qa DIR` builds a profile with a note holding
+every kind of block Zettlr renders; Zettlr runs on a virtual X display (`Xvfb`),
+`XDG_CONFIG_HOME=DIR/config` and `--remote-debugging-port=9224`, so its windows
+never reach the desktop; and `python3 build/zettlr.py --screen 9224` reads every
+window — what each element computed, and the window photographed. The states are
+walked over the same port: menus and popovers by input events, the editor's
+modes and every auxiliary window through Zettlr's own commands. Measured
+2026-09-25 and 26 across all fourteen windows and every mode of the editor, after
+about thirty fixes the pass itself found: every painted value a kit value, no
+text pair under its tier but the ANSI yellow at its recorded gamut cap, and no
+readable hue off the kit's families but the flag emoji in LanguageTool's language
+menus, which no stylesheet reaches. `README_ZETTLR.md` lists the states.
+
 What the pass is looking for: no hue in chrome that reads as a signal (§1); the
 three semantic hues present only where the meaning is (§3); one rule, the same
 width everywhere, carrying no state (§5); the cursor findable at a glance on a
@@ -557,6 +621,9 @@ motion, no blur.
 | `worksafe/vscode/remainder/themes/remainder-color-theme.json` | generated **and committed**; guarded by `build/vscode.py`. JSON with a comment header, as VS Code reads it; the role table in `build/vscode.py` is the source |
 | `worksafe/obsidian/Remainder/theme.css` | generated **and committed**; guarded by `build/obsidian.py`, which fails if it is not what the role table produces. The only literal colours in it are the `--rm-*` definitions |
 | `worksafe/obsidian/remainder-declutter.css` | generated **and committed**; guarded by `build/obsidian.py`, which also fails if it names any colour at all |
+| `worksafe/zettlr/remainder.css` | generated **and committed**; guarded by `build/zettlr.py`, which fails if it is not what the record and the tables produce. The only literal colours in it are the `--rm-*` definitions |
+| `worksafe/zettlr/remainder-declutter.css` | generated **and committed**; guarded by `build/zettlr.py`, which also fails if it names any colour at all |
+| `build/zettlr_platform.css` | **recorded and committed**: Zettlr's own CSS, the platform the theme answers, written by `build/zettlr.py --record` from the installed build and a running window and never by hand; GPL-3.0, like Zettlr. A re-record may reorder its CodeMirror blocks — the order the editor happened to mount them in — without changing what they hold, and the theme it writes then differs in order only |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |

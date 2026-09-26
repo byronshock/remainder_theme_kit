@@ -423,6 +423,80 @@ set weight, size, radius and structure as well as colour. Measured on 1.13.7
 the graph's canvas, except through the `--graph-*` variables it reads at load;
 the titlebar under the native frame.
 
+## Zettlr
+
+Electron: every window is a web page, and there is no theme slot — one
+stylesheet of the user's own is the whole mechanism. Measured on 4.8.0 (the
+CachyOS `zettlr` package, on the system `electron43`), 2026-09-25 and 26, on
+COSMIC.
+
+- **`custom.css` in the data directory is loaded last, in every window**, as
+  `<link id="custom-css-link" href="safe-file://…">` after all of Zettlr's own
+  stylesheets, and `@import` relative to it works. It is read as each window
+  opens, and pushed to every open window when it is saved from Assets Manager ›
+  Custom CSS (the `css-provider` command `set-custom-css`).
+- **The data directory** is `${XDG_CONFIG_HOME:-~/.config}/Zettlr` for the Arch
+  package (measured); the Flatpak's `~/.var/app/com.zettlr.Zettlr/config/Zettlr`
+  is its convention and *not verified on a machine*. `XDG_CONFIG_HOME` moves all
+  of it, the single-instance lock included, so a test profile is one variable
+  away and runs beside the real one. `--data-dir=DIR` also exists, but the lock
+  is taken before that flag is read, so a second instance started with it finds
+  the first and exits.
+- **`config.json` is held in memory and written back when Zettlr quits**, so an
+  edit made while it runs is lost: an installer needs it closed. With no
+  `config.json` Zettlr takes the start for a first start, and with a `version` in
+  it that differs from the running build, for an update; either opens the
+  onboarding window before the main one.
+- **The frame is a setting**, `window.nativeAppearance`, applied on restart.
+  Off — the default on Linux — Zettlr draws its menubar and toolbar in the page
+  and Electron draws the window buttons over the toolbar; they are not in the
+  page, and no stylesheet reaches them. On, the desktop draws a titlebar and the
+  menus become a native menu bar. Dark mode is `darkMode`, switched by
+  `autoDarkMode` (`off`, `system`, `schedule`), and the editor follows it or not
+  by `darkModeEditor`.
+- **The window does not know when it is key.** Nothing in the page changes with
+  the window's focus, so a theme cannot show key state.
+- **The CSS is in the bundles and in CodeMirror.** Each window's bundle carries
+  its stylesheets as strings (css-loader) and inserts them at the end of
+  `<head>` when it runs: 76 across fourteen windows, most colours written as
+  literals rather than variables. CodeMirror 6 writes its styles at run time into
+  one `<style>` element first in `<head>`, under numbered scope classes (`.ͼ1`,
+  …) that differ by window and by the order modules were mounted in; a module is
+  mounted only while its extension runs — raw mode has one of its own — and stays
+  mounted after. One more stylesheet is written at run time, `#system-css`: the
+  platform's accent as two variables.
+- **Each window names itself to CSS.** Its page loads its own bundle,
+  `<script src="../main_window/index.js">`, `../assets/index.js`, and so on, so
+  `:has(script[src=…])` on the root tells one window's page from another's.
+- **Some states are styled only under `body.dark` or `body.darwin`.** On Linux in
+  light mode a chosen radio button, a shortcut that is not bound and a pressed
+  toolbar toggle have no style of their own.
+- **The chrome's text is 10 to 15 px.** The note's size is a setting.
+- **Update checks are compiled out** of this package: Preferences says so, and
+  the Updater window reports none.
+- **The Arch package is one archive run by the system Electron**,
+  `/usr/lib/zettlr/app.asar`, so its process is `electron` with that path; the
+  other packagings name it `zettlr`. `zettlr --version` prints the version.
+- **The splash screen shows only when starting takes over a second**, measured
+  from when the config is loaded.
+- **`--remote-debugging-port`** exposes every window as a DevTools target, and
+  `--inspect=PORT` the main process's Node inspector. Menus, context menus
+  included, are HTML in the window's own page on Linux, so they are read with
+  it. On a virtual
+  display (`Xvfb`, with `--ozone-platform=x11`) every window renders and can be
+  photographed over the port without reaching the desktop.
+- **Chromium 150 in Electron 43.7, where it matters to a theme.** A selection's
+  ink is inherited from the element around it (`::selection` highlight
+  inheritance), and `getComputedStyle(el, '::selection')` reports `currentColor`
+  there wrongly, so what it paints has to be read off the pixels. The native
+  spelling mark in a text field is styled by `::spelling-error`, with
+  `text-decoration`. An emoji is drawn by a colour font, which `color` does not
+  reach; the language-variant menus in Preferences › Spellchecking label their
+  entries with flag emoji.
+
+**Cannot reach:** the window buttons; key state; the menus under the native
+frame; emoji and pictures; Zettlr's update checks, on this package.
+
 ## Claude Code
 
 Custom theme JSON in `~/.claude/themes/`, selected with `/theme`, or

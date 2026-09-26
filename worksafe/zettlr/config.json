@@ -1,0 +1,19 @@
+// Remainder — Zettlr settings: light mode, pinned, and the frame the theme is built on. Merged key by key into
+// Zettlr's own config.json by install.sh, with Zettlr closed and the file backed up first. Implements AUTHORITY.md
+// §2 and PLATFORM.md Zettlr. Every shipped default quoted here was read off the installed build -- the CachyOS
+// zettlr package 4.8.0, 2026-09-25 -- in its config template. This file carries no colour; the theme does, and
+// build/zettlr.py proves it. Zettlr reads config.json as plain JSON; the installer strips these comments first.
+{
+  // §2 is a light palette. "system" follows the desktop into dark mode, where Zettlr adds its body.dark rules and
+  // the editor's dark themes; the theme paints those in the light palette too, and this keeps them out of the way.
+  "darkMode": false,                     // shipped default: whatever the desktop was at Zettlr's first start
+  "autoDarkMode": "off",                 // shipped default "system"
+  "darkModeEditor": "match",             // shipped default "match"; pinned, so the editor follows the app
+
+  // The frame. Off, Zettlr draws its own menubar and toolbar and Electron draws the window buttons over them --
+  // the frame this theme is built on. On, the desktop draws a titlebar and Zettlr's menus become a native menu bar
+  // that no stylesheet reaches (PLATFORM.md Zettlr). Zettlr applies a change here only when it restarts.
+  "window": {
+    "nativeAppearance": false            // shipped default false on Linux; pinned
+  }
+}
