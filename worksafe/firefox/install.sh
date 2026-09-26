@@ -103,16 +103,19 @@ done
 # --- 2. the profile -------------------------------------------------------------------------------
 # installs.ini names the profile THIS Firefox install opens, which is the one the user will see; profiles.ini's
 # Default= is the fallback for a build that writes no installs.ini. Both live under the same root, and the root
-# moves with the packaging: deb, snap and flatpak each put it somewhere else.
+# moves with the packaging: deb, snap and flatpak each put it somewhere else -- and a Firefox that finds no
+# ~/.mozilla on first start puts it under XDG_CONFIG_HOME instead (156 on Arch, PLATFORM.md). The legacy root
+# is tried first because that is Firefox's own precedence: where ~/.mozilla exists it keeps using it.
 MOZ="${MOZ_HOME:-}"
 if [ -z "$MOZ" ]; then
-  for d in "$HOME/.mozilla/firefox" "$HOME/snap/firefox/common/.mozilla/firefox" \
+  for d in "$HOME/.mozilla/firefox" "${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox" \
+           "$HOME/snap/firefox/common/.mozilla/firefox" \
            "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox"; do
     [ -f "$d/profiles.ini" ] && MOZ="$d" && break
   done
 fi
 if [ -z "$PROFILE" ]; then
-  [ -n "$MOZ" ] || { say "no Firefox profile root found (looked in ~/.mozilla, snap and flatpak; set MOZ_HOME)" >&2; exit 1; }
+  [ -n "$MOZ" ] || { say "no Firefox profile root found (looked in ~/.mozilla, ~/.config/mozilla, snap and flatpak; set MOZ_HOME)" >&2; exit 1; }
   PROFILE=$(python3 - "$MOZ" <<'PY'
 import configparser, os, sys
 moz = sys.argv[1]

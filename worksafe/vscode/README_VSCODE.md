@@ -18,7 +18,7 @@ COSMIC, 2026-09-20.
 | `remainder/themes/remainder-color-theme.json` | the theme: 965 ids on 30 values, the syntax colouring, and the semantic token colours. **Generated and committed** (`CONTRIBUTING.md` §11); `build/vscode.py` fails if it is not what the generator now produces. | yes |
 | `settings.json` | the theme selected, the type (Hack at 16 px), the caret solid and the current-line band off, no indent guides, the terminal's WCAG repainting off, the minimal file icons. Merged key by key. | no |
 | `declutter.json` | §0's larger half: the welcome page, tips, walkthroughs, the empty-editor hint, recommendations, release notes, experiments, natural-language settings search, telemetry, feedback prompts, the chat sidebar, motion. Merged unless `--no-declutter`. | no |
-| `install.sh` | copies the extension into each install's extensions directory (Code, Code Flatpak, Insiders, VSCodium, VSCodium Flatpak), backs each `settings.json` up under `~/.local/state/remainder`, merges the two files in. VS Code may stay open. | no |
+| `install.sh` | copies the extension into each install's extensions directory (Code, Code Flatpak, Insiders, Code - OSS, VSCodium, VSCodium Flatpak), registers it in `extensions.json` when that file exists, backs each `settings.json` up under `~/.local/state/remainder`, merges the two files in. VS Code may stay open. | no |
 
 Both settings files are JSON with comments, as VS Code reads them, and each key
 quotes the shipped default it changes. `python3 build/vscode.py --settings`
@@ -263,12 +263,15 @@ Tolerated, never echoed (§4). `PLATFORM.md` is the record:
 
 `install.sh` finds every VS Code under `$HOME` by its `User` directory, copies
 `remainder/` into that install's extensions directory as
-`byronshock.remainder-<version>` — a copied folder is picked up by the
-scanner, which writes its own `extensions.json` beside it — and merges the two
-settings files into that install's `settings.json`, after saving the original
-under `~/.local/state/remainder/` on the first run. A `settings.json` with
-comments in it is not rewritten: Python's `json` writes none back, so the merged
-result is written beside the backup instead and the script says where.
+`byronshock.remainder-<version>`, registers it in the `extensions.json` there
+when VS Code has written one — a copied folder is picked up on its own only
+while that file does not exist; once a marketplace install has written it, a
+folder it does not list is removed on the next start (`PLATFORM.md` VS Code) —
+and merges the two settings files into that install's `settings.json`, after
+saving the original under `~/.local/state/remainder/` on the first run. A
+`settings.json` with comments in it is not rewritten: Python's `json` writes
+none back, so the merged result is written beside the backup instead and the
+script says where.
 
 ```
 sh worksafe/vscode/install.sh                    # theme, type, and the declutter
@@ -279,8 +282,9 @@ sh worksafe/vscode/install.sh --into DIR         # a user-data-dir of your own -
 
 VS Code may stay open: it watches `settings.json`. The extension appears on the
 next window reload (Developer: Reload Window) or start, and
-`workbench.colorTheme` already selects it. To undo, delete the
-`byronshock.remainder-*` folder and put the saved `settings.json` back.
+`workbench.colorTheme` already selects it. To undo, uninstall Remainder from
+the Extensions view — or delete the `byronshock.remainder-*` folder and its
+entry in `extensions.json` — and put the saved `settings.json` back.
 
 The QA profile is how the pass above was run, and how to look at a change
 without touching your own:

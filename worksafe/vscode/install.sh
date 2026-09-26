@@ -5,10 +5,12 @@
 # Usage: sh install.sh [--no-declutter] [--keep-file-icons] [--into DIR] [--no-ask]
 #
 # It installs the theme extension into every VS Code it finds under $HOME -- Code (deb, rpm, tar), Code as a
-# Flatpak, Code Insiders, VSCodium, and VSCodium as a Flatpak -- by copying worksafe/vscode/remainder/ into that
-# install's extensions directory, and then merges the kit's settings into that install's settings.json, key by
-# key, after saving the original under ~/.local/state/remainder on the first run. Nothing is asked, because
-# nothing here is another project's program (compare worksafe/firefox/install.sh --ublock); the flags narrow it.
+# Flatpak, Code Insiders, Code - OSS (the Arch `code` package), VSCodium, and VSCodium as a Flatpak -- by
+# copying worksafe/vscode/remainder/ into that install's extensions directory and registering it in the
+# extensions.json there when VS Code has written one (section 2 says why), and then merges the kit's settings
+# into that install's settings.json, key by key, after saving the original under ~/.local/state/remainder on
+# the first run. Nothing is asked, because nothing here is another project's program (compare
+# worksafe/firefox/install.sh --ublock); the flags narrow it.
 #
 #   --no-declutter    paint only: merge settings.json (the theme, the type, the caret) and not declutter.json,
 #                     so §0's larger half stays where the platform put it.
@@ -70,7 +72,8 @@ FOLDER="byronshock.remainder-$VERSION"
 # --- 1. the installs -------------------------------------------------------------------------------
 # Each line: label|extensions dir|settings.json. An install is present when its User directory exists; the
 # extensions directory is created if it is not there yet. PLATFORM.md VS Code records where each packaging
-# keeps them.
+# keeps them. Code - OSS and VSCodium both set dataFolderName to .vscode-oss and differ only in the config
+# folder, so with both present the extension lands once and each settings.json is merged on its own.
 if [ -n "$INTO" ]; then
   mkdir -p "$INTO/extensions" "$INTO/User"
   TARGETS="qa|$INTO/extensions|$INTO/User/settings.json"
@@ -85,10 +88,11 @@ code|$HOME/.vscode/extensions|$HOME/.config/Code/User/settings.json
 code-flatpak|$HOME/.var/app/com.visualstudio.code/data/vscode/extensions|$HOME/.var/app/com.visualstudio.code/config/Code/User/settings.json
 code-insiders|$HOME/.vscode-insiders/extensions|$HOME/.config/Code - Insiders/User/settings.json
 codium|$HOME/.vscode-oss/extensions|$HOME/.config/VSCodium/User/settings.json
+code-oss|$HOME/.vscode-oss/extensions|$HOME/.config/Code - OSS/User/settings.json
 codium-flatpak|$HOME/.var/app/com.vscodium.codium/data/codium/extensions|$HOME/.var/app/com.vscodium.codium/config/VSCodium/User/settings.json
 LIST
   if [ -z "$(printf '%s' "$TARGETS" | tr -d '\n')" ]; then
-    say "no VS Code found under $HOME (looked for Code, Code Flatpak, Code Insiders, VSCodium, VSCodium Flatpak)" >&2
+    say "no VS Code found under $HOME (looked for Code, Code Flatpak, Code Insiders, Code - OSS, VSCodium, VSCodium Flatpak)" >&2
     say "to install into a user-data-dir of your own: sh $0 --into DIR" >&2
     exit 1
   fi
@@ -106,6 +110,45 @@ printf '%s\n' "$TARGETS" | while IFS='|' read -r LABEL EXT CFG; do
   done
   cp -R "$HERE/remainder" "$EXT/$FOLDER"
   say "[$LABEL] extension: $EXT/$FOLDER"
+
+  # Register it. A folder alone is picked up only while $EXT/extensions.json does not exist: VS Code writes that
+  # file on its first marketplace install and from then on keeps it as the record of what is installed, and on
+  # the next start marks a folder it does not list as removed -- its name into .obsolete, and the theme never
+  # appears (1.138.0, Code - OSS; PLATFORM.md VS Code). So when the file is there the entry is added, in the
+  # form VS Code writes; when it is not, VS Code builds the file from the folder, which is the measured 1.137
+  # result. A removed mark VS Code has already set is lifted, or the folder goes on the next start regardless.
+  python3 - "$EXT" "$FOLDER" "$VERSION" <<'PY'
+import json, os, pathlib, sys, time
+ext, folder, version = sys.argv[1:4]
+ID = 'byronshock.remainder'
+def load(p, default):
+    try: return json.load(open(p, encoding='utf-8'))
+    except (OSError, ValueError): return default
+def save(p, obj):                      # the whole file at once: VS Code watches it
+    tmp = p + '.remainder.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f: json.dump(obj, f, separators=(',', ':'))
+    os.replace(tmp, p)
+reg = os.path.join(ext, 'extensions.json')
+if os.path.exists(reg):
+    loc = os.path.join(ext, folder)
+    entries = load(reg, [])
+    entries = [e for e in (entries if isinstance(entries, list) else [])
+               if not (isinstance(e, dict) and str(e.get('identifier', {}).get('id', '')).lower() == ID)]
+    entries.append({'identifier': {'id': ID}, 'version': version,
+                    'location': {'$mid': 1, 'fsPath': loc, 'external': pathlib.Path(loc).as_uri(),
+                                 'path': loc, 'scheme': 'file'},
+                    'relativeLocation': folder,
+                    'metadata': {'installedTimestamp': int(time.time() * 1000), 'pinned': False}})
+    save(reg, entries)
+    print(f'remainder: registered in {reg}')
+obs = os.path.join(ext, '.obsolete')
+marks = load(obs, {}) if os.path.exists(obs) else {}
+gone = [k for k in marks if isinstance(marks, dict) and k.lower().startswith(ID + '-')]
+if gone:
+    for k in gone: del marks[k]
+    save(obs, marks)
+    print(f'remainder: lifted the removed mark on {", ".join(gone)} in {obs}')
+PY
 
   # the settings: back up, then merge key by key
   mkdir -p "$(dirname "$CFG")"
@@ -155,5 +198,6 @@ cat <<MSG
 remainder: theme $VERSION installed; $D; what was replaced is in $STATE
            VS Code re-reads settings.json on its own. The extension appears after a window reload
            (Developer: Reload Window) or a restart, and workbench.colorTheme already selects it.
-           To undo: delete the byronshock.remainder-* folder and put the saved settings.json back.
+           To undo: uninstall Remainder from the Extensions view (or delete the byronshock.remainder-* folder
+           and its entry in extensions.json) and put the saved settings.json back.
 MSG

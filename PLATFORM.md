@@ -219,7 +219,12 @@ Measured on 155.0.1 (deb), 2026-09-19, except where noted.
   `browser.preferences.moreFromMozilla`.
 - **The profile root moves with the packaging**: `~/.mozilla/firefox` (deb),
   `~/snap/firefox/common/.mozilla/firefox`,
-  `~/.var/app/org.mozilla.firefox/.mozilla/firefox`. Inside it, `installs.ini`
+  `~/.var/app/org.mozilla.firefox/.mozilla/firefox` — and
+  `${XDG_CONFIG_HOME:-~/.config}/mozilla/firefox` on a machine where Firefox
+  found no `~/.mozilla` at its first start: measured 2026-09-23 on 156.0.1 (the
+  Arch package), which created no `~/.mozilla` at all and keeps `profiles.ini`
+  there; its libxul carries both `XDG_CONFIG_HOME` and a `MOZ_LEGACY_HOME`
+  override. Where `~/.mozilla` exists it is still the root. Inside it, `installs.ini`
   names the profile *this install* opens, which is not always the one
   `profiles.ini` marks `Default=1`.
 - **The running process is named `firefox-bin`**, not `firefox`: on the deb
@@ -238,15 +243,32 @@ on COSMIC.
 
 - A colour theme is an extension: a folder holding a `package.json` with
   `contributes.themes` and the theme JSON it points at. **A folder copied into
-  the extensions directory is picked up** — the scanner lists it and writes its
-  own `extensions.json` beside it — so no `.vsix` and no CLI is needed to
-  install one. It is seen on the next window reload or start.
+  the extensions directory is picked up only while there is no
+  `extensions.json` beside it.** On a directory without one, the scanner lists
+  the folder and writes that file from what it finds (the 1.137.0 measurement,
+  on a fresh directory). The first marketplace install writes
+  `extensions.json`, and from then on it is the record of what is installed: a
+  folder it does not list is logged `Marked extension as removed` on the next
+  start, its name goes into `.obsolete` in the same directory, and the theme
+  never appears — 1.138.0 (Code - OSS, 2026-09-23), five consecutive starts,
+  with `workbench.colorTheme` naming the theme throughout; the window fell
+  back to the build's default, Dark 2026. Appending the folder's entry to
+  `extensions.json` in the form VS Code writes (`identifier`, `version`,
+  `location` as URI components, `relativeLocation`, `metadata`) and dropping
+  its name from `.obsolete` registers it: `code --list-extensions` reads the
+  same record and listed it at once, and the start that followed logged no
+  removal. So no `.vsix` and no CLI is needed to install one, but the entry is.
+  It is seen on the next window reload or start.
 - Where each packaging keeps things (per user, no elevation):
   `~/.vscode/extensions` and `~/.config/Code/User/settings.json` (deb, rpm, tar);
   `~/.var/app/com.visualstudio.code/data/vscode/extensions` and
   `~/.var/app/com.visualstudio.code/config/Code/User/settings.json` (Flatpak);
   `~/.vscode-insiders` and `~/.config/Code - Insiders` (Insiders);
   `~/.vscode-oss` and `~/.config/VSCodium` (VSCodium);
+  `~/.vscode-oss` and `~/.config/Code - OSS` (Code - OSS, the Arch `code`
+  package: the same extensions directory as VSCodium, since both set
+  `dataFolderName` to `.vscode-oss`, and its own config folder; 1.138.0,
+  2026-09-23);
   `~/.var/app/com.vscodium.codium/data/codium` and `…/config/VSCodium` (VSCodium
   Flatpak).
 - **`settings.json` is JSON with comments and trailing commas**, and VS Code
