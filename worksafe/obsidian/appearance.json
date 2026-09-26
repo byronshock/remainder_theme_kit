@@ -1,0 +1,20 @@
+// Remainder — Obsidian settings: the theme, light mode, and the size the floors assume. Merged key by key into
+// each vault's .obsidian/appearance.json by install.sh, which backs the file up first. Implements AUTHORITY.md
+// §2, §5 and §0, and PLATFORM.md Obsidian. Every shipped default quoted here was read off the installed build --
+// the Arch obsidian package 1.13.7, 2026-09-25 -- in app.js's defaults. This file carries no colour; the theme
+// does, and build/obsidian.py proves it. Obsidian reads appearance.json as plain JSON; the installer strips
+// these comments before it merges.
+{
+  // the theme: .obsidian/themes/Remainder, which install.sh copies in beside this
+  "cssTheme": "Remainder",                                   // shipped default "" (Obsidian's own)
+
+  // §2 is a light palette. "moonstone" is Obsidian's light base theme; "system" would follow the desktop into
+  // dark, where the theme still paints the kit but the platform's dark-only rules come with it.
+  "theme": "moonstone",                                      // shipped default "system"
+
+  // §5: text at the size every contrast floor in §0e assumes. The theme sets the chrome to match.
+  "baseFontSize": 16,                                        // shipped default 16; pinned
+
+  // §0: blur. Translucency frosts the window over the desktop; the declutter snippet removes the rest.
+  "translucency": false                                      // shipped default false; pinned
+}

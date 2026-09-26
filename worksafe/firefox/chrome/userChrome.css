@@ -457,7 +457,7 @@
   border: 0 !important; box-shadow: none !important;
 }
 /* non-key: LIGHT with BLACK text. PLATFORM.md records that this libcosmic paints header bars with the window
-   background, so every native window here reads as non-key; Firefox is the one surface that can show it. */
+   background, so every native window here reads as non-key; Firefox can show it (as can Obsidian). */
 :root:-moz-window-inactive #navigator-toolbox,
 :root:-moz-window-inactive #titlebar,
 :root:-moz-window-inactive #TabsToolbar,

@@ -1,8 +1,9 @@
 # Remainder — Firefox
 
 Firefox draws its own chrome and hands the whole of it to a per-profile
-stylesheet, so every strip gets an exact value. It is also the one surface on
-this desktop that can show key/non-key state at all: `PLATFORM.md` records that
+stylesheet, so every strip gets an exact value. It is also one of the two
+surfaces on this desktop that can show key/non-key state at all — Obsidian is
+the other — and the first built: `PLATFORM.md` records that
 this libcosmic paints header bars with the window background, so every native
 window reads as non-key. Everything here is per profile, no sudo.
 

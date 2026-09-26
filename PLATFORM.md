@@ -136,8 +136,8 @@ derivation and record it.
 
 ## Firefox
 
-Draws its own chrome and hands it to a per-profile stylesheet — so it is the
-one surface that can show key/non-key state where the platform will not.
+Draws its own chrome and hands it to a per-profile stylesheet — so it can
+show key/non-key state where the platform will not (so can Obsidian, below).
 Measured on 155.0.1 (deb), 2026-09-19, except where noted.
 
 - `user.js` for prefs; `chrome/userChrome.css` and `userContent.css` for
@@ -346,6 +346,82 @@ on COSMIC.
 **Cannot reach:** the workbench face (above); font weight; border widths and
 radii; the onboarding window; the file icons' own colours, other than by
 choosing an icon theme (`vs-minimal` is monochrome and takes `icon.foreground`).
+
+## Obsidian
+
+Electron: the whole window is a web page, and a theme is a stylesheet that can
+set weight, size, radius and structure as well as colour. Measured on 1.13.7
+(the Arch `obsidian` package, on the system `electron43`), 2026-09-25, on COSMIC.
+
+- **A theme belongs to a vault, not to the user.** It is a folder,
+  `<vault>/.obsidian/themes/<Name>/`, holding `theme.css` and `manifest.json`,
+  and it is selected by `cssTheme` in `<vault>/.obsidian/appearance.json`. A CSS
+  snippet is a file in `<vault>/.obsidian/snippets/`, switched on by its name in
+  `enabledCssSnippets` in the same file. There is no per-user theme: an installer
+  goes vault by vault. A vault kept in a git repository usually ignores
+  `.obsidian/`, so writing there does not touch the repository.
+- **The vault list is `obsidian.json`** in the app's config directory:
+  `${XDG_CONFIG_HOME:-~/.config}/obsidian` for the Arch package (measured). The
+  Flatpak's `~/.var/app/md.obsidian.Obsidian/config/obsidian` and the Snap's
+  `~/snap/obsidian/current/.config/obsidian` are the platforms' conventions and
+  are *not verified on a machine*. The same file holds the app-wide settings:
+  `frame` (`"native"` gives the compositor's frame; absent, the frame is hidden
+  and the app draws its own titlebar) and `updateDisabled`.
+- **Obsidian opens only a vault that list names.** A folder path on its command
+  line, or an `obsidian://open?path=` link to a vault it does not list, opens
+  the vault picker; writing the entry into `obsidian.json` first, with
+  `"open": true`, opens it. `XDG_CONFIG_HOME` moves the whole profile — the list,
+  window state, local storage — so a test profile is one variable away.
+- **Settings and themes are watched.** A change on disk to `appearance.json` or
+  `app.json` is re-read (`reloadConfig`, on the vault's own watcher), and a change
+  to the selected theme's `theme.css` reloads it, so an installer can write both
+  with Obsidian open and the window follows at once.
+- **The app is two archives.** The package ships `app.asar`, a loader, and
+  `obsidian.asar`, the app — `app.css`, `app.js` — and Obsidian checks GitHub for
+  a newer `obsidian-X.Y.Z.asar` on start and hourly, downloads it into its config
+  directory, and loads that over the packaged one; `obsidian.log` there names the
+  one it loaded. So the build to read is not always the package's. An asar is a
+  pickled length, a JSON index and the files, and Python reads it with `struct`.
+- **The window knows when it is key.** `is-focused` is toggled on `<body>` with
+  the window's focus, and with the hidden frame the top 40 px — the tab strips,
+  the sidebar toggles and the window buttons — are painted from
+  `--titlebar-background` and `--titlebar-background-focused`. So a theme can
+  show key state, which COSMIC's own header bars cannot. With `frame` native the
+  compositor paints the titlebar instead.
+- **Settings open in a window of their own** by default on 1.13.7
+  (`settingsPopoutWindow`): an `about:blank` page the main window fills, with the
+  theme, its own titlebar and its own `is-focused`.
+- **Colour arrives as custom properties, most of them derived.** 873 variables
+  on `body` and `.theme-light` in `app.css`, 302 of which take a colour; hover,
+  selection, tags, the current file and the scrollbars are
+  `color-mix(in oklch, X N%, transparent)`, a blend rather than a value. The
+  accent is `hsl()` of three variables. A few colours are literals in rules and
+  reach no variable — tooltip and notice text, the dropdown's arrow (a data URI),
+  the radio button's circle — and a theme overrides the rule. A custom property
+  is computed where it is declared, so a region that redefines one variable does
+  not change another declared on `body` that reads it.
+- **Motion is mostly literal.** Of 85 `transition` and `animation` declarations
+  in `app.css`, 14 read the `--anim-duration-*` variables and 66 carry a literal
+  duration; there is no `prefers-reduced-motion` query. The app's own animation
+  helper sets an inline transition with its own timer beside the
+  `transitionend`, so durations near zero strand nothing.
+- **The type is a theme slot.** `--font-interface-theme`, `--font-text-theme` and
+  `--font-monospace-theme` sit under the user's own choice in Settings, which
+  wins. The chrome's sizes are variables too, at 12, 13 and 15 px; the note's
+  text is `baseFontSize`, default 16.
+- **Sync keeps its connection outside the vault**, in the app's own storage, so
+  nothing in a vault's files says whether it syncs. Its core plugin ships on, and
+  with no account connected shows an error status icon.
+- **The release notes open after an update**, decided by a value in the app's
+  local storage (`most-recently-installed-version`), not by a setting.
+- **`--remote-debugging-port`** works on this build and exposes each window —
+  the popouts included — as a DevTools target; `getComputedStyle` over it reads
+  back what the cascade produced, and a screenshot over it needs the window
+  uncovered, where the computed values do not.
+
+**Cannot reach:** the release notes after an update; a plugin's own stylesheet;
+the graph's canvas, except through the `--graph-*` variables it reads at load;
+the titlebar under the native frame.
 
 ## Claude Code
 

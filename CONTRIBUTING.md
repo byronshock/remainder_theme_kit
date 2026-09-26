@@ -109,6 +109,16 @@ had: §2's seven, §3's three and their two legend values, the twelve ANSI slots
 `build/cosmic.py` unchanged, two slots of the COSMIC neutral ladder, and
 `#00000000`, which is `transparent` as VS Code spells it and paints nothing.
 
+**The Obsidian surface added none, 2026-09-25.** Its theme holds fifteen values —
+§2's seven, §3's three and their two legend values, and the ANSI normal red,
+green and yellow that `remainder-term.ron` and the VS Code theme already carry
+for signal text — and the distinct set taken over `worksafe/`, `elevated/`,
+`palette.json` and `poles.json` with `worksafe/obsidian/` and without it is the
+same set. (That pass counts 65 where the paragraph above records 66; the
+method differs in some detail nobody wrote down, and the difference is in the
+set without Obsidian, so it is not this surface's. Worth pinning the method
+beside the next count.)
+
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
@@ -262,9 +272,14 @@ python3 build/vscode.py --derive   # the tints, the orange, the ANSI reuse, and 
 python3 build/vscode.py --write    # regenerate the theme JSON from the role table
 python3 build/vscode.py --coverage # the installed build's colour registry against the theme (a report)
 python3 build/vscode.py --settings # the settings the kit sets, against the installed build (a report)
+python3 build/obsidian.py          # every variable resolved under the theme, per scope; every pair and adjacency
+python3 build/obsidian.py --derive # the ramp, and the roles the theme may name
+python3 build/obsidian.py --write  # regenerate the theme and the declutter snippet from the tables
+python3 build/obsidian.py --coverage   # the installed build's variables against the recorded ones (a report)
+python3 build/obsidian.py --screen P   # what a running Obsidian computed, every window (a report)
 ```
 
-Five are built. What a checker owes:
+Six are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -377,6 +392,32 @@ else forced:
   `minimap.foregroundOpacity`); the checker leaves them to the platform by name and
   fails the theme if it paints them.
 
+And three the sixth added, which a platform whose colours are custom properties
+forced:
+
+- **It resolves the way the browser does.** Obsidian's colours are 302 custom
+  properties, most of them `var()` chains, and a custom property is computed
+  where it is declared: a region that redefines `--background-modifier-hover`
+  does not change `--nav-item-background-hover`, declared on `body`, which has
+  already taken body's answer. So `build/obsidian.py` records the platform's
+  declarations with their date, overlays the theme on them, and resolves every
+  variable per scope with that rule before it measures a pair — and gates on
+  every one landing on a kit value, on transparent, or on content left to the
+  platform by name. A checker that read the theme's own lines would have passed
+  a hover the browser never paints.
+- **It asks the running app what it computed.** `--screen` is the Firefox
+  Marionette probe made part of the checker: over the DevTools port it walks every
+  visible element of every window — the Settings popout included — and reports
+  each painted value off the ladder and each text pair under the tier its own
+  computed size and weight demand. It found seven defects the gate could not —
+  literals in the platform's own rules, a weight no variable carries, and two of
+  the theme's own choices meeting a platform rule nobody had measured. A report,
+  not a gate: it needs a window.
+- **It measures at the size the screen renders.** Every floor assumes about
+  16 px (§5), and Obsidian's chrome renders at 12 to 15. Where a theme can set the
+  size, it sets the size the floors assume, and says so as a choice (§0c), so the
+  tier the checker applies is the tier on the screen.
+
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
 there is no file to scan. What must hold is the bar itself: *every value the
@@ -488,6 +529,17 @@ region's modal value is the one the theme names for it, the values over 3% of
 any region all pass `build/poles.py`, and the one unauthored value over 3% is the
 2 px outline COSMIC draws around every window, native ones included.
 
+On Obsidian the pass is a probe rather than a photograph, as Firefox's popups
+were: `sh worksafe/obsidian/install.sh --qa DIR` builds a profile of its own with
+a vault holding every kind of block, `XDG_CONFIG_HOME=DIR/config obsidian
+--remote-debugging-port=9223` opens it, and `python3 build/obsidian.py --screen
+9223` reads what every window computed. A screenshot over the same port needs
+the window uncovered; the computed values do not. Measured 2026-09-25 in 24
+states of the main window, key and not: every painted value a kit value except
+the modal scrim, which §4 permits, and no text pair under its tier. The Settings
+window was probed once, before its last two changes (`README_OBSIDIAN.md`), and
+is the first thing the next pass should look at.
+
 What the pass is looking for: no hue in chrome that reads as a signal (§1); the
 three semantic hues present only where the meaning is (§3); one rule, the same
 width everywhere, carrying no state (§5); the cursor findable at a glance on a
@@ -503,6 +555,8 @@ motion, no blur.
 | `elevated/windows/remainder.theme` | generated **and committed**; guarded by `build/windows.py` |
 | `elevated/windows/remainder.reg` | generated **and committed**; guarded by `build/windows.py`. ASCII, CRLF, no BOM — Windows reads a `.reg` without a BOM as ANSI, so those two spell their section references out where the rest of the kit writes `§` |
 | `worksafe/vscode/remainder/themes/remainder-color-theme.json` | generated **and committed**; guarded by `build/vscode.py`. JSON with a comment header, as VS Code reads it; the role table in `build/vscode.py` is the source |
+| `worksafe/obsidian/Remainder/theme.css` | generated **and committed**; guarded by `build/obsidian.py`, which fails if it is not what the role table produces. The only literal colours in it are the `--rm-*` definitions |
+| `worksafe/obsidian/remainder-declutter.css` | generated **and committed**; guarded by `build/obsidian.py`, which also fails if it names any colour at all |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |
