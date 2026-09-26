@@ -52,7 +52,7 @@ Every color the kit authors as chrome is **clear**: its chroma is below
 chroma. Nothing else is chrome.
 
 ```
-python3 build/poles.py '#773556' '#FF6B6B'
+python3 build/poles.py '#763555' '#FF6B6B'
 ```
 
 It prints each value with its nearest pole family, the gap, and what that
@@ -91,8 +91,8 @@ semantics, 17 are pole members recorded in `poles.json`, 12 are terminal ANSI
 slots, and **2 are the reserved legend values**. Nothing is unexplained.
 
 The count was 60 before `elevated/windows/` landed. **It added five**, and they are
-one ladder: the interior slots of Windows' eight-entry accent palette — `#AE6788`
-`#9B5677` `#894666` `#652546` `#420328`. Indices 3 and 5 of that ramp are ACCENT
+one ladder: the interior slots of Windows' eight-entry accent palette — `#AE6789`
+`#9B5677` `#894566` `#642445` `#410227`. Indices 3 and 5 of that ramp are ACCENT
 and SELECT exactly, and the thirty-one-slot colours table added nothing at all,
 because Windows' table is a table of roles and §2 already names a value for every
 role in it. Each of the five clears destructive by about 31° where its own chroma
@@ -101,7 +101,7 @@ requires 10.6.
 **Re-measured again 2026-09-20, after the VS Code surface landed**, by the same
 method: **66 distinct**, 62 before it. The four it added are content or signal by
 construction and every one is inside a pole on purpose (§3 below): the three pale
-tints a diff draws behind code — `#4FFFD1` `#FF9E9B` `#FFD841`, one per semantic
+tints a diff draws behind code — `#57FFD1` `#FF9D9A` `#FFD844`, one per semantic
 hue, solved by `build/vscode.py tint()` — and `charts.orange` `#843000`, solved from
 the platform's own exemplar the way an ANSI slot is solved from xterm's. The 965
 workbench ids the theme decides land on 30 values, and 26 of those the kit already
@@ -369,7 +369,7 @@ else forced:
   table carries the tier each pair actually renders at, and the surface is shaped
   by the answer — read text on WHITE, LIGHT for what carries icons, headers and
   marks. A checker that assumed §2's weights would have passed a sidebar full of
-  file names at Lc 61.3 against a floor of 75.
+  file names at Lc 61.2 against a floor of 75.
 - **It admits one alpha and tells a colour from an opacity.** `#00000000` is how
   VS Code spells `transparent`, and every `*.border` between two surfaces takes it;
   any other alpha is a blend and fails, as in the sheets. Two ids take a colour
@@ -421,6 +421,7 @@ right".
 | WCAG 2.x contrast | four pairs identical at "AAA 7.1:1" | APCA separates them Lc 51.7 to 78.9; two were display-type only (§0e) |
 | "below 0.014 the cast stops being perceptible" | a declared threshold | measured 2026-09-20 at **0.004**, three times lower; §2 now carries the reading (§9) |
 | a cast of 0.0130, the round number | does not derive | CURSOR's best teal reaches Lc 60.4540 where the solver demands 60.5 — reachable casts are islands, not a range (§2) |
+| a cast of 0.0128, backed off from 0.016 | derives, and every pair clears | three times the measured cast threshold rather than four, so the hint had to be looked for; and it sat on its island's top edge with 0.0000 of slack above it, so no upward move derived at all. Returned to 0.016, 2026-09-23 (§2) |
 | DWM `ColorizationColor` as an ABGR DWORD, like `AccentColor` | `dword:00563577`, which the checker read back as ACCENT | the key is AARRGGBB like the `.theme`'s (`0xC40078D7` is Microsoft's default); a checker cannot verify its own reading of a notation, and the parent kit's `theme.reg` caught it by parity (§8, §11), 2026-09-21 |
 | `active_hint` at the rule's own width, in CURSOR | the key window's rule turned CURSOR entirely, touching the panel and its neighbours | the rule carries no state (§5); looked at 2026-09-21 |
 | the mark at 8 dp, then at 11 (a quarter of the rule) | corners rounded to 12 and 16 px — cosmic-comp rounds the band to a radius equal to its thickness, and no theme radius reaches it; 11 also rendered 16 px on two sides and 17 on the others | the smallest width that renders whole and uniform at every quarter-step scale and is found from the corner of the eye: 4 dp, 6 px here, the corner cut 5/3/2/1/1 px, 2026-09-21 (§5) |

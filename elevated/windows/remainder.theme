@@ -19,37 +19,37 @@ DisplayName=Remainder
 ; The legacy Win32 colours table. Decimal RGB triples -- Windows reads no other
 ; notation here, which is why build/windows.py learned this one first.
 [Control Panel\Colors]
-ActiveTitle=119 53 86
-GradientActiveTitle=119 53 86
-TitleText=239 229 233
-InactiveTitle=184 174 178
-GradientInactiveTitle=184 174 178
-InactiveTitleText=15 9 12
-Background=15 9 12
-Window=239 229 233
-WindowText=15 9 12
-WindowFrame=15 9 12
-ActiveBorder=15 9 12
-InactiveBorder=15 9 12
-Menu=239 229 233
-MenuText=15 9 12
-MenuBar=239 229 233
-MenuHilight=83 21 55
-Hilight=83 21 55
-HilightText=239 229 233
-HotTrackingColor=119 53 86
-ButtonFace=184 174 178
-ButtonText=15 9 12
-ButtonHilight=184 174 178
-ButtonLight=184 174 178
-ButtonShadow=74 65 69
-ButtonDkShadow=15 9 12
-ButtonAlternateFace=184 174 178
-GrayText=74 65 69
-Scrollbar=184 174 178
-AppWorkspace=74 65 69
-InfoWindow=239 229 233
-InfoText=15 9 12
+ActiveTitle=118 53 85
+GradientActiveTitle=118 53 85
+TitleText=241 228 233
+InactiveTitle=186 173 178
+GradientInactiveTitle=186 173 178
+InactiveTitleText=16 8 12
+Background=16 8 12
+Window=241 228 233
+WindowText=16 8 12
+WindowFrame=16 8 12
+ActiveBorder=16 8 12
+InactiveBorder=16 8 12
+Menu=241 228 233
+MenuText=16 8 12
+MenuBar=241 228 233
+MenuHilight=82 20 54
+Hilight=82 20 54
+HilightText=241 228 233
+HotTrackingColor=118 53 85
+ButtonFace=186 173 178
+ButtonText=16 8 12
+ButtonHilight=186 173 178
+ButtonLight=186 173 178
+ButtonShadow=75 64 69
+ButtonDkShadow=16 8 12
+ButtonAlternateFace=186 173 178
+GrayText=75 64 69
+Scrollbar=186 173 178
+AppWorkspace=75 64 69
+InfoWindow=241 228 233
+InfoText=16 8 12
 
 ; AUTHORITY.md sec. 5: the desktop field is a flat BLACK one. No wallpaper, no pattern -- the value
 ; above in Background is the whole desktop, and the tiling gaps ARE the rule.
@@ -68,7 +68,7 @@ Path=%SystemRoot%\resources\themes\Aero\Aero.msstyles
 ColorStyle=NormalColor
 Size=NormalSize
 AutoColorization=0
-ColorizationColor=0XC4773556
+ColorizationColor=0XC4763555
 ; Light mode, and the standard theme engine -- not a contrast theme. PLATFORM.md:
 ; forced colours strip affordances users need and read as an accessibility mode.
 SystemMode=Light

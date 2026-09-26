@@ -45,7 +45,7 @@ HOME_HUE_DERIVED = round((P.HOME[0] + ((P.HOME[1] - P.HOME[0]) % 360) / 2) % 360
 # No magenta guard is applied, and that is deliberate (build/field.py). Magenta is not a pole
 # and signals nothing, so it cannot enter poles.json; and it is a chroma phenomenon before it
 # is a hue one -- every named magenta sits above chroma 0.18 while the kit authors at 0.100
-# and 0.020. The CHROME ceiling below is what keeps magenta out. An angular guard would buy
+# and 0.016. The CHROME ceiling below is what keeps magenta out. An angular guard would buy
 # nothing an angle can hold.
 HOME_HUE = 351.0
 
@@ -105,19 +105,31 @@ LOAD_BEARING = [('WHITE', 'LIGHT'), ('WHITE', 'DARK'), ('WHITE', 'ACCENT'), ('WH
 # three times lower than this file used to assert -- it said "below about 0.014 it stops being
 # perceptible at all", which was a judgement nobody had tested.
 #
-# So 0.0128 is not the smallest cast that can be seen. It is well above that, and the reason is a
-# choice about what the cast is FOR: a stronger hint that a surface is furniture and not a document
-# resting on the furniture. Backed off from 0.016 because that hint does not need to be as loud as
-# it was, and stopped here rather than lower because the hint is the point.
+# So 0.016 is not the smallest cast that can be seen; it is four times it. The reason is a choice
+# about what the cast is FOR: the hint that a surface is furniture and not a document resting on the
+# furniture, and the hint is the point. It was backed off to 0.0128 on 2026-09-20 on the reading
+# that the hint did not need to be as loud as it was, and returned to 0.016 on 2026-09-23: a cast
+# that has to be looked for is not the hint, and a definite one is. 0.016 is also the value the kit
+# shipped before the backing-off.
 #
-# 0.0130 was the round number wanted and it DOES NOT DERIVE: the best in-gamut teal at CURSOR's
-# chroma reaches Lc 60.4540 against the WHITE it produces, and the solver demands 60.0 + MARGIN.
-# It misses by 0.046 of an Lc point. 0.0128 is the nearest value below it and leaves CURSOR Lc 60.9,
-# four times the headroom 0.0135 would have left. Reachable casts are not a range -- CURSOR's floor
-# against an 8-bit WHITE makes them islands, and this is the top of the one below 0.013.
+# Reachable casts are NOT A RANGE. CURSOR's floor is read against a WHITE quantised to 8 bits, so
+# the cast moves in islands. Sweeping 0.0100-0.0300 at 0.0002 (2026-09-23) derives on four of them
+# and nowhere else:
+#     0.0100-0.0128  width 0.0030  WHITE #EEE5E9 -> #EFE5E9
+#     0.0136-0.0168  width 0.0034  WHITE #F0E4E9 -> #F1E4E9   <- the widest, and 0.016 is inside it
+#     0.0188-0.0206  width 0.0020  WHITE #F3E3E9 -> #F4E3E9
+#     0.0242-0.0246  width 0.0006  one WHITE throughout
+# Every gap is the best in-gamut teal at CURSOR's chroma falling under 60.0 + MARGIN: the WHITE at
+# 0.0130 leaves it Lc 60.4540, the one at 0.0170 60.4395, the one at 0.0208 60.3004. 0.0130 -- the
+# round number between the first two islands -- still does not derive, and misses by 0.046 of an Lc
+# point.
+#
+# 0.016 has 0.0026 of slack below it and 0.0008 above. 0.0128 had 0.0030 below and NONE above: it
+# was the top edge of its island, so any move upward at all failed. The move costs 0.15 of CURSOR's
+# Lc margin (+0.9 -> +0.7, still over its floor) and buys headroom on the side 0.0128 did not have.
 #
 # Far under C_FLOOR either way, so no user can read a hue in it.
-CAST = 0.0128
+CAST = 0.016
 # CHOSEN: the two things that must be noticed -- the key titlebar and the selected row --
 # are allowed a real hue. Just above C_FLOOR, so they are honestly hue-bearing and have to
 # pass the pole test rather than escape it as neutrals. Far below a signal's own chroma
@@ -302,7 +314,7 @@ if __name__ == '__main__':
         json.dump({
             'name': 'Remainder',
             'derived_from': 'poles.json, by build/derive_palette.py. No source artifact.',
-            'derived_on': '2026-09-19',
+            'derived_on': '2026-09-23',
             'derived': {'home_hue_derived': HOME_HUE_DERIVED, 'home_arc': [round(P.HOME[0], 1), round(P.HOME[1], 1)],
                         'note': 'The hypothesis constrains hue only. Every lightness here is solved from the contrast targets.'},
             'surface_floor_dE': SURFACE_FLOOR,

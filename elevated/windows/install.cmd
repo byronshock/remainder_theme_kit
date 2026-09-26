@@ -147,7 +147,7 @@ echo.
 echo   1. The text cursor indicator. Settings ^> Accessibility ^> Text cursor: turn the
 echo      indicator on and set a custom colour of  #007891  -- CURSOR, the one value in the
 echo      kit at another hue, because a cursor is a locator and not furniture.
-echo   2. Edge's frame. edge://settings/appearance, custom theme colour  #773556  -- it is a
+echo   2. Edge's frame. edge://settings/appearance, custom theme colour  #763555  -- it is a
 echo      Preferences entry and not a registry key, so no installer can reach it.
 echo   3. Sign out and back in once, if anything still looks like Windows. A few surfaces read
 echo      their colours only at logon.

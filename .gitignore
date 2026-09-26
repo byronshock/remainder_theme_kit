@@ -1,4 +1,5 @@
 __pycache__/
+.qwen/
 *.pyc
 .DS_Store
 Thumbs.db

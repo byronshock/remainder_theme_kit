@@ -19,12 +19,12 @@
 
 @-moz-document url-prefix(about:) {
   :root {
-    --rm-white:  #EFE5E9;
-    --rm-light:  #B8AEB2;
-    --rm-dark:   #4A4145;
-    --rm-black:  #0F090C;
-    --rm-accent: #773556;
-    --rm-select: #531537;
+    --rm-white:  #F1E4E9;
+    --rm-light:  #BAADB2;
+    --rm-dark:   #4B4045;
+    --rm-black:  #10080C;
+    --rm-accent: #763555;
+    --rm-select: #521436;
     --rm-cursor: #007891;
     --rm-success:     #006B54;
     --rm-warning:     #FCD116;

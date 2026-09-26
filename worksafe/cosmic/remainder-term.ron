@@ -28,44 +28,44 @@
 // terminal cannot make that slot read, and the kit does not pretend otherwise.
 (
     name: "Remainder",
-    foreground: "#0F090CFF",          // BLACK on WHITE, Lc 91.8 — §2's body-text pair
-    background: "#EFE5E9FF",          // WHITE
+    foreground: "#10080CFF",          // BLACK on WHITE, Lc 91.8 — §2's body-text pair
+    background: "#F1E4E9FF",          // WHITE
     cursor: "#007891FF",              // CURSOR: a locator, the one value in the kit at another hue (§2)
-    bright_foreground: "#0F090CFF",   // BLACK. Brighter than BLACK on this field means lighter, so worse.
-    dim_foreground: "#4A4145FF",      // DARK, Lc 79.0
+    bright_foreground: "#10080CFF",   // BLACK. Brighter than BLACK on this field means lighter, so worse.
+    dim_foreground: "#4B4045FF",      // DARK, Lc 79.0
     normal: (
-        black:   "#0F090CFF",         // BLACK   — §2's ladder onto the four neutral ANSI slots
+        black:   "#10080CFF",         // BLACK   — §2's ladder onto the four neutral ANSI slots
         red:     "#930000FF",         // destructive hue, Lc 75.0
-        green:   "#005900FF",         // success hue, Lc 75.3
+        green:   "#005800FF",         // success hue, Lc 75.3
         yellow:  "#525200FF",         // warning hue, Lc 74.1 — the gamut cap above
-        blue:    "#0000E8FF",         // info-blue hue, Lc 75.1
+        blue:    "#0000E6FF",         // info-blue hue, Lc 75.1
         magenta: "#820082FF",         // no pole: magenta signals nothing (§0d), and at 328.4 its
                                       //   realized hue lands inside the kit's own working arc — the one
                                       //   ANSI slot the kit could have authored itself. Lc 75.1
         cyan:    "#007F7FFF",         // demoted info-cyan (poles.json). In a terminal the claim it was
                                       //   demoted for — note, diagnostic — is the claim the slot makes,
                                       //   so the slot honours it where the pole set does not. Lc 58.9
-        white:   "#B8AEB2FF",         // LIGHT
+        white:   "#BAADB2FF",         // LIGHT
     ),
     bright: (
-        black:   "#4A4145FF",         // DARK
-        red:     "#D70000FF",         // Lc 60.1
+        black:   "#4B4045FF",         // DARK
+        red:     "#D60000FF",         // Lc 60.1
         green:   "#008100FF",         // Lc 60.2
         yellow:  "#747400FF",         // Lc 60.1
         blue:    "#0000FFFF",         // Lc 71.8 — blue's chroma ceiling sits above the tier, so this slot
                                       //   is more legible than the 60 tier asks for
-        magenta: "#BE00BEFF",         // Lc 60.3
+        magenta: "#BD00BDFF",         // Lc 60.3
         cyan:    "#007F7FFF",         // = normal: the cap above
-        white:   "#EFE5E9FF",         // WHITE
+        white:   "#F1E4E9FF",         // WHITE
     ),
     dim: (
-        black:   "#0F090CFF",         // BLACK
+        black:   "#10080CFF",         // BLACK
         red:     "#76362DFF",         // Lc 76.1
         green:   "#265423FF",         // Lc 76.0
         yellow:  "#525201FF",         // = normal: yellow's normal slot already sits at the chroma floor
-        blue:    "#334B7FFF",         // Lc 75.5
+        blue:    "#324A7FFF",         // Lc 75.5
         magenta: "#6A3A68FF",         // Lc 75.5
         cyan:    "#027F7FFF",         // = normal: the cap above
-        white:   "#746A6EFF",         // neutral_5, the ramp's midpoint
+        white:   "#756A6EFF",         // neutral_5, the ramp's midpoint
     ),
 )

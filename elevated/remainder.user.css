@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           Remainder
 @namespace      github.com/byronshock/remainder_theme_kit
-@version        0.1.7
+@version        0.1.8
 @description    Remainder for websites: WHITE ground and documents, LIGHT fields and panels, ACCENT links kept underlined, SELECT selection carrying WHITE, the CURSOR caret, one BLACK rule at 44px, Montserrat and Hack, no curves, no hairlines. Tier: elevated — no elevation on this surface, but its reach is every site.
 @author         Byron Shock, Ph.D.
 ==/UserStyle== */
@@ -40,6 +40,11 @@
    images off non-media, inline too — but not off sprite icons, or the icon vanishes and leaves its label.
    L5 font rules carry no !important: with it, every icon-font glyph renders as tofu.
 
+   0.1.8: the palette moved back. CAST 0.0128 -> 0.016, the value 0.1.6 backed off from, so every
+          neutral and both chrome hues are one or two code values along; CURSOR and §3's three do not
+          move, and no selector, no weight and not the 44px rule changed. Nothing moved off a floor:
+          BLACK on WHITE Lc 91.8, BLACK on LIGHT 61.2, the caret on the field 60.7. The cast is four
+          times the measured perceptual threshold rather than three -- the hint is definite (§2).
    0.1.7: the rule is 44px. §5's reference width is the 1 cm handle zone entire, 44 dp, where 22 was half of
           it; --rm-rule and hr follow, and nothing else in the sheet moved.
    0.1.6: the palette moved. CAST 0.016 -> 0.0128, so every neutral and both chrome hues are one or two
@@ -53,7 +58,7 @@
           text-decoration-color travels with the colour -- an ACCENT underline on the dark ground was all
           that was left visible when the text went.
    0.1.4: a selected row in a mail client was BLACK on SELECT -- Lc 0.0, invisible, and measured at the
-          pixel off a screenshot of a real inbox: glyph cores #0F090C on a #531537 ground. The selection
+          pixel off a screenshot of a real inbox: glyph cores #10080C on a #521436 ground. The selection
           rules paint eleven grounds and only seven of them had a matching descendant rule, so the text
           inside the other four kept whatever was declared on it. The one that mattered is `tbody
           tr:hover`, which is every table-based list there is. The deeper cause is this sheet arguing
@@ -93,12 +98,12 @@
 @-moz-document url-prefix("http"), url-prefix("file") {
 
 :root {
-  --rm-white:  #EFE5E9;
-  --rm-light:  #B8AEB2;
-  --rm-dark:   #4A4145;
-  --rm-black:  #0F090C;
-  --rm-accent: #773556;
-  --rm-select: #531537;
+  --rm-white:  #F1E4E9;
+  --rm-light:  #BAADB2;
+  --rm-dark:   #4B4045;
+  --rm-black:  #10080C;
+  --rm-accent: #763555;
+  --rm-select: #521436;
   --rm-cursor: #007891;
   --rm-success:     #006B54;
   --rm-warning:     #FCD116;

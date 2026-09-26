@@ -8,9 +8,9 @@ kit had not met yet. Both were measured off the installed build (Flatpak com.vis
 
   THE PLATFORM SETS NO WEIGHT. A theme names colours and nothing else; the workbench renders its
     labels at 400 and only its section headers at 700 (`.pane-header{font-size:11px;font-weight:700}`
-    in workbench.desktop.main.css). BLACK on LIGHT is Lc 61.3, which §2 authors as the 16px/700 tier
+    in workbench.desktop.main.css). BLACK on LIGHT is Lc 61.2, which §2 authors as the 16px/700 tier
     -- so on this platform LIGHT can carry a header, an icon or a mark, and not a label a user reads.
-    Every ground that carries read text here is WHITE (BLACK on it Lc 91.9), LIGHT is the ground of
+    Every ground that carries read text here is WHITE (BLACK on it Lc 91.8), LIGHT is the ground of
     the icon strips and the tab strip, and the one rule §5 draws is the status bar: 22 px of BLACK
     with WHITE on it -- half the rule's 44 dp, at a height the platform fixes and a theme cannot
     change; recorded as residue (§4), not echoed.
@@ -20,7 +20,7 @@ kit had not met yet. Both were measured off the installed build (Flatpak com.vis
     themeType)`), so outside one the selection is a fill BEHIND text that keeps its colour. §2's dark
     SELECT-with-WHITE is therefore unreachable in the editor, and the pale tint §2 measured and
     rejected is what the platform leaves: the best in-gamut tint at CHROME chroma that still clears
-    the surface floor carries BLACK at Lc 63.4, and LIGHT -- an authored value -- carries it at 61.3.
+    the surface floor carries BLACK at Lc 63.4, and LIGHT -- an authored value -- carries it at 61.2.
     The editor selection is LIGHT, the shortfall against the body tier is the platform's, and it is
     recorded in HIGHLIGHTS below rather than hidden. The TERMINAL is different: xterm.js honours
     selectionForeground, so the terminal's selection is SELECT carrying WHITE, as §2 authors it.
@@ -37,9 +37,9 @@ ships here beside the surface (CONTRIBUTING.md §8):
   ANSI       the sixteen terminal slots, taken from build/cosmic.py unchanged: the same buffer, the
              same content (§0a), the same values. The normal tier also carries every piece of TEXT that
              means error, added or warning outside the buffer (a file name, a count, a message), because
-             §3's FHWA values are grounds and marks, not text: DESTRUCTIVE on WHITE is Lc 68.2 and
-             WARNING on WHITE is Lc 8.2, under the visibility floor. A MARK that means warning takes
-             the bright yellow slot (Lc 60.2) for the same reason.
+             §3's FHWA values are grounds and marks, not text: DESTRUCTIVE on WHITE is Lc 68.1 and
+             WARNING on WHITE is Lc 8.0, under the visibility floor. A MARK that means warning takes
+             the bright yellow slot (Lc 60.1) for the same reason.
   TINTS      three pale grounds, one per semantic hue, for the fills a diff and a coverage view draw
              BEHIND code: the lightest in-gamut value at that hue, at a chroma between C_FLOOR and a
              signal's own C_REF, that still clears SURFACE_FLOOR against WHITE, chosen for the most
@@ -191,9 +191,9 @@ COLORS = [
     # -- the base: what everything else falls back to -------------------------------------------------
     ('foreground', B, 'text'),
     ('strongForeground', B, ''),
-    ('descriptionForeground', D, 'secondary text; DARK on WHITE is Lc 78.9'),
+    ('descriptionForeground', D, 'secondary text; DARK on WHITE is Lc 79.0'),
     ('disabledForeground', D, '§2 names DARK as disabled text'),
-    ('errorForeground', RED, 'error TEXT takes the ANSI normal red: DESTRUCTIVE on WHITE is Lc 68.2, under the body tier'),
+    ('errorForeground', RED, 'error TEXT takes the ANSI normal red: DESTRUCTIVE on WHITE is Lc 68.1, under the body tier'),
     ('icon.foreground', B, 'icons are marks'),
     ('focusBorder', A, 'focus is ACCENT (§2)'),
     ('selection.background', L, 'text selected outside the editor keeps its colour; the fill is LIGHT (HIGHLIGHTS)'),
@@ -237,7 +237,7 @@ COLORS = [
 
     # -- controls: the outline of a control is its glyph and takes BLACK; focus takes ACCENT ----------
     ('input.background', W, ''),
-    ('input.foreground', B, 'what the user types, Lc 91.9'),
+    ('input.foreground', B, 'what the user types, Lc 91.8'),
     ('input.border', B, 'the well\'s own outline -- a control glyph, not a separator between surfaces'),
     ('input.placeholderForeground', D, ''),
     ('inputOption.activeBackground', A, 'a toggle that is on: ACCENT carrying WHITE (§2)'),
@@ -318,7 +318,7 @@ COLORS = [
     ('menu.border', NONE, ''),
 
     # -- the activity bar: icons only, so LIGHT carries it -----------------------------------------------
-    ('activityBar.background', L, 'icons are marks: BLACK on LIGHT is Lc 61.3, far over the 30 a mark needs'),
+    ('activityBar.background', L, 'icons are marks: BLACK on LIGHT is Lc 61.2, far over the 30 a mark needs'),
     ('activityBar.foreground', B, ''),
     ('activityBar.inactiveForeground', D, 'DARK on LIGHT, Lc 48.4: a mark'),
     ('activityBar.activeBackground', W, 'the active item is a WHITE well that joins the WHITE sidebar beside it'),
@@ -373,23 +373,23 @@ COLORS = [
     ('list.inactiveSelectionForeground', W, ''),
     ('list.inactiveSelectionIconForeground', W, ''),
     ('list.hoverBackground', L, 'hover is a LIGHT tint here, not SELECT: extension webviews use this id as a static ground and set it alone, so their text inherits `foreground` -- measured 2026-09-21, BLACK on SELECT in a chat panel'),
-    ('list.hoverForeground', B, 'follows: BLACK on LIGHT, Lc 61.3, a fill under text that keeps its colour (HIGHLIGHTS)'),
+    ('list.hoverForeground', B, 'follows: BLACK on LIGHT, Lc 61.2, a fill under text that keeps its colour (HIGHLIGHTS)'),
     ('list.focusBackground', NONE, 'a focused, unselected row is marked by its outline'),
     ('list.focusForeground', B, ''),
     ('list.focusOutline', A, ''),
-    ('list.focusAndSelectionOutline', W, 'on a SELECT row an ACCENT outline is dE 11.7 away; WHITE reads'),
+    ('list.focusAndSelectionOutline', W, 'on a SELECT row an ACCENT outline is dE 11.8 away; WHITE reads'),
     ('list.inactiveFocusBackground', NONE, ''),
     ('list.inactiveFocusOutline', D, ''),
     ('list.highlightForeground', A, 'the matched characters of a filter, on a WHITE row'),
     ('list.focusHighlightForeground', W, 'the same on the SELECT row'),
     ('list.deemphasizedForeground', D, ''),
-    ('list.errorForeground', RED, 'a file with errors: the ANSI normal red carries text at Lc 75.2'),
+    ('list.errorForeground', RED, 'a file with errors: the ANSI normal red carries text at Lc 75.0'),
     ('list.warningForeground', YELLOW, 'a file with warnings: the ANSI normal yellow, at its gamut cap'),
     ('list.invalidItemForeground', RED, ''),
     ('list.dropBackground', L, ''),
     ('list.dropBetweenBackground', B, 'the insertion line while dragging: a mark'),
     ('list.filterMatchBackground', NONE, ''),
-    ('list.filterMatchBorder', B, 'a match is boxed, not filled, so its text keeps Lc 91.9'),
+    ('list.filterMatchBorder', B, 'a match is boxed, not filled, so its text keeps Lc 91.8'),
     ('listFilterWidget.background', W, ''),
     ('listFilterWidget.outline', B, ''),
     ('listFilterWidget.noMatchesOutline', DS, ''),
@@ -414,7 +414,7 @@ COLORS = [
     ('tab.activeForeground', B, ''),
     ('tab.activeBorderTop', A, 'a 2 px mark, which is what tells the active tab from the others'),
     ('tab.activeBorder', NONE, ''),
-    ('tab.inactiveBackground', W, 'inactive tabs are WHITE too, with DARK labels (Lc 78.9): LIGHT would put their labels at 61.3'),
+    ('tab.inactiveBackground', W, 'inactive tabs are WHITE too, with DARK labels (Lc 79.0): LIGHT would put their labels at 61.3'),
     ('tab.inactiveForeground', D, ''),
     ('tab.border', NONE, 'the tabs are one WHITE band; §5 draws no line between them'),
     ('tab.hoverBackground', S, ''),
@@ -465,11 +465,11 @@ COLORS = [
 
     # -- the editor --------------------------------------------------------------------------------------
     ('editor.background', W, ''),
-    ('editor.foreground', B, 'body text, Lc 91.9'),
+    ('editor.foreground', B, 'body text, Lc 91.8'),
     ('editorPane.background', W, ''),
     ('editorGutter.background', W, ''),
     ('editor.border', NONE, ''),
-    ('editorLineNumber.foreground', D, 'line numbers: DARK on WHITE, Lc 78.9'),
+    ('editorLineNumber.foreground', D, 'line numbers: DARK on WHITE, Lc 79.0'),
     ('editorLineNumber.activeForeground', B, ''),
     ('editorLineNumber.dimmedForeground', D, ''),
     ('editorActiveLineNumber.foreground', B, ''),
@@ -554,10 +554,10 @@ COLORS = [
     ('editorGhostText.border', NONE, ''),
     ('editorLink.activeForeground', A, ''),
     ('editorUnnecessaryCode.border', NONE, ''),
-    ('editorError.foreground', DS, 'the error squiggle: a mark, DESTRUCTIVE on WHITE Lc 68.2'),
+    ('editorError.foreground', DS, 'the error squiggle: a mark, DESTRUCTIVE on WHITE Lc 68.1'),
     ('editorError.background', NONE, ''),
     ('editorError.border', NONE, ''),
-    ('editorWarning.foreground', BYELLOW, 'the warning squiggle: WARNING on WHITE is Lc 8.2, invisible; the ANSI bright yellow is 60.2'),
+    ('editorWarning.foreground', BYELLOW, 'the warning squiggle: WARNING on WHITE is Lc 8.0, invisible; the ANSI bright yellow is 60.2'),
     ('editorWarning.background', NONE, ''),
     ('editorWarning.border', NONE, ''),
     ('editorInfo.foreground', D, 'information has no hue: DARK'),
@@ -765,7 +765,7 @@ COLORS = [
     ('outputView.background', W, ''),
     ('outputViewStickyScroll.background', W, ''),
     ('terminal.background', W, ''),
-    ('terminal.foreground', B, 'BLACK on WHITE, Lc 91.9 -- worksafe/cosmic/remainder-term.ron\'s pair'),
+    ('terminal.foreground', B, 'BLACK on WHITE, Lc 91.8 -- worksafe/cosmic/remainder-term.ron\'s pair'),
     ('terminal.selectionBackground', S, 'xterm.js honours selectionForeground, so the terminal has §2\'s selection: SELECT carrying WHITE'),
     ('terminal.selectionForeground', W, ''),
     ('terminal.inactiveSelectionBackground', S, ''),
@@ -810,7 +810,7 @@ COLORS = [
     ('terminalSymbolIcon.tagForeground', B, ''),
 
     # -- the status bar: the rule (§5) --------------------------------------------------------------------
-    ('statusBar.background', B, '22 px of BLACK carrying WHITE (Lc -92.4): the one rule this surface draws, at the height the platform fixes -- half the rule\'s 44 dp'),
+    ('statusBar.background', B, '22 px of BLACK carrying WHITE (Lc -92.3): the one rule this surface draws, at the height the platform fixes -- half the rule\'s 44 dp'),
     ('statusBar.foreground', W, ''),
     ('statusBar.border', NONE, ''),
     ('statusBar.focusBorder', W, ''),
@@ -962,7 +962,7 @@ COLORS = [
     ('editor.inlineValuesForeground', B, ''),
 
     # -- git, testing, charts, the graph -------------------------------------------------------------------
-    ('gitDecoration.addedResourceForeground', GREEN, 'added and untracked are new content: the ANSI normal green carries the name at Lc 75.1'),
+    ('gitDecoration.addedResourceForeground', GREEN, 'added and untracked are new content: the ANSI normal green carries the name at Lc 75.3'),
     ('gitDecoration.untrackedResourceForeground', GREEN, ''),
     ('gitDecoration.deletedResourceForeground', RED, ''),
     ('gitDecoration.stageDeletedResourceForeground', RED, ''),
@@ -1112,7 +1112,7 @@ LEFT_UNSET = {
 # What a token class LOOKS like is decided by tone and geometry, and the reasons are in the header.
 # Each entry is (name, scopes, fg, fontStyle). fg None inherits the editor foreground.
 TOKENS = [
-    ('comments: DARK and italic. DARK on WHITE is Lc 78.9, over the body tier, so a comment is quieter and still read',
+    ('comments: DARK and italic. DARK on WHITE is Lc 79.0, over the body tier, so a comment is quieter and still read',
      ['comment', 'punctuation.definition.comment', 'comment.block.documentation'], D, 'italic'),
     ('keywords, storage and control flow: BLACK and bold -- weight, not hue',
      ['keyword', 'keyword.control', 'storage', 'storage.type', 'storage.modifier', 'keyword.operator.new',
@@ -1150,7 +1150,7 @@ TOKENS = [
       'storage.type.primitive.java', 'storage.type.token.java', 'storage.type.groovy', 'storage.type.annotation.groovy',
       'storage.type.parameters.groovy', 'storage.type.generic.groovy', 'storage.type.object.array.groovy',
       'storage.type.primitive.array.groovy', 'storage.type.primitive.groovy'], A, 'bold'),
-    ('functions, methods, members, attributes and property names: SELECT, Lc 85.7 -- read against BLACK by tone',
+    ('functions, methods, members, attributes and property names: SELECT, Lc 85.8 -- read against BLACK by tone',
      ['entity.name.function', 'support.function', 'entity.name.method', 'support.constant.handlebars',
       'source.powershell variable.other.member', 'entity.name.operator.custom-literal', 'entity.other.attribute-name',
       'support.type.property-name', 'support.type.vendored.property-name', 'support.type.property-name.json',
@@ -1441,7 +1441,7 @@ ADJACENT_EXEMPT = {
     ('editorStickyScroll.background', 'editor.background'): 'the same',
     ('peekViewResult.background', 'peekViewEditor.background'): 'two fields inside one ACCENT frame; the content tells them apart',
     ('minimapSlider.background', 'minimapSlider.hoverBackground'): 'the slider does not change on hover: an opaque DARK band would hide the minimap under it',
-    ('button.hoverBackground', 'button.background'): 'hover is a change over time, not a boundary: §2\'s own exempt pair (ACCENT/SELECT, dE 11.7), which worksafe/firefox/ uses for the same hover',
+    ('button.hoverBackground', 'button.background'): 'hover is a change over time, not a boundary: §2\'s own exempt pair (ACCENT/SELECT, dE 11.8), which worksafe/firefox/ uses for the same hover',
     ('input.background', 'editorWidget.background'): 'the well is edged by its own outline (input.border, BLACK), not by a tone change',
 }
 # The two legend values may appear only as the text of these pairs (§3): a light legend on DESTRUCTIVE or
