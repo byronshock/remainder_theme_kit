@@ -217,7 +217,7 @@ COLORS = [
     ('banner.iconForeground', W, ''),
     ('textLink.foreground', A, 'links route to ACCENT (§3); Lc 75.4 on WHITE, the body minimum'),
     ('textLink.activeForeground', S, ''),
-    ('textPreformat.foreground', B, 'inline code: the face changes (Hack), the ground does not'),
+    ('textPreformat.foreground', B, 'inline code: the face changes (the mono), the ground does not'),
     ('textPreformat.background', NONE, ''),
     ('textPreformat.border', NONE, ''),
     ('textCodeBlock.background', NONE, 'a code block in a hover: the face carries it'),

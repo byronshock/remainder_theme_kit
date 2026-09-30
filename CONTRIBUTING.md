@@ -745,11 +745,15 @@ copyleft: a derivative is shared under the same license. Color values are not
 copyrightable; what is licensed is the documents and code that express them.
 
 **The kit ships no fonts.** §5 declares two typefaces and `install.sh --fonts`
-fetches them from the projects themselves at a pinned tag — Hack v3.003 from
-`source-foundry/Hack` (MIT), Montserrat v7.222 from `JulietaUla/Montserrat`
-(SIL OFL 1.1), the repository its own `OFL.txt` names — verifying each file
-against a SHA-256 recorded in the installer and installing the license beside
-the faces. A file whose checksum does not match is not installed, and the
+fetches them from the projects themselves at a pinned tag. AtkynsonMono Nerd
+Font comes from `ryanoasis/nerd-fonts` v3.5.1 (SIL OFL 1.1). It is the Nerd
+Fonts build of Atkinson Hyperlegible Mono, whose own repository,
+`googlefonts/atkinson-hyperlegible-next-mono`, is archived, has no tags and
+publishes no patched build. Its tarball was recorded 2026-09-29, and the record
+equals the `SHA-256.txt` Nerd Fonts publishes with the release. Montserrat
+v7.222 comes from `JulietaUla/Montserrat` (SIL OFL 1.1), the repository its own
+`OFL.txt` names. Each file is verified against a SHA-256 recorded in the
+installer, and the license is installed beside the faces. A file whose checksum does not match is not installed, and the
 installer says so rather than carrying on.
 
 Adding or moving a font means re-recording those checksums from the

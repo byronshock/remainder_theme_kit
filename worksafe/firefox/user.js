@@ -36,11 +36,14 @@ user_pref("browser.theme.native-theme", false);
 // `python3 build/firefox.py --derive` and re-read the sheet before trusting it.
 user_pref("browser.nova.enabled", false);
 
-// §5: UI Montserrat, mono Hack. These are the CONTENT defaults; the chrome's own face is set in
-// userChrome.css. A page that names its own font keeps it (§0a: content is exempt).
+// §5: UI Montserrat, mono AtkynsonMono Nerd Font. These are the CONTENT defaults; the chrome's own face is
+// set in userChrome.css. A page that names its own font keeps it (§0a: content is exempt).
+// font.name-list is read after font.name, and the first family installed wins: Atkinson Hyperlegible Mono is
+// the fallback, then the platform's generic, which is this list's shipped value on Linux.
 user_pref("font.default.x-western", "sans-serif");
 user_pref("font.name.sans-serif.x-western", "Montserrat");
-user_pref("font.name.monospace.x-western", "Hack");
+user_pref("font.name.monospace.x-western", "AtkynsonMono Nerd Font");
+user_pref("font.name-list.monospace.x-western", "Atkinson Hyperlegible Mono, monospace");
 
 // §0: the larger half. Recommendations, sponsorship, nags, promotions, and the machine-learning features
 // Firefox 155 turns on by default.

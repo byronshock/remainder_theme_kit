@@ -109,7 +109,22 @@ values, and tiling gaps are all settable per-user with no sudo.
   gap carry focus to exactly the extent of its width, which is the trade a
   theme makes with it.
 - Background is per output, not per workspace.
-- Toolkit config (`com.system76.CosmicTk`): fonts, density, header size.
+- Toolkit config (`com.system76.CosmicTk`): fonts, density, header size. A
+  font entry names its family *and* its weight (`weight: Medium`), and the
+  weight is taken as written.
+- **COSMIC's text stack does not read fontconfig's rules.** cosmic-text finds
+  faces through fontdb, which parses fontconfig's files for `<dir>` and the
+  generic aliases and nothing else. A `<selectfont><rejectfont>` that hides a
+  face from every fontconfig client — Firefox, Chromium, Electron — leaves it
+  visible to COSMIC. To get a weight on COSMIC, name it. Read in fontdb's
+  `load_fontconfig`, 2026-09-29.
+- **COSMIC Terminal keeps its own font** (`com.system76.CosmicTerm` `font_name`,
+  `font_weight`, `bold_font_weight`, the weights as bare numbers), not the
+  toolkit's. It lists only faces flagged fixed-pitch, at weights that are whole
+  hundreds, and **resets a `font_name` it does not list to the first one it
+  does**. Fonts with a Nerd Fonts "Nerd Font" suffix are not flagged fixed-pitch
+  (`post.isFixedPitch` 0, fontconfig spacing dual). Their "Nerd Font Mono" twin
+  is. cosmic-terminal 1.9.0, read in its `main.rs`, 2026-09-29.
 - `cosmic-randr` reports output size and scale, so an installer can compute
   per-output geometry.
 - `cosmic-settings appearance export|import` prints two ERRORs on **stderr** —
@@ -169,6 +184,13 @@ Measured on 155.0.1 (deb), 2026-09-19, except where noted.
   `python3` cannot open these: Firefox ships `omni.ja` optimised, with data
   ahead of the central directory, which `zipfile` rejects as a bad magic number
   and `unzip` reads with a warning.
+- **A badged toolbar button has no `> .toolbarbutton-icon`.** Its icon sits
+  inside `.toolbarbutton-badge-stack`, and Firefox grounds the icon, the text
+  and the badge stack of an `[open]`, `[checked]` or pressed button alike, with
+  `--toolbarbutton-background-color-active` and `color: inherit`. A state rule
+  written against the icon alone misses every badged button. The sidebar button
+  is badged, and it is `[checked]` and `[expanded]` whenever vertical tabs are
+  expanded. Firefox 156.0.1, read over Marionette in chrome context, 2026-09-29.
 - **Some surfaces are derived by alpha-mixing** — `color-mix(in srgb,
   currentColor N%, transparent)` and a `--color-*-alpha-*` family. Anything
   painted that way is a blend of two things rather than a value a theme set.

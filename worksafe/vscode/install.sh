@@ -190,7 +190,11 @@ done
 
 # --- 3. the fonts §5 declares, which this installer does not fetch --------------------------------
 # One installer owns the checksums (CONTRIBUTING.md §12): worksafe/cosmic/install.sh --fonts.
-fc-list 2>/dev/null | grep -qi ':Hack:\|: Hack:' || say "Hack is not installed -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
+# fontconfig lists a face under every name it has -- "AtkynsonMono Nerd Font,AtkynsonMono NF" -- so a family is
+# matched as one entry of that comma-separated list; Atkinson Hyperlegible Mono is the mono's fallback (§5).
+have_font() { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
+have_font 'AtkynsonMono Nerd Font' || have_font 'Atkinson Hyperlegible Mono' \
+  || say "AtkynsonMono Nerd Font is not installed -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 
 # --- 4. what happened ---------------------------------------------------------------------------
 [ "$DECLUTTER" = 1 ] && D="the declutter merged (§0)" || D="the declutter left alone (--no-declutter)"

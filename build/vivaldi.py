@@ -242,11 +242,12 @@ def size_rules():
 # Every variable the stylesheet decides, with its reason where the reason is not the variable's name. Declared with
 # !important on #browser.theme-id-Remainder and on every element beneath it (the header says why), so a region
 # changes a ground by re-declaring the variables that read it, one specificity step up.
-MONTSERRAT, HACK = '"Montserrat", sans-serif', '"Hack", monospace'
+# The mono is AtkynsonMono Nerd Font, and Atkinson Hyperlegible Mono where it is absent (§5).
+MONTSERRAT, MONO = '"Montserrat", sans-serif', '"AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono"'
 BASE = '#browser.theme-id-Remainder'
 VARS = [
     ('§5: the faces Vivaldi reads from variables. The interface face itself is set by rule, below.', [
-        ('--monospaceFont', '"Hack"'), ('--sansSerifFont', '"Montserrat"'),
+        ('--monospaceFont', MONO), ('--sansSerifFont', '"Montserrat"'),
     ]),
     ('§5: every corner square. The theme sets --radius to 0; Vivaldi derives six more beside it, and '
      '--radiusRound is how it draws a pill or a circle.', [

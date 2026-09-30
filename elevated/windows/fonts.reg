@@ -10,11 +10,11 @@ Windows Registry Editor Version 5.00
 ; ships no fonts (CONTRIBUTING sec. 12): get Montserrat from the repository its own licence names,
 ; github.com/JulietaUla/Montserrat, and install the faces before merging this.
 ;
-; AUTHORITY.md sec. 5 declares Montserrat for UI and Hack for mono, and records that the cuts are
-; MEDIUM and EXTRABOLD rather than Regular and Bold -- Regular reads thin at 16px, and weight is
-; safe in one direction only: every contrast floor in the kit gets easier as rendered weight goes
-; up. Windows picks the cut by name from the installed family, so install the Medium and ExtraBold
-; faces and the substitution lands on them.
+; AUTHORITY.md sec. 5 declares Montserrat for UI and AtkynsonMono Nerd Font for mono, and records
+; that Montserrat's cuts are MEDIUM and EXTRABOLD rather than Regular and Bold -- Regular reads
+; thin at 16px, and weight is safe in one direction only: every contrast floor in the kit gets
+; easier as rendered weight goes up. Windows picks the cut by name from the installed family, so
+; install the Medium and ExtraBold faces and the substitution lands on them.
 ;
 ; This file is the whole substitution and it is separately reversible: delete these values and
 ; Windows goes back to Segoe UI. install.cmd only merges it when asked with --fonts.

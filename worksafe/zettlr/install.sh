@@ -276,9 +276,9 @@ done
 # face under every name it has -- "Montserrat,Montserrat Medium" -- so a family is matched as one entry of that
 # comma-separated list, not as the whole line.
 missing=''
-for f in Montserrat Hack; do
-  fc-list : family 2>/dev/null | grep -qiE "(^|,)$f(,|\$)" || missing="$missing $f"
-done
+have_font() { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
+have_font Montserrat || missing="$missing Montserrat"
+have_font 'AtkynsonMono Nerd Font' || have_font 'Atkinson Hyperlegible Mono' || missing="$missing 'AtkynsonMono Nerd Font'"
 [ -n "$missing" ] && say "font(s) not installed:$missing -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 
 # --- 5. what happened -------------------------------------------------------------------------------------

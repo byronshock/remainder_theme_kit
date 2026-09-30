@@ -134,7 +134,7 @@ pressed toolbar toggle (the log viewer's level filters, the sidebar's button).
 Each is drawn here in the kit's value for it, and the rule says why.
 
 **Code and tables draw no grid.** Code keeps the field's ground and is carried
-by its face, Hack, and by the colouring `worksafe/vscode/` chose (§0c):
+by its face, the mono (§5), and by the colouring `worksafe/vscode/` chose (§0c):
 keywords and tags BLACK and bold, comments DARK and italic, literals ACCENT,
 names SELECT, a diff's lines in the ANSI green and red. A table's header row is
 LIGHT carrying BLACK at 700 over WHITE rows, with no lines between cells.

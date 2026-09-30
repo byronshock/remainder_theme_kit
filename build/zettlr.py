@@ -123,7 +123,8 @@ CAPS = {hx: note for slot, row in _T.items() for tier, (hx, lc, note) in row.ite
 # §5's type: the two faces, and the size every contrast floor in §0e assumes. Zettlr sets its chrome at 10 to 15
 # px; measured at the 16 px tiers those pairs would pass on paper and not on the screen, so the chrome's text is
 # set at 16 px (CHOSEN, as on worksafe/obsidian/) and the tier the checker applies is the tier on the screen.
-FACES = {'ui': '"Montserrat", sans-serif', 'mono': '"Hack", monospace'}
+# The mono is AtkynsonMono Nerd Font, and Atkinson Hyperlegible Mono where it is absent (§5).
+FACES = {'ui': '"Montserrat", sans-serif', 'mono': '"AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace'}
 UI, MONO = 'ui', 'mono'
 PX16 = '16px'
 
@@ -842,7 +843,7 @@ CLASSIFY = [
     rule(r'^\.editor-pane \.editor-container div\.dropzone\.dragover$', 'a file dragged over the editor: ACCENT '
          'carrying WHITE; the glow is decoration', ground=A, shadow=NONE),
     rule(r'^\.editor-pane \.editor-container \.empty-pane$|^\.main-editor-wrapper$', 'the field', ground=W),
-    rule(r'^\.main-editor-wrapper\.code-file \.cm-editor$', 'a code file: Hack (§5)', face=MONO),
+    rule(r'^\.main-editor-wrapper\.code-file \.cm-editor$', 'a code file: the mono face (§5)', face=MONO),
     rule(r'^#sidebar$', 'the sidebar: a LIGHT panel, BLACK at 700', **PANEL),
     rule(r'^#sidebar h1$', '', size=CONTENT),
     rule(r'^#sidebar div\.toc-entry-container div\.toc-level$', 'a heading\'s level in the contents: BLACK on the '
@@ -941,7 +942,7 @@ CLASSIFY = [
     rule(r'^\.cm-editor \.cm-specialChar$', 'an invisible character, shown: an ACCENT mark', ink=A),
     rule(r'^\.cm-editor \.cm-gutters$', 'the gutter is the field, and its labels DARK, Lc 79.0', ground=W, ink=D,
          line=NONE),
-    rule(r'^\.cm-editor \.cm-(footnote|heading)-gutter \.cm-gutterElement( div)?$', 'the gutter\'s labels: Hack at '
+    rule(r'^\.cm-editor \.cm-(footnote|heading)-gutter \.cm-gutterElement( div)?$', 'the gutter\'s labels: the mono face at '
          '16 px', face=MONO, size=PX16),
     rule(r'^\.cm-editor \.cm-panels-(top|bottom)$', 'no line between a panel and the note', line=NONE),
     rule(r'^\.cm-editor \.cm-(dialog label|dialog-close|panel\.cm-search label|diagnosticSource)$', '', size=PX16),
@@ -1012,7 +1013,7 @@ CLASSIFY = [
          'captions over an image: WHITE on BLACK, Lc -92.3, opaque', ground=B, ink=W, size=PX16),
     rule(r'^\.cm-editor figure\.image-preview figcaption::selection$', 'selected caption text: §2\'s selection',
          ground=S, ink=W),
-    rule(r'^\.cm-editor \.code$', 'code: BLACK in Hack (§5)', ink=B, face=MONO),
+    rule(r'^\.cm-editor \.code$', 'code: BLACK in the mono face (§5)', ink=B, face=MONO),
     rule(r'^\.cm-editor \.cm-(keyword|control-keyword|operator-keyword|definition-keyword|module-keyword|modifier|'
          r'tag|tag-name)$', 'the code colouring (§0c, CHOSEN, as on worksafe/vscode/): keywords and tags BLACK and '
          'bold', ink=B),
@@ -1065,7 +1066,7 @@ CLASSIFY = [
     rule(r'^\.code-editor-wrapper$', 'a code field: WHITE, BLACK outline (a control)', ground=W, line=B),
     rule(r'^\.asset-container span\.protected-info$', 'DARK on the field', ink=D),
     rule(r'^div#sil-1-1-text$|^div#error p#additional-info$|^div#about-general p#uuid$|^\.message \.details$',
-         'fixed-width text: Hack (§5)', face=MONO, ink=D, size=PX16),
+         'fixed-width text: the mono face (§5)', face=MONO, ink=D, size=PX16),
     rule(r'^div#project-container div\.project-box$', 'a project\'s card: LIGHT carrying BLACK at 700, no line',
          ground=L, line=NONE),
     rule(r'^div#project-container div\.project-box:hover$', 'hovered: WHITE', ground=W),
@@ -1387,7 +1388,7 @@ RULES = [
     ('The line under a selected row\'s name is WHITE with it.',
      ':root:root .selectable-list-wrapper .selectable-list-container div.item.selected .info-string',
      [('color', '{white}')]),
-    ('A code field -- the Assets Manager\'s editors -- is set in Hack (§5); CodeMirror asks for `monospace`, which '
+    ('A code field -- the Assets Manager\'s editors -- is set in the mono face (§5); CodeMirror asks for `monospace`, which '
      'fontconfig answers with some other face.', ':root:root .code-editor-wrapper .cm-editor .cm-scroller',
      [('font-family', 'var(--rm-face-mono)')]),
     ('A chosen radio button is ACCENT with its WHITE dot (§2). On Linux Zettlr fills it only in dark mode, so in light '
@@ -1448,7 +1449,7 @@ RULES = [
     ('', ':root:root #sidebar div.toc-entry-container div.toc-entry-active', [('background-color', '{select}')]),
     ('Where Zettlr renders a note as HTML in its chrome -- the preview of a linked note -- the browser\'s own marks '
      'show through: <mark> in its yellow carrying #000000, <code> in whatever face `monospace` finds. Marked text is '
-     'LIGHT carrying BLACK at 700 and code is Hack, as in the editor. The print preview is the page as it will '
+     'LIGHT carrying BLACK at 700 and code is the mono face, as in the editor. The print preview is the page as it will '
      'print, and keeps its own.', ':root:root mark:not(#print-container *)',
      [('background-color', '{light}'), ('color', '{black}'), ('font-weight', '700')]),
     ('On a LIGHT panel -- the preview is a tooltip -- a LIGHT mark would vanish: there it is the other tone, WHITE.',

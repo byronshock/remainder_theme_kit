@@ -154,7 +154,13 @@ done
 mkdir -p "$STATE"        # the first thing this script writes, and not before here
 
 # --- 3. per user-data directory: the experiment; per profile: the theme, the stylesheets, the settings ----------
-python3 - "$HERE" "$STATE" "$DECLUTTER" "$FOUND" <<'PY'
+# The fixed-width font pref holds one family, so it is the mono (§5) unless only its fallback is on this machine.
+MONO='AtkynsonMono Nerd Font'
+if ! fc-list : family 2>/dev/null | grep -qiE "(^|,)$MONO(,|\$)" \
+   && fc-list : family 2>/dev/null | grep -qiE '(^|,)Atkinson Hyperlegible Mono(,|$)'; then
+  MONO='Atkinson Hyperlegible Mono'
+fi
+REMAINDER_MONO="$MONO" python3 - "$HERE" "$STATE" "$DECLUTTER" "$FOUND" <<'PY'
 import json, os, re, shutil, sys
 here, state, declutter = sys.argv[1], sys.argv[2], sys.argv[3] == '1'
 strip = re.compile(r'("(?:\\.|[^"\\])*")|//[^\n]*|/\*.*?\*/', re.S)
@@ -179,6 +185,7 @@ def merge(dst, src, changed, path=''):
 
 theme = json.load(open(os.path.join(here, 'theme.json')))
 kit = jsonc(open(os.path.join(here, 'settings.json')).read())
+kit['webkit']['webprefs']['fonts']['fixed']['Zyyy'] = os.environ['REMAINDER_MONO']
 if not declutter:                      # paint only: the theme's selection, the wash, the fonts -- none of §0
     t = kit['vivaldi']['theme']
     kit = {'vivaldi': {'themes': kit['vivaldi']['themes'],
@@ -260,9 +267,9 @@ PY
 # face under every name it has -- "Montserrat,Montserrat Medium" -- so a family is matched as one entry of that
 # comma-separated list, not as the whole line.
 missing=''
-for f in Montserrat Hack; do
-  fc-list : family 2>/dev/null | grep -qiE "(^|,)$f(,|\$)" || missing="$missing $f"
-done
+have_font() { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
+have_font Montserrat || missing="$missing Montserrat"
+have_font 'AtkynsonMono Nerd Font' || have_font 'Atkinson Hyperlegible Mono' || missing="$missing 'AtkynsonMono Nerd Font'"
 [ -n "$missing" ] && say "font(s) not installed:$missing -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 
 # --- 5. what happened -------------------------------------------------------------------------------------

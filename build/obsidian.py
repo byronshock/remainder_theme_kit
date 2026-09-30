@@ -127,11 +127,12 @@ def ramp():
 # `body.theme-light, body.theme-dark`: one specificity step over the platform's own `.theme-light`, and
 # on the dark class as well, because §2 is a light palette and a vault switched to dark mode should still
 # get the kit rather than half of it (the installer also selects light mode).
-MONTSERRAT, HACK = '"Montserrat"', '"Hack"'
+# The mono is AtkynsonMono Nerd Font, and Atkinson Hyperlegible Mono where it is absent (§5).
+MONTSERRAT, MONO = '"Montserrat"', '"AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono"'
 VARS = [
     ('§5: the type. The faces go in the theme\'s own slots, so a face the user picks in Settings still wins.', [
         ('--font-interface-theme', MONTSERRAT), ('--font-text-theme', MONTSERRAT),
-        ('--font-monospace-theme', HACK),
+        ('--font-monospace-theme', MONO),
     ]),
     ('§5: the chrome at the size every floor assumes (CHOSEN; see the header). Obsidian ships 12, 13 and 15 px.', [
         ('--font-ui-smaller', '16px'), ('--font-ui-small', '16px'), ('--font-ui-medium', '16px'),
