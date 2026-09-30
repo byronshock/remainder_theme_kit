@@ -170,7 +170,8 @@ On a terminal that asks three questions before writing anything, and Ctrl-C
 before the last one leaves the machine untouched:
 
 1. **Fonts** — fetch and install Montserrat and AtkynsonMono Nerd Font, and
-   hide the mono's 400 cuts so it renders at 500? Declined, it offers
+   hide the mono's 400 cuts so it renders at 500 and make it what
+   `monospace` means for every program? Declined, it offers
    Atkinson Hyperlegible Mono itself instead (`--fonts-plain`). Not asked when
    both are already on the machine and no 400 cut of the mono is visible.
    Default yes.

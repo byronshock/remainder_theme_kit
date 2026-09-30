@@ -648,7 +648,10 @@ them rather than pretending to measure them:
   Where a package has installed the whole family, 400 would resolve to its
   Regular exactly. So the installer's fonts step hides the 400 cuts from
   fontconfig for that user, and names the weight outright in COSMIC's two
-  settings, whose text stack does not read fontconfig.
+  settings, whose text stack does not read fontconfig. The same file makes the
+  mono what `monospace` means for that user, so a program that names no face of
+  its own gets it too: the Mono variant, since a program asking for the generic
+  expects a fixed pitch. Chosen 2026-09-29.
 
   **Montserrat's cuts are Medium and ExtraBold**, not Regular and Bold, and the reason is
   the same margin. Montserrat Regular reads thin at 16px, and weight is the one

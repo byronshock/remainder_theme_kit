@@ -179,7 +179,8 @@ remainder: §5 declares Montserrat for the UI and AtkynsonMono Nerd Font for mon
            floor in §0e is a function of what they render at. They are fetched from the two projects
            themselves at a pinned tag, checked against a recorded SHA-256, and installed for this user
            only. The mono renders at 500 and 700: where its 400 cuts are also on this machine, a
-           fontconfig file hides them from this user (delete it to undo), so 400 resolves to 500.
+           fontconfig file hides them from this user, so 400 resolves to 500, and the same file makes
+           the mono what "monospace" means for every program (delete it to undo both).
 Q
     if yesno "Download and install them?" y; then WANT_FONTS=1
     else
@@ -341,13 +342,14 @@ install_fonts() {
   # The mono's 400 cuts, hidden. The faces above have none, but a package that installs the whole family
   # puts Regular beside them and declared 400 then renders at 400. rejectfont takes a face out of what every
   # fontconfig client can see -- Firefox, Chromium, Electron -- for this user only; COSMIC's own text stack
-  # does not read it, which is why its settings name the weight outright (section 4). Delete it to undo.
+  # does not read it, which is why its settings name the weight outright (section 4). The same file makes the
+  # mono what "monospace" means for this user, so a program that names no face gets it too. Delete it to undo.
   mkdir -p "$FCCONF"
   cp "$HERE/fontconfig/60-remainder-mono.conf" "$FCCONF/"
 
   command -v fc-cache >/dev/null 2>&1 && fc-cache -f "$FONTS" >/dev/null 2>&1 || true
   say "fonts installed in $FONTS ($MONO_NAME, Montserrat $MONT_TAG, SIL OFL 1.1)"
-  say "the mono's 400 cuts hidden by $FCCONF/60-remainder-mono.conf"
+  say "the mono's 400 cuts hidden, and \"monospace\" made the mono, by $FCCONF/60-remainder-mono.conf"
 }
 
 if [ "$WANT_FONTS" = 1 ]; then
