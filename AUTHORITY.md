@@ -623,7 +623,7 @@ them rather than pretending to measure them:
   on COSMIC at 150% on 2026-09-21: 6 px on all four sides, every pixel
   `#007891` exactly, drawn in the gap and not over the window, 60 px of rule
   outside it. 8 and 11 dp were shipped before it and retired for the rounding.
-- **Typography.** UI Montserrat, mono **AtkynsonMono Nerd Font**, 12pt system
+- **Typography.** UI Montserrat, mono **Intel One Mono**, 12pt system
   size. **This is load-bearing and unmeasured**: every contrast floor in §0e is
   a function of what "12pt" renders at, taken to be about 16px effective. If
   that is wrong, every floor moves. It is the kit's weakest input and the
@@ -631,18 +631,18 @@ them rather than pretending to measure them:
 
   **The faces are chosen for legibility, which is what the kit is for.**
   Montserrat was chosen as one of two faces found to raise reading speed in
-  readers over 35 (reference to be added). The mono is Atkinson Hyperlegible
-  Mono, the Braille Institute's face drawn for low-vision readers, in its Nerd
-  Fonts build: AtkynsonMono Nerd Font, renamed because the original's licence
-  reserves the names "Atkinson" and "Hyperlegible" for unmodified copies.
-  Atkinson Hyperlegible Mono itself is the fallback wherever the Nerd build is
-  absent. Where a platform accepts only fixed-pitch faces — COSMIC's terminal
-  and its toolkit mono — the mono is the build's Mono variant, AtkynsonMono Nerd
-  Font Mono, the same design with its icons held to one cell. Chosen, 2026-09-29,
-  for the kit's 0.2. The mono was Hack until then.
+  readers over 35 (reference to be added). The mono is Intel One Mono, drawn
+  with and for developers with low vision, in its Nerd Fonts build's Mono
+  variant: IntoneMono Nerd Font Mono, renamed because the original's licence
+  reserves the name "Intel" for unmodified copies, and flagged fixed-pitch, so
+  one name serves every surface, COSMIC's terminal included. Intel One Mono
+  itself is the fallback wherever the Nerd build is absent, and `monospace`
+  means the mono for the user it is installed for. Chosen 2026-09-30. The mono
+  was Hack until 0.2, and for one day after, Atkinson Hyperlegible Mono in its
+  Nerd Fonts build, which rendered oddly in a terminal on another machine.
 
   **The mono's cuts are Medium and Bold.** Text moves 400 → 500 for the margin
-  argued below. Bold stays 700, because the Nerd build has no ExtraBold, so a
+  argued below. Bold stays 700, because the family has no ExtraBold, so a
   mono bold renders at exactly the weight the floors assume: not over it, and
   not under. That is no margin, but it is not a false pass. Chosen 2026-09-29.
   Where a package has installed the whole family, 400 would resolve to its
@@ -650,8 +650,7 @@ them rather than pretending to measure them:
   fontconfig for that user, and names the weight outright in COSMIC's two
   settings, whose text stack does not read fontconfig. The same file makes the
   mono what `monospace` means for that user, so a program that names no face of
-  its own gets it too: the Mono variant, since a program asking for the generic
-  expects a fixed pitch. Chosen 2026-09-29.
+  its own gets it too. Chosen 2026-09-29.
 
   **Montserrat's cuts are Medium and ExtraBold**, not Regular and Bold, and the reason is
   the same margin. Montserrat Regular reads thin at 16px, and weight is the one

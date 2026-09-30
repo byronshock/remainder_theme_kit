@@ -155,10 +155,10 @@ mkdir -p "$STATE"        # the first thing this script writes, and not before he
 
 # --- 3. per user-data directory: the experiment; per profile: the theme, the stylesheets, the settings ----------
 # The fixed-width font pref holds one family, so it is the mono (§5) unless only its fallback is on this machine.
-MONO='AtkynsonMono Nerd Font'
+MONO='IntoneMono Nerd Font Mono'
 if ! fc-list : family 2>/dev/null | grep -qiE "(^|,)$MONO(,|\$)" \
-   && fc-list : family 2>/dev/null | grep -qiE '(^|,)Atkinson Hyperlegible Mono(,|$)'; then
-  MONO='Atkinson Hyperlegible Mono'
+   && fc-list : family 2>/dev/null | grep -qiE '(^|,)Intel One Mono(,|$)'; then
+  MONO='Intel One Mono'
 fi
 REMAINDER_MONO="$MONO" python3 - "$HERE" "$STATE" "$DECLUTTER" "$FOUND" <<'PY'
 import json, os, re, shutil, sys
@@ -269,7 +269,7 @@ PY
 missing=''
 have_font() { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
 have_font Montserrat || missing="$missing Montserrat"
-have_font 'AtkynsonMono Nerd Font' || have_font 'Atkinson Hyperlegible Mono' || missing="$missing 'AtkynsonMono Nerd Font'"
+have_font 'IntoneMono Nerd Font Mono' || have_font 'Intel One Mono' || missing="$missing 'IntoneMono Nerd Font Mono'"
 [ -n "$missing" ] && say "font(s) not installed:$missing -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 
 # --- 5. what happened -------------------------------------------------------------------------------------

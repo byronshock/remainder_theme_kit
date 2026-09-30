@@ -242,8 +242,8 @@ def size_rules():
 # Every variable the stylesheet decides, with its reason where the reason is not the variable's name. Declared with
 # !important on #browser.theme-id-Remainder and on every element beneath it (the header says why), so a region
 # changes a ground by re-declaring the variables that read it, one specificity step up.
-# The mono is AtkynsonMono Nerd Font, and Atkinson Hyperlegible Mono where it is absent (§5).
-MONTSERRAT, MONO = '"Montserrat", sans-serif', '"AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono"'
+# The mono is IntoneMono Nerd Font Mono, and Intel One Mono where it is absent (§5).
+MONTSERRAT, MONO = '"Montserrat", sans-serif', '"IntoneMono Nerd Font Mono", "Intel One Mono"'
 BASE = '#browser.theme-id-Remainder'
 VARS = [
     ('§5: the faces Vivaldi reads from variables. The interface face itself is set by rule, below.', [

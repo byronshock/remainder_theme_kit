@@ -58,16 +58,16 @@
       "mono_icons": true                     // "Use Monochrome Settings Icons"; shipped default false
     }
   },
-  // §5 for pages that name no face of their own: Montserrat, and AtkynsonMono Nerd Font for monospace. These are
+  // §5 for pages that name no face of their own: Montserrat, and IntoneMono Nerd Font Mono for monospace. These are
   // the CONTENT defaults, as worksafe/firefox/user.js sets them; the interface's own face is set in remainder.css.
   // A page that names its own font keeps it (§0a: content is exempt). A Chromium font pref holds one family and no
-  // fallback, so on a machine with only Atkinson Hyperlegible Mono, install.sh names that instead.
+  // fallback, so on a machine with only Intel One Mono, install.sh names that instead.
   "webkit": {
     "webprefs": {
       "fonts": {
         "standard": { "Zyyy": "Montserrat" },
         "sansserif": { "Zyyy": "Montserrat" },
-        "fixed": { "Zyyy": "AtkynsonMono Nerd Font" }
+        "fixed": { "Zyyy": "IntoneMono Nerd Font Mono" }
       }
     }
   }

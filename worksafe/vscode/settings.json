@@ -19,13 +19,13 @@
   // reads as non-key -- PLATFORM.md); custom is what the theme paints ACCENT / WHITE by key state.
   "window.titleBarStyle": "custom",                          // shipped default "custom" on Linux; pinned
 
-  // §5: mono AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono where it is absent, at the size every floor
+  // §5: mono IntoneMono Nerd Font Mono, Intel One Mono where it is absent, at the size every floor
   // in §0e assumes (~16 px effective). The weight stays the declared 400; it renders at 500 where the fonts
   // step has hidden the 400 cuts. The workbench's own face is not a setting -- PLATFORM.md VS Code records
   // where it comes from.
-  "editor.fontFamily": "'AtkynsonMono Nerd Font', 'Atkinson Hyperlegible Mono', monospace", // shipped default the platform's monospace stack
+  "editor.fontFamily": "'IntoneMono Nerd Font Mono', 'Intel One Mono', monospace", // shipped default the platform's monospace stack
   "editor.fontSize": 16,                                     // shipped default 14
-  "terminal.integrated.fontFamily": "'AtkynsonMono Nerd Font', 'Atkinson Hyperlegible Mono', monospace",
+  "terminal.integrated.fontFamily": "'IntoneMono Nerd Font Mono', 'Intel One Mono', monospace",
   "terminal.integrated.fontSize": 16,                        // shipped default 14
 
   // §0e: WCAG 2.x contrast is used nowhere. The terminal's default (4.5) is a luminance ratio the terminal

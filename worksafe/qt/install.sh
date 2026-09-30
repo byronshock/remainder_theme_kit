@@ -102,10 +102,10 @@ mkdir -p "$STATE"        # the first thing this script writes, and not before he
 # --- 1. qt5ct and qt6ct: the scheme, then the config keys -----------------------------------------------
 # The fixed font holds one family: §5's mono in its fixed-pitch Mono variant, or its fallback where only that is on
 # this machine. fontconfig lists a face under every name it has, so a family is one entry of that list.
-MONO='AtkynsonMono Nerd Font Mono'
+MONO='IntoneMono Nerd Font Mono'
 if ! fc-list : family 2>/dev/null | tr ',' '\n' | grep -qix "$MONO" \
-   && fc-list : family 2>/dev/null | tr ',' '\n' | grep -qix 'Atkinson Hyperlegible Mono'; then
-  MONO='Atkinson Hyperlegible Mono'
+   && fc-list : family 2>/dev/null | tr ',' '\n' | grep -qix 'Intel One Mono'; then
+  MONO='Intel One Mono'
 fi
 # The scheme is the kit's own file and is overwritten freely; the config is the user's and is merged key by key,
 # keeping every key this fragment does not name (icon_theme, standard_dialogs, COSMIC's marker, window geometry).
@@ -143,7 +143,7 @@ for g, k, v in parse(frag):
     if k == 'color_scheme_path':
         v = scheme
     if g == 'Fonts' and k == 'fixed':
-        v = v.replace('AtkynsonMono Nerd Font Mono,', os.environ['REMAINDER_MONO'] + ',', 1)
+        v = v.replace('IntoneMono Nerd Font Mono,', os.environ['REMAINDER_MONO'] + ',', 1)
     want.append((g, k, v))
 
 lines = open(conf, encoding='utf-8', errors='replace').read().split('\n')
@@ -265,8 +265,8 @@ if [ "$FONTS" = 1 ]; then
   # family list is split on commas before it is searched, or the cuts §5 chooses fail the test.
   fc-list : family 2>/dev/null | tr ',' '\n' | grep -qix Montserrat \
     || say "font 'Montserrat' is not installed -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
-  fc-list : family 2>/dev/null | tr ',' '\n' | grep -qix -e 'AtkynsonMono Nerd Font Mono' -e 'Atkinson Hyperlegible Mono' \
-    || say "font 'AtkynsonMono Nerd Font' is not installed -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
+  fc-list : family 2>/dev/null | tr ',' '\n' | grep -qix -e 'IntoneMono Nerd Font Mono' -e 'Intel One Mono' \
+    || say "font 'IntoneMono Nerd Font Mono' is not installed -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 fi
 
 # --- 5. what happened, and what the session does with it ---------------------------------------------------

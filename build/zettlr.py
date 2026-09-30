@@ -123,8 +123,8 @@ CAPS = {hx: note for slot, row in _T.items() for tier, (hx, lc, note) in row.ite
 # §5's type: the two faces, and the size every contrast floor in §0e assumes. Zettlr sets its chrome at 10 to 15
 # px; measured at the 16 px tiers those pairs would pass on paper and not on the screen, so the chrome's text is
 # set at 16 px (CHOSEN, as on worksafe/obsidian/) and the tier the checker applies is the tier on the screen.
-# The mono is AtkynsonMono Nerd Font, and Atkinson Hyperlegible Mono where it is absent (§5).
-FACES = {'ui': '"Montserrat", sans-serif', 'mono': '"AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace'}
+# The mono is IntoneMono Nerd Font Mono, and Intel One Mono where it is absent (§5).
+FACES = {'ui': '"Montserrat", sans-serif', 'mono': '"IntoneMono Nerd Font Mono", "Intel One Mono", monospace'}
 UI, MONO = 'ui', 'mono'
 PX16 = '16px'
 

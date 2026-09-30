@@ -25,7 +25,7 @@
   --rm-green: #005800;
   --rm-yellow: #525200;
   --rm-face-ui: "Montserrat", sans-serif;
-  --rm-face-mono: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  --rm-face-mono: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
 }
 
 /* THE MIRROR. Every declaration Zettlr makes that puts a colour on the screen, or a face or a size the kit
@@ -667,7 +667,7 @@
 }
 /* a code file: the mono face (§5) */
 :root:where(:has(script[src="../main_window/index.js"])) .main-editor-wrapper.code-file .cm-editor {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
 }
 /* the field */
 :root:where(:has(script[src="../main_window/index.js"])) body.dark .main-editor-wrapper {
@@ -1786,13 +1786,13 @@
 /* --- sheet 6f8a8e66: about --- */
 /* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../about/index.js"])) div#sil-1-1-text {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
 }
 
 /* --- sheet 006790a2: about --- */
 /* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../about/index.js"])) div#about-general p#uuid {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
   color: var(--rm-dark);
   font-size: 16px;
 }
@@ -1817,7 +1817,7 @@
 /* --- sheet 1f2c9f0a: error --- */
 /* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../error/index.js"])) div#error p#additional-info {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
 }
 
 /* --- sheet 604353db: log_viewer --- */
@@ -1857,7 +1857,7 @@
 }
 /* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../log_viewer/index.js"])) .message .details {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
 }
 :root:where(:has(script[src="../log_viewer/index.js"])) .message .message .details .more {
   color: var(--rm-black);
@@ -2300,7 +2300,7 @@
   --zettlr-editor-primary-color: var(--rm-accent);
   --zettlr-editor-secondary-color: var(--rm-accent);
   --zettlr-editor-font: "Montserrat", sans-serif;
-  --zettlr-editor-code-font: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  --zettlr-editor-code-font: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
   --zettlr-editor-error-color: var(--rm-red);
   --zettlr-editor-scroller-color: var(--rm-black);
   --zettlr-editor-scroller-bg: var(--rm-white);
@@ -2365,7 +2365,7 @@
 }
 /* the gutter's labels: the mono face at 16 px */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-footnote-gutter .cm-gutterElement {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .footnote-preview-container {
   font-size: 16px;
@@ -2378,7 +2378,7 @@
 }
 /* the gutter's labels: the mono face at 16 px */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-heading-gutter .cm-gutterElement div {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
   font-size: 16px;
 }
 /* raw mode shows an alert as its markers, on the note: a note, tip or important one BLACK -- information has
@@ -2496,7 +2496,7 @@
   --zettlr-editor-code-blue: var(--rm-select);
   --zettlr-editor-code-cyan: var(--rm-black);
   --zettlr-editor-code-green: var(--rm-accent);
-  --zettlr-editor-code-font: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  --zettlr-editor-code-font: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
   --zettlr-editor-primary-color: var(--rm-accent);
   --zettlr-editor-secondary-color: var(--rm-accent);
   --zettlr-editor-font: "Montserrat", sans-serif;
@@ -2510,7 +2510,7 @@
 }
 /* code: BLACK in the mono face (§5) */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .code {
-  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
+  font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
   color: var(--rm-black);
 }
 /* ...comments DARK and italic */

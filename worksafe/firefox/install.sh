@@ -221,16 +221,16 @@ if [ "$SIDELOADED" = 1 ]; then
 fi
 
 # --- 5. the fonts §5 declares, which this installer does not fetch -----------------------------------
-# One installer owns the checksums. worksafe/cosmic/install.sh pins AtkynsonMono Nerd Font and Montserrat to
+# One installer owns the checksums. worksafe/cosmic/install.sh pins IntoneMono Nerd Font Mono and Montserrat to
 # a tag and verifies each file against a SHA-256 recorded there (CONTRIBUTING.md §12); a second copy of those
 # checksums in this file would be a second thing to keep true. So this one only says whether the faces are
 # here. fontconfig lists a face under every name it has -- "Montserrat,Montserrat Medium" -- so a family is
-# matched as one entry of that comma-separated list, not as the whole line. Atkinson Hyperlegible Mono is the
+# matched as one entry of that comma-separated list, not as the whole line. Intel One Mono is the
 # mono's fallback (§5), and either one is the mono here.
 missing=''
 have_font() { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
 have_font Montserrat || missing="$missing Montserrat"
-have_font 'AtkynsonMono Nerd Font' || have_font 'Atkinson Hyperlegible Mono' || missing="$missing 'AtkynsonMono Nerd Font'"
+have_font 'IntoneMono Nerd Font Mono' || have_font 'Intel One Mono' || missing="$missing 'IntoneMono Nerd Font Mono'"
 [ -n "$missing" ] && say "font(s) not installed:$missing -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 
 # --- 6. what happened ---------------------------------------------------------------------------------

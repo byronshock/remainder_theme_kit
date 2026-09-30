@@ -22,7 +22,7 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 PAL = json.load(open(os.path.join(ROOT, 'palette.json')))
 NEU, CHO = PAL['neutrals'], PAL['chosen']
 GROUND, INK, MUTED = NEU['WHITE'], NEU['BLACK'], NEU['DARK']
-UI, MONO = "Montserrat, Nimbus Sans, Helvetica, Arial, sans-serif", "AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono, monospace"
+UI, MONO = "Montserrat, Nimbus Sans, Helvetica, Arial, sans-serif", "IntoneMono Nerd Font Mono, Intel One Mono, monospace"
 
 H_LO, H_HI = 296.0, 26.0                       # the home end of the arc, through 360
 H_SPAN = (H_HI - H_LO) % 360                   # 90 deg

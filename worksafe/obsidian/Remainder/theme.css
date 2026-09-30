@@ -28,7 +28,7 @@ body.theme-light, body.theme-dark {
   /* §5: the type. The faces go in the theme's own slots, so a face the user picks in Settings still wins. */
   --font-interface-theme: "Montserrat";
   --font-text-theme: "Montserrat";
-  --font-monospace-theme: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono";
+  --font-monospace-theme: "IntoneMono Nerd Font Mono", "Intel One Mono";
 
   /* §5: the chrome at the size every floor assumes (CHOSEN; see the header). Obsidian ships 12, 13 and 15
      px. */

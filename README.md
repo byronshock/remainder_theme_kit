@@ -169,10 +169,11 @@ sh worksafe/cosmic/install.sh
 On a terminal that asks three questions before writing anything, and Ctrl-C
 before the last one leaves the machine untouched:
 
-1. **Fonts** — fetch and install Montserrat and AtkynsonMono Nerd Font, and
+1. **Fonts** — fetch and install Montserrat and Intel One Mono (its Nerd Fonts
+   build, IntoneMono Nerd Font Mono), and
    hide the mono's 400 cuts so it renders at 500 and make it what
    `monospace` means for every program? Declined, it offers
-   Atkinson Hyperlegible Mono itself instead (`--fonts-plain`). Not asked when
+   Intel One Mono itself instead (`--fonts-plain`). Not asked when
    both are already on the machine and no 400 cut of the mono is visible.
    Default yes.
 2. **Icons** — generate the icon theme from this machine's own icons? Not
@@ -419,8 +420,8 @@ gate. Details, the ramp, and the three steps no installer can do:
 
 ## Status
 
-**0.2**, 2026-09-29. The mono is AtkynsonMono Nerd Font, the Nerd Fonts build
-of Atkinson Hyperlegible Mono, with Atkinson Hyperlegible Mono itself as its
+**0.2**, 2026-09-29, and 0.2.1, 2026-09-30. The mono is Intel One Mono, in its
+Nerd Fonts build IntoneMono Nerd Font Mono, with Intel One Mono itself as its
 fallback, rendered at 500 and 700. It replaces Hack on all nine surfaces, and
 COSMIC Terminal now takes it too (`AUTHORITY.md` §5). No colour moved.
 
@@ -484,7 +485,7 @@ Two licenses, split by what the file is, matching the parent kit:
   `LICENSE-CC-BY-SA`.
 
 Fonts are nobody's to relicense and the kit ships none: `install.sh --fonts`
-fetches AtkynsonMono Nerd Font from the Nerd Fonts release and Montserrat from
+fetches Intel One Mono (its Nerd Fonts build) from the Nerd Fonts release and Montserrat from
 its own repository, both SIL OFL 1.1, and puts each licence beside its files.
 
 Both are copyleft. Color values themselves are not copyrightable; the license
