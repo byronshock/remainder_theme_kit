@@ -16,7 +16,7 @@ COSMIC, 2026-09-20.
 |---|---|---|
 | `remainder/package.json` | the extension manifest: one light (`vs`) theme called Remainder | no |
 | `remainder/themes/remainder-color-theme.json` | the theme: 965 ids on 30 values, the syntax colouring, and the semantic token colours. **Generated and committed** (`CONTRIBUTING.md` §11); `build/vscode.py` fails if it is not what the generator now produces. | yes |
-| `settings.json` | the theme selected, the type (the mono at 16 px: AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono where it is absent), the caret solid and the current-line band off, no indent guides, the terminal's WCAG repainting off, the minimal file icons. Merged key by key. | no |
+| `settings.json` | the theme selected, the type (the mono at 16 px: Intel One Mono, in its Nerd Fonts build), the caret solid and the current-line band off, no indent guides, the terminal's WCAG repainting off, the minimal file icons. Merged key by key. | no |
 | `declutter.json` | §0's larger half: the welcome page, tips, walkthroughs, the empty-editor hint, recommendations, release notes, experiments, natural-language settings search, telemetry, feedback prompts, the chat sidebar, motion. Merged unless `--no-declutter`. | no |
 | `install.sh` | copies the extension into each install's extensions directory (Code, Code Flatpak, Insiders, Code - OSS, VSCodium, VSCodium Flatpak), registers it in `extensions.json` when that file exists, backs each `settings.json` up under `~/.local/state/remainder`, merges the two files in. VS Code may stay open. | no |
 

@@ -31,7 +31,7 @@ SPAN = (HI - LO) % 360
 L_TOP, L_BOT = 0.97, 0.10
 GROUND, INK, MUTED = N['WHITE'], N['BLACK'], N['DARK']
 OOG = '#CFC6CB'                                   # outside sRGB at this hue and chroma
-UI, MONO = "Nimbus Sans, Helvetica, Arial, sans-serif", "AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono, monospace"
+UI, MONO = "Nimbus Sans, Helvetica, Arial, sans-serif", "IntoneMono Nerd Font Mono, Intel One Mono, monospace"
 
 W, H = 1240, 1000
 X0, PW = 150, 940

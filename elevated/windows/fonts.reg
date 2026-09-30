@@ -10,7 +10,7 @@ Windows Registry Editor Version 5.00
 ; ships no fonts (CONTRIBUTING sec. 12): get Montserrat from the repository its own licence names,
 ; github.com/JulietaUla/Montserrat, and install the faces before merging this.
 ;
-; AUTHORITY.md sec. 5 declares Montserrat for UI and AtkynsonMono Nerd Font for mono, and records
+; AUTHORITY.md sec. 5 declares Montserrat for UI and Intel One Mono for mono, and records
 ; that Montserrat's cuts are MEDIUM and EXTRABOLD rather than Regular and Bold -- Regular reads
 ; thin at 16px, and weight is safe in one direction only: every contrast floor in the kit gets
 ; easier as rendered weight goes up. Windows picks the cut by name from the installed family, so

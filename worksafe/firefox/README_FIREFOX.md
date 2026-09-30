@@ -15,7 +15,7 @@ Measured on **Firefox 155.0.1** (deb) on COSMIC, 2026-09-19.
 
 | File | What it does |
 |---|---|
-| `user.js` | prefs, read at every start: enables the stylesheets; Firefox draws its own titlebar so the tab strip can be the key one; compact density; square bottom corners; scrollbars always shown; reduced motion; light; Montserrat and AtkynsonMono Nerd Font, with Atkinson Hyperlegible Mono as the mono's fallback; and the §0 declutter — sponsored tiles at their source, urlbar suggestions, trending, weather, promos, "what's new", hover previews, recommendations, and the two machine-learning features 155 turns on by default. |
+| `user.js` | prefs, read at every start: enables the stylesheets; Firefox draws its own titlebar so the tab strip can be the key one; compact density; square bottom corners; scrollbars always shown; reduced motion; light; Montserrat and Intel One Mono; and the §0 declutter — sponsored tiles at their source, urlbar suggestions, trending, weather, promos, "what's new", hover previews, recommendations, and the two machine-learning features 155 turns on by default. |
 | `chrome/userChrome.css` | the chrome. The only literal colours in it are the twelve `--rm-*` definitions; every other declaration refers to those by name, which is what makes `build/firefox.py` able to prove there is nothing else in there. |
 | `chrome/userContent.css` | the pages Firefox itself draws — new tab, home, blank, the `about:` pages. Web pages are untouched: content is exempt (§0a) and the all-sites sheet is a different tier. |
 | `install.sh` | finds the profile this Firefox install opens, backs up what it replaces into `~/.local/state/remainder`, copies the three files in. Refuses while Firefox is running, and refuses under `sudo`. |
@@ -235,7 +235,7 @@ types in, and the ground under it is one the kit chose.
 
 ## Why the fonts are not fetched here
 
-`worksafe/cosmic/install.sh` pins AtkynsonMono Nerd Font and Montserrat to a tag
+`worksafe/cosmic/install.sh` pins Intel One Mono and Montserrat to a tag
 and verifies each file against a SHA-256 recorded in it (`CONTRIBUTING.md` §12).
 One installer owns those checksums; a second copy would be a second thing to
 keep true. This installer only reports whether the faces are on the machine and

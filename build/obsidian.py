@@ -127,8 +127,8 @@ def ramp():
 # `body.theme-light, body.theme-dark`: one specificity step over the platform's own `.theme-light`, and
 # on the dark class as well, because §2 is a light palette and a vault switched to dark mode should still
 # get the kit rather than half of it (the installer also selects light mode).
-# The mono is AtkynsonMono Nerd Font, and Atkinson Hyperlegible Mono where it is absent (§5).
-MONTSERRAT, MONO = '"Montserrat"', '"AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono"'
+# The mono is IntoneMono Nerd Font Mono, and Intel One Mono where it is absent (§5).
+MONTSERRAT, MONO = '"Montserrat"', '"IntoneMono Nerd Font Mono", "Intel One Mono"'
 VARS = [
     ('§5: the type. The faces go in the theme\'s own slots, so a face the user picks in Settings still wins.', [
         ('--font-interface-theme', MONTSERRAT), ('--font-text-theme', MONTSERRAT),

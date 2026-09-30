@@ -818,15 +818,12 @@ copyleft: a derivative is shared under the same license. Color values are not
 copyrightable; what is licensed is the documents and code that express them.
 
 **The kit ships no fonts.** §5 declares two typefaces and `install.sh --fonts`
-fetches them from the projects themselves at a pinned tag. AtkynsonMono Nerd
-Font comes from `ryanoasis/nerd-fonts` v3.5.1 (SIL OFL 1.1). It is the Nerd
-Fonts build of Atkinson Hyperlegible Mono, whose own repository,
-`googlefonts/atkinson-hyperlegible-next-mono`, is archived, has no tags and
-publishes no patched build. Its tarball was recorded 2026-09-29, and the record
-equals the `SHA-256.txt` Nerd Fonts publishes with the release. Its fallback,
-Atkinson Hyperlegible Mono (`--fonts-plain`), comes from that archived
-repository, pinned to its last commit, `154d503`, since it has no tags and
-the commit cannot move; recorded 2026-09-29. Montserrat
+fetches them from the projects themselves at a pinned tag. IntoneMono Nerd
+Font Mono, the Nerd Fonts build of Intel One Mono, comes from
+`ryanoasis/nerd-fonts` v3.5.1 (SIL OFL 1.1); its tarball was recorded
+2026-09-30, and the record equals the `SHA-256.txt` Nerd Fonts publishes with
+the release. Its fallback, Intel One Mono itself (`--fonts-plain`), comes from
+`intel/intel-one-mono` V1.4.0 (SIL OFL 1.1), recorded the same day. Montserrat
 v7.222 comes from `JulietaUla/Montserrat` (SIL OFL 1.1), the repository its own
 `OFL.txt` names. Each file is verified against a SHA-256 recorded in the
 installer, and the license is installed beside the faces. A file whose checksum does not match is not installed, and the

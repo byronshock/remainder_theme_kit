@@ -390,8 +390,8 @@ _dis = {'WindowText': (D, 'disabled text: DARK on WHITE, Lc 78.9'), 'Text': (D, 
         'ToolTipText': (B, 'a tooltip is never disabled; kept'), 'BrightText': (W, 'as active')}
 DISABLED = [(r, _dis[r][0], _dis[r][1]) if r in _dis else (r, v, 'as active') for r, v, _ in ACTIVE]
 ACCENT_ACTIVE, ACCENT_INACTIVE, ACCENT_DISABLED = A, A, D
-FONT_GENERAL, FONT_FIXED = 'Montserrat', 'AtkynsonMono Nerd Font Mono'   # §5; the size is 12 pt there too
-FONT_FIXED_FALLBACK = 'Atkinson Hyperlegible Mono'   # §5's fallback, which install.sh names where only it is installed
+FONT_GENERAL, FONT_FIXED = 'Montserrat', 'IntoneMono Nerd Font Mono'   # §5; the size is 12 pt there too
+FONT_FIXED_FALLBACK = 'Intel One Mono'   # §5's fallback, which install.sh names where only it is installed
 
 
 def group(rows):

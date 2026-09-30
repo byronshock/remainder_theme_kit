@@ -24,7 +24,7 @@ CX, CY, RAD = 400, 452, 300
 CMAX = 0.32
 RFLOOR = RAD * P.C_FLOOR / CMAX
 UI = "Montserrat, Nimbus Sans, Helvetica, Arial, sans-serif"
-MONO = "AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono, monospace"
+MONO = "IntoneMono Nerd Font Mono, Intel One Mono, monospace"
 GROUND, INK, MUTED = PAL['neutrals']['WHITE'], PAL['neutrals']['BLACK'], PAL['neutrals']['DARK']
 o = []
 

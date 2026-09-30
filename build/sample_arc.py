@@ -74,7 +74,7 @@ W, X0, SW = 1240, 140, 1040
 RH, RGAP, Y0 = 62, 16, 150
 H = Y0 + len(ROWS) * (RH + RGAP) + 190
 GROUND, INK, MUTED = NEU['WHITE'], NEU['BLACK'], NEU['DARK']
-UI, MONO = "Montserrat, Nimbus Sans, Helvetica, Arial, sans-serif", "AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono, monospace"
+UI, MONO = "Montserrat, Nimbus Sans, Helvetica, Arial, sans-serif", "IntoneMono Nerd Font Mono, Intel One Mono, monospace"
 o = [f'<rect width="{W}" height="{H}" fill="{GROUND}"/>']
 
 
