@@ -431,6 +431,64 @@ RULES = [
     ('A destructive button is §3\'s own ground with the light legend, never a tint of it.',
      'button.mod-destructive, button.mod-warning, button.mod-destructive.mod-cta',
      [('background-color', '{destructive}'), ('--text-color', '{legend-light}'), ('color', '{legend-light}')]),
+    ('So is the box that says a note\'s properties do not parse. Obsidian mixes --text-error into what lies under '
+     'it at 10% and sets the error in it: a blend, and the ANSI red on it at Lc 63.8 on the note and 37.2 on a '
+     'sidebar. The screen pass could not see it until it read oklch().',
+     '.metadata-error-container',
+     [('background-color', '{destructive}'), ('color', '{legend-light}'), ('--text-error', '{legend-light}'),
+      ('--text-muted', '{legend-light}'), ('--text-accent', '{legend-light}'),
+      ('--text-accent-hover', '{legend-light}')]),
+    ('An edge nobody gave a colour, hovered or chosen, thickens, as Obsidian draws it, and gains no halo: Obsidian '
+     'laid a 24-unit band of the default card colour at 10% under it, a blend. Found by hand, not by the '
+     'screen pass: a straight edge\'s box has no height, and the probe steps over it.',
+     '.canvas-edges g:not(.is-themed).is-focused path.canvas-interaction-path, '
+     '.canvas:not(.is-connecting) .canvas-edges g:not(.is-themed):hover path.canvas-interaction-path',
+     [('stroke', 'transparent')]),
+    ('The hotkeys\' Conflicts filter is a chip like its neighbours, its name error text, RED, and its count on '
+     '§3\'s own ground with the light legend; chosen, the chip is that ground. Obsidian tinted the chip 10% '
+     'DESTRUCTIVE inside an edge at 15% and the count 15%, where the count measured Lc 53.0; and chosen, it '
+     'carried WHITE, not the legend, as a conflicting key did, at Lc 71.8. Found once the screen pass read '
+     'oklch().',
+     '.setting-group-filter.mod-error',
+     [('background-color', 'transparent'), ('border-color', 'var(--background-modifier-border)')]),
+    ('', '.setting-group-filter.mod-error:hover', [('border-color', 'var(--background-modifier-border-hover)')]),
+    ('', '.setting-group-filter-badge', [('background-color', '{destructive}'), ('color', '{legend-light}')]),
+    ('', '.setting-group-filter.mod-error.is-active, .setting-group-filter.mod-error.is-active:hover',
+     [('background-color', '{destructive}'), ('border-color', '{destructive}'), ('color', '{legend-light}')]),
+    ('', '.is-active .setting-group-filter-badge', [('background-color', 'transparent'), ('color', '{legend-light}')]),
+    ('', '.setting-hotkey.has-conflict',
+     [('background-color', '{destructive}'), ('color', '{legend-light}')]),
+    ('A formula that fails in a base marks its cell with DESTRUCTIVE at full strength, where Obsidian mixed it to '
+     '60%: a blend, found once the screen pass read oklch(). The message beside it is error text, RED.',
+     '.bases-formula-error .warning-icon', [('color', '{destructive}')]),
+    ('A property\'s type warning, hovered, takes every icon\'s hover. Obsidian mixed its own orange in at 15%: a '
+     'blend of a value the kit does not paint, echoing a warning the YELLOW glyph already carries (§3). Found '
+     'once the screen pass read oklch().',
+     '.metadata-property-warning-icon:hover', [('background-color', 'var(--background-modifier-hover)')]),
+    ('A canvas group nobody gave a colour is not a label (§3\'s test), so it is not tinted. Obsidian filled it and '
+     'its name with the default card colour at 7% and 10%: a blend. It is the canvas, WHITE, inside its LIGHT '
+     'edge, with its name DARK on it, Lc 79.0; and the stand-in Obsidian draws while a card\'s content is not '
+     'drawn is the card, WHITE, where Obsidian washed it at 10%. A group or card given a colour is content, and '
+     'keeps Obsidian\'s paint. Found once the screen pass read oklch().',
+     '.canvas-node-group:not(.is-themed) .canvas-node-content, '
+     '.canvas-node-group:not(.is-themed) .canvas-group-label:not([contenteditable="true"]), '
+     '.canvas-node:not(.is-themed) .canvas-node-placeholder',
+     [('background-color', 'transparent')]),
+    ('A canvas selection is drawn, not tinted: a frame in ACCENT, §2\'s colour for what is chosen, with nothing '
+     'inside it. Obsidian filled the box you drag at 10% ACCENT, and the box around a selection at 3% inside an '
+     'edge at 30%: blends. A card dragged in from the toolbar is the WHITE card it becomes, in the same frame.',
+     '.canvas-selection, .canvas-selection.mod-group-selection',
+     [('background-color', 'transparent'), ('border-color', '{accent}')]),
+    ('', '.canvas-node.is-dummy .canvas-node-container', [('background-color', '{white}')]),
+    ('The message on an empty canvas is ACCENT on the canvas, Lc 75.4. Obsidian set it on ACCENT at 10%, where it '
+     'measured 66.0.', '.canvas-placeholder-message', [('background-color', '{white}'), ('color', '{accent}')]),
+    ('A folder a note is dragged over is a drop target: its row ACCENT carrying WHITE, as in worksafe/zettlr/, '
+     'and the rows inside it left alone. Obsidian washed the whole folder in ACCENT at 10% and set the row\'s '
+     'name ACCENT on the wash. Found, with the canvas\'s, once the screen pass read oklch().',
+     '.nav-folder.is-being-dragged-over', [('background-color', 'transparent')]),
+    ('', '.nav-folder.is-being-dragged-over > .nav-folder-title, .tree-item-self.is-being-dragged-over',
+     [('background-color', '{accent}'), ('color', '{white}'), ('--nav-item-color-highlighted', '{white}'),
+      ('--icon-color', '{white}')]),
     ('A dropdown is a button: its arrow was a data URI stroked #000, which §3 reserves; it is drawn here from '
      'two gradients in the label\'s own colour.',
      '.dropdown',
@@ -463,6 +521,14 @@ RULES = [
     ('A diff is content, and its convention is realized: inserted green, deleted red, at the ANSI text tier.',
      '.token.inserted', [('color', '{green}')]),
     ('', '.token.deleted', [('color', '{red}')]),
+    ('So is the diff File recovery and Sync history draw. Obsidian tinted each line 20% DESTRUCTIVE or SUCCESS '
+     'and each changed word 40%, and set BLACK on the tints at Lc 72.9 and 75.0, 47.0 and 50.5: blends, and the '
+     'screen pass could not see them until it read oklch(). The lines are the field, deleted red and inserted '
+     'green at the ANSI text tier; a changed word is set 700, as marked text is.',
+     '.diff-line.mod-left', [('background-color', 'transparent'), ('color', '{red}')]),
+    ('', '.diff-line.mod-right', [('background-color', 'transparent'), ('color', '{green}')]),
+    ('', '.diff-line.mod-left .diff-changed, .diff-line.mod-right .diff-changed',
+     [('background-color', 'transparent'), ('font-weight', '700')]),
     ('Callouts: a frame in the callout\'s colour, the title on it, and the content on a WHITE inset. The title '
      'carries BLACK on LIGHT, and §3\'s legend on a semantic frame.',
      '.callout', [('background-color', 'var(--callout-color)'), ('mix-blend-mode', 'normal')]),
@@ -911,6 +977,9 @@ PAIRS = [
     ('--icon-color', '--background-primary', None, 30, 'a glyph on the field'),
     ('--icon-color-active', '--background-modifier-active-hover', None, 30, 'a toggle that is on, on the field'),
     ('--icon-color-active', '--background-modifier-active-hover', 'panel', 30, 'the same, on a panel'),
+    ('--background-modifier-error', '--background-primary', None, 30, 'a formula\'s error in a base: its glyph'),
+    ('--text-warning', '--background-modifier-hover', None, 30, 'a property\'s type warning, hovered: its glyph'),
+    ('--text-warning', '--background-modifier-hover', 'panel', 30, 'the same, on the properties sidebar'),
     ('--text-on-accent', '--interactive-accent', None, 75, 'the primary button, 400'),
     ('--text-normal', '--interactive-normal', None, 60, 'a button on the field: LIGHT, 700'),
     ('--text-normal', '--interactive-normal', 'panel', 75, 'a button on a panel: WHITE'),
@@ -961,6 +1030,9 @@ ADJACENT = [
     ('--background-primary', '--callout-warning', None, 'a warning callout\'s frame'),
     ('--background-primary', '--callout-error', None, 'a destructive callout\'s frame'),
     ('--background-primary', '--callout-success', None, 'a success callout\'s frame'),
+    ('--background-primary', '--background-modifier-error', None, 'the box of properties that do not parse, on the note'),
+    ('--background-secondary', '--background-modifier-error', 'panel', 'the same box on the properties sidebar'),
+    ('--background-secondary', '--interactive-accent', 'panel', 'a folder dragged over, on the file list'),
     ('--background-primary', '--hr-color', None, 'a thematic break'),
     ('--background-primary', '--text-selection', None, 'the selection on the field'),
     ('--background-primary', '--background-modifier-message', None, 'a notice over the note'),
@@ -1440,10 +1512,26 @@ def coverage():
 # still apply. So this asks a running Obsidian, over the DevTools protocol, what every visible element
 # computed -- the way worksafe/firefox/'s Marionette probe asked Firefox -- and reports each painted value
 # and each text pair as the screen has it. A report, not a gate: it needs a window.
+# Chromium 150 serializes a computed colour in the space it was mixed in: color-mix() in srgb or hsl as
+# color(srgb R G B / A), channels 0-1; in oklch as oklch(L C H / A), in oklab as oklab(L a b / A), a powerless
+# channel as `none` -- and it paints `none` as 0, so the kit's neutrals, whose chroma it counts as powerless, come
+# out of an oklch mix hue-shifted: WHITE at 100% paints #F2E4E7. The parse reads each notation the way Chromium
+# paints it. One it cannot read is listed as unread, never taken for nothing painted: the parse once read only
+# rgb(), and every color-mix() on the screen was invisible here (found 2026-09-29, on worksafe/vivaldi/).
 PROBE = r"""(() => {
-  const out = [];
-  const parse = s => { const m = s && s.match(/rgba?\(([^)]+)\)/); if (!m) return null;
-    const p = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; };
+  const out = [], unread = new Set();
+  const srgb = v => 255 * Math.min(1, Math.max(0, v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055));
+  const oklab = (L, a, b) => { const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3, m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3,
+    s = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3; return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s].map(srgb); };
+  const parse = s => { const m = s && s.match(/\b(rgba?|color|oklab|oklch|lab|lch)\(([^)]+)\)/); if (!m) return null;
+    const p = m[2].split(/[ ,\/]+/).filter(Boolean), space = m[1] === 'color' ? p.shift() : m[1];
+    const [x, y, z] = p.map(v => v === 'none' ? 0 : Number(v)), a = p.length > 3 ? Number(p[3]) : 1;
+    if (space === 'rgb' || space === 'rgba') return [x, y, z, a];
+    if (space === 'srgb') return [x * 255, y * 255, z * 255, a];
+    if (space === 'oklab') return [...oklab(x, y, z), a];
+    if (space === 'oklch') return [...oklab(x, y * Math.cos(z * Math.PI / 180), y * Math.sin(z * Math.PI / 180)), a];
+    unread.add(s); return null; };
   const hex = c => '#' + c.slice(0, 3).map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase();
   const name = el => { let s = el.tagName.toLowerCase();
     const cls = (el.getAttribute('class') || '').trim().split(/\s+/).filter(Boolean).slice(0, 3);
@@ -1474,7 +1562,7 @@ PROBE = r"""(() => {
     if (cs.boxShadow !== 'none') out.push({prop: 'box-shadow', value: cs.boxShadow.slice(0, 120), where: where(el)});
     if (cs.backdropFilter && cs.backdropFilter !== 'none') out.push({prop: 'backdrop-filter', value: cs.backdropFilter, where: where(el)});
   }
-  return {body: document.body.className, records: out};
+  return {body: document.body.className, records: out, unread: [...unread]};
 })()"""
 
 
@@ -1545,6 +1633,11 @@ def _screen_one(page):
     recs = shot['records']
     key = 'is-focused' in shot['body'].split()
     print(f"=== {page['title']}: window {'KEY' if key else 'not key'}, {len(recs)} painted values\n")
+    if shot.get('unread'):
+        print('UNREAD -- colours in a notation the probe cannot read, so their elements are missing below:')
+        for s in shot['unread']:
+            print(f'  {s}')
+        print()
     by = {}
     for r in recs:
         if r['prop'] in ('box-shadow', 'backdrop-filter'):

@@ -196,14 +196,70 @@ its reason beside it: disabled buttons faded to 0.4 (a blend; now DARK); the
 key cap in the palette's selected row, WHITE on WHITE; dialog buttons at 400 on
 LIGHT, Lc 61.2 against the 75 tier; the search counts DARK on LIGHT at 48.4;
 file-type badges at 9 px; a hovered property turning LIGHT under an ACCENT tag,
-Lc 44.8; and in the Settings window, a title faded to 0.85. The Settings window
-was probed once, separately, and **its last two changes are not yet looked at on
-the screen**: the title's fade, and the page, which was WHITE — so its WHITE
-setting cards had no edge — and is LIGHT now. The checker measures what that
-puts on the page, BLACK on LIGHT at 700 and the cards WHITE on it at ΔE 17.1,
-and the next pass should look. The graph itself is drawn on a canvas the probe cannot read:
-its colours come from the theme's `--graph-*` variables, which the checker
-measures.
+Lc 44.8; and in the Settings window, a title faded to 0.85, and a page that was
+WHITE, so its WHITE setting cards had no edge. The graph itself is drawn on a
+canvas the probe cannot read: its colours come from the theme's `--graph-*`
+variables, which the checker measures.
+
+**Until 2026-09-29 the probe read every blend as nothing painted.** Chromium
+reports a colour made by `color-mix()` in the space it was mixed in —
+`color(srgb …)` for a mix in srgb, `oklch(…)` for one in oklch, which is 78 of
+the 87 in `app.css` — and the probe parsed only `rgb()`. So an element painted by
+a mix was recorded as painting nothing, and text on one was measured against
+whatever lay under the mix: a false pass. `worksafe/vivaldi/` found it. The
+probe now reads all three notations the way Chromium paints them, and lists any
+other as UNREAD rather than dropping it. Chromium paints a powerless hue as 0,
+and counts the kit's four neutrals' hue as powerless in an oklch mix, so WHITE
+mixed at 100% paints `#F2E4E7`; none of the theme's own values is a mix, so this
+reaches only the platform's.
+
+Walked again that day on a throwaway QA profile, in 91 states of both windows —
+the ones above, every Settings page top and bottom, and the states that reach
+the platform's own mixes — the probe found nine blends and a tenth was found by
+hand. Each is now in the theme with its reason beside it:
+
+- the box that says a note's properties do not parse, RED at 10%, with the ANSI
+  red on it at Lc 63.8 on the note and 37.2 on the sidebar: now DESTRUCTIVE
+  carrying §3's legend, like a destructive button;
+- a property's type warning, hovered, in Obsidian's own orange at 15%: now every
+  icon's hover, LIGHT on the note and WHITE on the sidebar, under the YELLOW glyph;
+- File recovery's diff (Sync history's too), lines tinted DESTRUCTIVE and SUCCESS
+  at 20% and changed words at 40%, BLACK on them at Lc 72.9, 75.0, 47.0 and 50.5:
+  now the field, with deleted lines red and inserted green at the ANSI text tier
+  and a changed word set 700, as the code block's diff already was;
+- the hotkeys' Conflicts filter at 10% in an edge at 15%, and its count at 15%,
+  where the count measured Lc 53.0: now a chip like its neighbours with its name
+  RED and its count on DESTRUCTIVE; chosen, the chip is DESTRUCTIVE, and it and a
+  conflicting key carry the legend, where they carried WHITE (the key at Lc 71.8);
+- a formula's error mark in a base, DESTRUCTIVE at 60%: now at full strength;
+- on a canvas: a group nobody coloured, and its name, washed in LIGHT at 7% and
+  10%, and the stand-in drawn while a card's content is not, at 10% — now
+  untinted, the canvas's WHITE (the stand-in shows for a moment, so it was
+  checked by its cascade, not caught on the screen); the box you drag and the box round a selection, ACCENT at 10%, and at 3%
+  inside an edge at 30%, and a card dragged in from the toolbar at 20% — now ACCENT
+  frames with nothing inside; the empty canvas's message on its own tint at Lc
+  66.0 — now ACCENT on WHITE, 75.4;
+- in the file list, a folder a note is dragged over, washed whole in ACCENT at
+  10% with its name ACCENT on the wash: now a drop target, its row ACCENT carrying
+  WHITE;
+- by hand: a canvas edge, hovered or chosen, laid a 24-unit band of LIGHT at 10%
+  under itself; it thickens without it now.
+
+Afterwards the only blend on the screen is the scrim. The same walk looked at the
+Settings window's last two changes: the title is WHITE on ACCENT at full
+strength, and the page is LIGHT, its headings BLACK at 700, Lc 61.2, with the
+cards WHITE on it at ΔE 17.1.
+
+**What the probe still cannot see**: a pseudo-element, and a shape whose box has
+no area. Obsidian paints several states with a mix on `::before` or `::after` — a
+pane highlighted as a drop target, the tab left behind while one is dragged, a
+property or a base dragged over — and those are unmeasured; the canvas edge was
+found by hand because a straight one has no height. The pass also named
+defects that are not blends and are not yet answered: BLACK at 400 on LIGHT,
+Lc 61.2, on a text button hovered on the note, a base's table header, the
+current page in Settings' list, a hotkey chip and the graph's control headers;
+a tag ACCENT on LIGHT at 44.8 in the properties sidebar; and a search result's
+file name WHITE on LIGHT at 31.8.
 
 ## Residue
 

@@ -231,6 +231,21 @@ on LIGHT, the sponsors' white logos on LIGHT. And two in the machinery: the
 cross-window leak the scoping now prevents, and a theme file cut short at a
 selector list split inside a quoted value, which the parse count now guards.
 
+Until 2026-09-29 the probe parsed only `rgb()`, and Chromium reports a colour
+made by `color-mix()` as `color(srgb …)` or `oklch(…)`, the space it was mixed
+in: an element painted by a mix would have been recorded as painting nothing
+(`worksafe/vivaldi/` found it). The probe now reads both, and lists any other
+notation as UNREAD. Zettlr 4.8.0 mixes nothing — no bundle in its `app.asar`
+holds a `color-mix()`, an `oklch()` or a `lab()`, CodeMirror's run-time themes
+included — so there was nothing for the old parse to have missed, and a walk
+that day on a throwaway profile bore it out: the main window at rest, scrolled,
+with a selection, the find panel and two popovers; Preferences' twelve pages top
+and bottom; Statistics, the Tags Manager, About and the Assets Manager. In every
+window no element computed a colour in any notation but `rgb()`, the new probe
+and the old one read the same values, every value was a kit value, and every
+readable hue in the photographs was the kit's. A `custom.css` of your own may
+mix; the probe would now say so.
+
 ## Residue
 
 Tolerated, never echoed (§4). `PLATFORM.md` is the record:

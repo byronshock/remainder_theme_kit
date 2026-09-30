@@ -1691,11 +1691,28 @@ CONTENT_SELECTORS = ('.katex', 'math', '.mermaid-chart', '#print-container', 'di
                      '.tree-item.blue', '.tree-item.purple', '.tree-item.rose', '.tree-item.red', '.tree-item.orange',
                      '.tree-item.yellow', '.tree-item.green', '.color-swatch', '.color-circle',
                      '[class*="cm-readability-"]', 'img', 'iframe', 'canvas')
+# Chromium 150 serializes a computed colour in the space it was mixed in: color-mix() in srgb or hsl as
+# color(srgb R G B / A), channels 0-1; in oklch as oklch(L C H / A), in oklab as oklab(L a b / A), a powerless
+# channel as `none` -- and it paints `none` as 0, so the kit's neutrals, whose chroma it counts as powerless, come
+# out of an oklch mix hue-shifted: WHITE at 100% paints #F2E4E7. The parse reads each notation the way Chromium
+# paints it. One it cannot read is listed as unread, never taken for nothing painted: the parse once read only
+# rgb(), and a blend was invisible here (found 2026-09-29, on worksafe/vivaldi/). Zettlr 4.8.0 mixes nothing; a
+# custom.css may.
 PROBE = r"""(() => {
-  const out = [];
+  const out = [], unread = new Set();
   const CONTENT = __CONTENT__;
-  const parse = s => { const m = s && s.match(/rgba?\(([^)]+)\)/); if (!m) return null;
-    const p = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; };
+  const srgb = v => 255 * Math.min(1, Math.max(0, v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055));
+  const oklab = (L, a, b) => { const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3, m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3,
+    s = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3; return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s, -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s].map(srgb); };
+  const parse = s => { const m = s && s.match(/\b(rgba?|color|oklab|oklch|lab|lch)\(([^)]+)\)/); if (!m) return null;
+    const p = m[2].split(/[ ,\/]+/).filter(Boolean), space = m[1] === 'color' ? p.shift() : m[1];
+    const [x, y, z] = p.map(v => v === 'none' ? 0 : Number(v)), a = p.length > 3 ? Number(p[3]) : 1;
+    if (space === 'rgb' || space === 'rgba') return [x, y, z, a];
+    if (space === 'srgb') return [x * 255, y * 255, z * 255, a];
+    if (space === 'oklab') return [...oklab(x, y, z), a];
+    if (space === 'oklch') return [...oklab(x, y * Math.cos(z * Math.PI / 180), y * Math.sin(z * Math.PI / 180)), a];
+    unread.add(s); return null; };
   const hex = c => '#' + c.slice(0, 3).map(v => Math.round(v).toString(16).padStart(2, '0')).join('').toUpperCase();
   const up = e => e.parentElement || (e.parentNode && e.parentNode.host) || null;
   const name = el => { let s = el.tagName.toLowerCase(); if (el.id) s += '#' + el.id;
@@ -1735,7 +1752,7 @@ PROBE = r"""(() => {
     if (el.tagName === 'INPUT' && ['checkbox', 'radio', 'range'].includes(el.type) && cs.appearance !== 'none')
       out.push({prop: 'native-control', value: el.type, where: where(el)});
   }
-  return {body: document.body.className, focused: document.hasFocus(), records: out};
+  return {body: document.body.className, focused: document.hasFocus(), records: out, unread: [...unread]};
 })()"""
 
 
@@ -1844,6 +1861,11 @@ def pixel_report(page):
 def report(window, shot):
     recs = shot['records']
     print(f"=== {window}: body.{shot['body'] or '-'}, {len(recs)} painted values\n")
+    if shot.get('unread'):
+        print('UNREAD -- colours in a notation the probe cannot read, so their elements are missing below:')
+        for s in shot['unread']:
+            print(f'  {s}')
+        print()
     content = [r for r in recs if r.get('content')]
     recs = [r for r in recs if not r.get('content')]
     print(f"content, left as Zettlr paints it (§0a): {len(content)} values in "
