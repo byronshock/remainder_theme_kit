@@ -131,6 +131,13 @@ an eight-digit value counted by its first six. By that method the kit holds
 `worksafe/obsidian/` as well. None of the obvious variants of the method
 reproduces the 65 or 66 above, so 64 is a new baseline rather than a change.
 
+**The Vivaldi surface added none, 2026-09-29.** Its interface stylesheet defines
+the same fifteen values as Obsidian's and Zettlr's, and `build/vivaldi.py` fails
+if it carries a colour outside those definitions; `theme.json` names five of
+§2's own as Vivaldi's theme colours; `settings.json` and the installer write
+none. By the method pinned above the kit holds **64 distinct values**, with
+`worksafe/vivaldi/` and without it.
+
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
@@ -295,9 +302,14 @@ python3 build/zettlr.py --write    # regenerate the theme and the declutter from
 python3 build/zettlr.py --record P # re-record Zettlr's own CSS from the installed build and a running window
 python3 build/zettlr.py --coverage # the installed build's stylesheets against the record (a report)
 python3 build/zettlr.py --screen P # what a running Zettlr computed and painted, every window (a report)
+python3 build/vivaldi.py           # every variable resolved in every region; every pair, adjacency and rank
+python3 build/vivaldi.py --derive  # the roles, the UI zoom, and what the native theme alone paints
+python3 build/vivaldi.py --write   # regenerate the stylesheet, the declutter and theme.json
+python3 build/vivaldi.py --coverage  # the installed build's variables and literals against the record (a report)
+python3 build/vivaldi.py --screen P  # what a running Vivaldi computed and painted, every window (a report)
 ```
 
-Seven are built. What a checker owes:
+Eight are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -468,6 +480,35 @@ And four the seventh added, which a platform that paints from literals forced:
   own red under a misspelling, which a hue test passes as DESTRUCTIVE. It also
   names what no stylesheet reaches: the flags in a language menu are emoji.
 
+And three the eighth added, which a platform that derives its colours at run time
+forced:
+
+- **It proves the cascade it assumes.** Vivaldi's script derives its colour
+  variables from a theme's four colours, sets them inline on `#browser`, and
+  re-declares them on descendants, so the stylesheet declares every one at every
+  element with `!important`, region by region — the key strip, the non-key
+  window, a private window's strip, the current tab, the fields. That only
+  resolves the way the checker resolves it if each region outranks every region
+  before it that can match the same element. So `build/vivaldi.py` computes each
+  region's specificity and fails if one does not: the browser's own tie-break,
+  made a gate, where `build/obsidian.py` assumed it. Regions that can never
+  match one element — a key window's and a non-key window's — are told apart by
+  their selectors and left unranked against each other.
+- **It measures what the platform does with the kit's own inputs.** The native
+  theme is installed for the switches no stylesheet reaches, and it is what shows
+  if the experiment that loads the stylesheet is off. So the record holds what
+  Vivaldi derives from the kit's four colours, and `--derive` measures it against
+  the pins: 8 of 43 on the ladder. A surface that sets inputs rather than values
+  owes a measurement of the values those inputs produce.
+- **It reads a blend however the browser writes it.** Chromium reports a
+  `color-mix()` as `color(srgb … / a)`, not `rgba()`, and a probe that parses
+  only the second reads the first as nothing painted: the start page's widgets
+  sat at WHITE over 65% until `--screen` learned the notation. And it keeps the
+  exemption where the platform draws a picture of itself: Settings › Themes
+  paints each theme's preview from that theme's own variables, a pin on every
+  element repainted them all in the kit's, and the pins now stop at a preview —
+  in `:where()`, so the exclusion costs no rank.
+
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
 there is no file to scan. What must hold is the bar itself: *every value the
@@ -604,6 +645,22 @@ text pair under its tier but the ANSI yellow at its recorded gamut cap, and no
 readable hue off the kit's families but the flag emoji in LanguageTool's language
 menus, which no stylesheet reaches. `README_ZETTLR.md` lists the states.
 
+On Vivaldi the pass is the probe and a photograph again, on a display of its own:
+`sh worksafe/vivaldi/install.sh --qa DIR` builds a user-data directory past
+Vivaldi's first-run pages and installs into it; Vivaldi runs on `Xvfb` with
+`--user-data-dir=DIR/profile`, `--ozone-platform=x11` and
+`--remote-debugging-port=9225`; and `python3 build/vivaldi.py --screen 9225`
+reads every interface window. Its menus are Chromium's and not the page, so they
+are photographed off the whole display. Measured 2026-09-29 with the tabs on top
+and at the side, in the layout this machine's own profile uses, key and not, and
+in a private window; the start page, a web page, the address field's suggestions,
+all eight side panels, Settings' General and Themes pages, and the first-run
+pages: every painted value a kit value, no text pair under its tier, and no
+readable hue off the kit's families outside content, after about twenty fixes the
+pass itself found. Quick commands and the bookmark-added popup were not reached:
+Vivaldi handles its shortcuts in the browser process, which key events sent over
+DevTools do not reach. `README_VIVALDI.md` lists the states.
+
 What the pass is looking for: no hue in chrome that reads as a signal (§1); the
 three semantic hues present only where the meaning is (§3); one rule, the same
 width everywhere, carrying no state (§5); the cursor findable at a glance on a
@@ -623,6 +680,9 @@ motion, no blur.
 | `worksafe/obsidian/remainder-declutter.css` | generated **and committed**; guarded by `build/obsidian.py`, which also fails if it names any colour at all |
 | `worksafe/zettlr/remainder.css` | generated **and committed**; guarded by `build/zettlr.py`, which fails if it is not what the record and the tables produce. The only literal colours in it are the `--rm-*` definitions |
 | `worksafe/zettlr/remainder-declutter.css` | generated **and committed**; guarded by `build/zettlr.py`, which also fails if it names any colour at all |
+| `worksafe/vivaldi/remainder.css` | generated **and committed**; guarded by `build/vivaldi.py`, which fails if it is not what the tables produce. The only literal colours in it are the `--rm-*` definitions |
+| `worksafe/vivaldi/remainder-declutter.css` | generated **and committed**; guarded by `build/vivaldi.py`, which also fails if it names any colour at all |
+| `worksafe/vivaldi/theme.json` | generated **and committed**; guarded by `build/vivaldi.py`: the native theme, whose five colours are §2's and whose switches are the ones the checker measured with |
 | `build/zettlr_platform.css` | **recorded and committed**: Zettlr's own CSS, the platform the theme answers, written by `build/zettlr.py --record` from the installed build and a running window and never by hand; GPL-3.0, like Zettlr. A re-record may reorder its CodeMirror blocks — the order the editor happened to mount them in — without changing what they hold, and the theme it writes then differs in order only |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |

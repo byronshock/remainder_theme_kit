@@ -1,0 +1,73 @@
+// Remainder — Vivaldi preferences: the theme selected, and §0's larger half switched off. Merged key by key into
+// each profile's Preferences by install.sh, with Vivaldi closed and the file backed up first. Implements
+// AUTHORITY.md §0, §2 and §5 and PLATFORM.md Vivaldi. Every shipped default quoted here was read off the installed
+// build -- the Arch vivaldi package 8.2.4133.76, 2026-09-29 -- in resources/vivaldi/prefs_definitions.json. Vivaldi
+// stores an enum as its index, so those are written as numbers with the name beside them. This file carries no
+// colour; the theme (theme.json and remainder.css) does, and build/vivaldi.py proves it. The installer also writes
+// what cannot be written here: the theme entry itself, the stylesheet folder, the UI zoom, and the experiment
+// that loads the stylesheet, which lives in Local State.
+{
+  "vivaldi": {
+    "themes": {
+      "current": "Remainder",                // shipped default "Vivaldi1"
+      // A private window gets the kit too. Vivaldi's own "Private" theme is a violet chrome whose hue is the state
+      // it carries, and §6.8 gives no chrome hue a meaning; here a private window's key strip is BLACK instead of
+      // ACCENT, the state carried by tone (remainder.css, and README_VIVALDI.md).
+      "current_private": "Remainder"         // shipped default "Vivaldi9"
+    },
+    "theme": {
+      // "system" (1) swaps in Vivaldi's own light or dark theme when the desktop flips, over the one selected here.
+      "schedule": { "enabled": 0 },          // off; shipped default 1, "system"
+      "use_animation": false,                // §0: motion. Shipped default true
+      // A non-key window is washed pale, over everything in it: a blend over every value in the window. The strip
+      // already says the window is not key (LIGHT, not ACCENT), which is §2's way of saying it.
+      "dim_blurred": false                   // shipped default true on Linux
+    },
+    "webpages": {
+      "smooth_scrolling": { "enabled": false }   // §0: motion. Shipped default true
+    },
+    // §0: the tips, nags and promotions, each one off.
+    "tabs": {
+      "button": { "show_tips": false }       // tips in the tab-bar popup; shipped default true
+    },
+    "show_extensions_banner": false,         // a banner for the extension store; shipped default true
+    "startpage": {
+      "speed_dial": { "tracker_suggestion_show": false }   // a suggested tile; shipped default true
+    },
+    "dashboard": {
+      "top_sites_hide_suggestions": true     // suggested sites among the top sites; shipped default false
+    },
+    "startup": {
+      "check_is_default": false              // "make Vivaldi your default browser"; shipped default true
+    },
+    "address_bar": {
+      // "Enable Search Suggestions", under every address you type until it is answered; -1 is Vivaldi's own
+      // "dismissed", which is what its Dismiss button writes.
+      "show_search_suggestions_warning": -1  // shipped default 0
+    },
+    "incognito": { "show_intro": false },    // an introduction page in every private window; shipped default true
+    "auto_hide": { "show_introduction": false },            // shipped default true
+    "privacy": { "break_mode": { "introduction_show": false } },   // shipped default true
+    "quick_commands": { "first_run_tip_dismissed": true },  // shipped default false
+    "settings": {
+      // "Love Vivaldi? Donate!" at the top of Settings, with a red heart. Vivaldi hides it for good once this is
+      // over 0; its own close button writes the time, and this is the date the surface was written.
+      "donation_promo_dismissed": 1790640000000,   // shipped default 0
+      // Paint, not declutter: Settings' own list of pages draws each page's icon in its own colour -- orange,
+      // teal, blue, green, every one of them a pole (§1). Vivaldi ships a monochrome set beside them.
+      "mono_icons": true                     // "Use Monochrome Settings Icons"; shipped default false
+    }
+  },
+  // §5 for pages that name no face of their own: Montserrat, and Hack for monospace. These are the CONTENT
+  // defaults, as worksafe/firefox/user.js sets them; the interface's own face is set in remainder.css. A page that
+  // names its own font keeps it (§0a: content is exempt).
+  "webkit": {
+    "webprefs": {
+      "fonts": {
+        "standard": { "Zyyy": "Montserrat" },
+        "sansserif": { "Zyyy": "Montserrat" },
+        "fixed": { "Zyyy": "Hack" }
+      }
+    }
+  }
+}

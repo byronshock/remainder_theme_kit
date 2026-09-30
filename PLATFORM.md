@@ -137,7 +137,8 @@ derivation and record it.
 ## Firefox
 
 Draws its own chrome and hands it to a per-profile stylesheet — so it can
-show key/non-key state where the platform will not (so can Obsidian, below).
+show key/non-key state where the platform will not (so can VS Code, Obsidian and
+Vivaldi, below).
 Measured on 155.0.1 (deb), 2026-09-19, except where noted.
 
 - `user.js` for prefs; `chrome/userChrome.css` and `userContent.css` for
@@ -496,6 +497,107 @@ COSMIC.
 
 **Cannot reach:** the window buttons; key state; the menus under the native
 frame; emoji and pictures; Zettlr's update checks, on this package.
+
+## Vivaldi
+
+Chromium, with the whole interface drawn as one web page: `window.html` in
+Vivaldi's own component extension (`mpognobbkildjkofajifpdfhcoklimli`), the web
+in `<webview>`s beneath it. Measured on 8.2.4133.76 (the Arch `vivaldi`
+package), 2026-09-29, on COSMIC.
+
+- **Two knobs, and a theme needs both.** A native theme is a JSON entry in each
+  profile's `Preferences` — `vivaldi.themes.user`, selected by
+  `vivaldi.themes.current`, and by `vivaldi.themes.current_private` in a private
+  window. Interface stylesheets are an experiment (below).
+- **A native theme is four colours and some switches**: background, foreground,
+  highlight, accent, a window colour, and `colorPosition` (`tabbar`,
+  `addressbar`, `unified`; `accentOnWindow` is the older spelling of `tabbar`),
+  `accentFromPage`, `alpha`, `blur`, `backgroundImage`, `transparencyTabBar`,
+  `transparencyTabs`, `radius`, `contrast`. The interface's script derives 42
+  colour variables from the four by lightening, darkening and mixing — walking a
+  value away from the background until it clears a ΔE the `contrast` setting
+  scales — and 30 more from the background image, and sets them inline on
+  `#browser`, with classes beside them: `theme-id-<id>`, `theme-light` or
+  `theme-dark`, `color-behind-tabs-on`, `unified-ui`, `color-accent-from-page`.
+  Its stylesheet mixes 13 more from those with `color-mix()`. Under `alpha` 0.5
+  the unified style composites the background image through the chrome.
+- **`vivaldi.theme.schedule.enabled` is `system` by default**, and it selects
+  Vivaldi's own light or dark theme (`vivaldi.theme.schedule.o_s`) over
+  `themes.current` whenever the desktop flips. A theme installed with it on is
+  replaced at the next flip.
+- **Interface stylesheets are an experiment**: vivaldi://experiments › *Allow CSS
+  modifications*, the feature `VivaldiCssMods`, stored in `Local State` as the
+  entry `vivaldi-css-mods@1` in `browser.enabled_labs_experiments`. With it on,
+  every `.css` file in the folder at `vivaldi.appearance.css_ui_mods_directory`
+  is served as `chrome://vivaldi-data/css-mods/css` and linked into `window.html`
+  after Vivaldi's own stylesheet. It is author origin, so its `!important` beats
+  the inline variables on `#browser`; but Vivaldi re-declares variables on
+  descendants — the tab strip, the non-key window's header, break mode — so a
+  value meant everywhere has to be declared at every element (importance does
+  not cross inheritance: Firefox, above).
+- **The start page, Settings — in a tab or a window of its own — the welcome
+  pages, the side panels and the popups are all `window.html`.** The start page's
+  own document, `chrome://vivaldi-webui/startpage`, is empty, and the interface
+  draws over it. So one stylesheet reaches all of them.
+- **Menus are not the page.** The Vivaldi menu and every context menu are
+  Chromium's own views, drawn from the GTK theme while
+  `extensions.theme.system_theme` is 1 (the default here): GTK 3's stylesheet in
+  `~/.config/gtk-3.0` if there is one, Adwaita's colours if not. No interface
+  stylesheet reaches them.
+- **The window knows when it is key**: `#browser` carries `hasfocus` or
+  `isblurred`. `vivaldi.theme.dim_blurred` (default on Linux) re-declares the
+  colour variables on a non-key window's header, footer and panels, paler.
+- **A private window carries no class of its own on `#browser`.** Its indicator,
+  `.UrlBar-PrivateWindowIndicator`, is rendered into the address toolbar, and is
+  hidden with that toolbar in the layouts that put the address field in the tab
+  bar; `:has()` finds it either way.
+- **User Interface Zoom** (Settings › Appearance) scales `window.html` and no web
+  page. It is a Chromium zoom level — log base 1.2 of the factor — in the
+  profile's `Preferences` at `partition.per_host_zoom_levels`, against the
+  extension's host in the partition `Storage/ext/<id>/def`, hex-encoded and
+  prefixed `x`. At 100% the chrome's text is 11.5 px in 110 rules and 13 px in 34.
+- **Preferences**: `Preferences` in each profile folder, `Local State` beside
+  them, listing the profiles under `profile.info_cache`.
+  `resources/vivaldi/prefs_definitions.json` holds every `vivaldi.*` preference
+  with its default, and a Linux one where it differs. An enum is stored as its
+  index. A toolbar never changed is not in `Preferences` at all. Both files are
+  held in memory and written back when Vivaldi quits, so an edit made while it
+  runs is lost.
+- **The process is `vivaldi-bin`** whatever user-data directory it runs in, so
+  the name cannot say which is open; Chromium's `SingletonLock` in the directory,
+  a symlink to `host-pid`, can. `--user-data-dir` starts a second instance with a
+  lock of its own, beside the first.
+- **A fresh profile opens a setup wizard and a welcome tab**, both
+  `window.html`; `vivaldi.welcome.read_pages` and
+  `vivaldi.startup.has_seen_welcome_page` mark them done. `--no-first-run` does
+  not.
+- **Promotions live in preferences, and one in a toolbar**: the extension
+  banner, the tab-bar popup's tips, a suggested speed dial, suggested top sites,
+  the default-browser check, the prompt to enable search suggestions
+  (`vivaldi.address_bar.show_search_suggestions_warning`, where -1 is
+  dismissed), the donation banner in Settings
+  (`vivaldi.settings.donation_promo_dismissed`, hidden once it is over 0), and
+  the VPN button, a toolbar item (`VPNButton`). A new profile's partner speed
+  dials are bookmarks in `Bookmarks`, remembered in
+  `vivaldi.bookmarks.deleted_partners` once deleted, so they do not come back.
+- **Settings' page icons are coloured** unless `vivaldi.settings.mono_icons`.
+- **Settings › Themes draws each theme as a picture** painted from that theme's
+  own variables on the preview element, so a rule that sets the variables on
+  every element repaints the previews too.
+- **`--remote-debugging-port`** exposes every interface window as an `app`
+  target at `window.html`, and web pages as `page` targets. Keyboard shortcuts
+  are handled in the browser process: key events dispatched over DevTools reach
+  the page and not them. On a virtual display (`Xvfb`, with
+  `--ozone-platform=x11`) every window renders, and a native menu shows only in
+  a photograph of the whole display.
+- **The packaging**: `/opt/vivaldi` for the deb, rpm and Arch packages, user
+  data in `${XDG_CONFIG_HOME:-~/.config}/vivaldi`, the snapshot in
+  `vivaldi-snapshot` beside it; the Flatpak `com.vivaldi.Vivaldi` keeps
+  `~/.var/app/com.vivaldi.Vivaldi/config/vivaldi` by its convention, *not verified
+  on a machine*.
+
+**Cannot reach:** menus (GTK's); GTK dialogs; web pages, except through an
+extension; the shortcuts, over DevTools.
 
 ## Claude Code
 
