@@ -638,6 +638,122 @@ button.mod-destructive.mod-cta {
   color: var(--rm-legend-light);
 }
 
+/* So is the box that says a note's properties do not parse. Obsidian mixes --text-error into what lies
+   under it at 10% and sets the error in it: a blend, and the ANSI red on it at Lc 63.8 on the note and
+   37.2 on a sidebar. The screen pass could not see it until it read oklch(). */
+.metadata-error-container {
+  background-color: var(--rm-destructive);
+  color: var(--rm-legend-light);
+  --text-error: var(--rm-legend-light);
+  --text-muted: var(--rm-legend-light);
+  --text-accent: var(--rm-legend-light);
+  --text-accent-hover: var(--rm-legend-light);
+}
+
+/* An edge nobody gave a colour, hovered or chosen, thickens, as Obsidian draws it, and gains no halo:
+   Obsidian laid a 24-unit band of the default card colour at 10% under it, a blend. Found by hand, not by
+   the screen pass: a straight edge's box has no height, and the probe steps over it. */
+.canvas-edges g:not(.is-themed).is-focused path.canvas-interaction-path,
+.canvas:not(.is-connecting) .canvas-edges g:not(.is-themed):hover path.canvas-interaction-path {
+  stroke: transparent;
+}
+
+/* The hotkeys' Conflicts filter is a chip like its neighbours, its name error text, RED, and its count on
+   §3's own ground with the light legend; chosen, the chip is that ground. Obsidian tinted the chip 10%
+   DESTRUCTIVE inside an edge at 15% and the count 15%, where the count measured Lc 53.0; and chosen, it
+   carried WHITE, not the legend, as a conflicting key did, at Lc 71.8. Found once the screen pass read
+   oklch(). */
+.setting-group-filter.mod-error {
+  background-color: transparent;
+  border-color: var(--background-modifier-border);
+}
+
+.setting-group-filter.mod-error:hover {
+  border-color: var(--background-modifier-border-hover);
+}
+
+.setting-group-filter-badge {
+  background-color: var(--rm-destructive);
+  color: var(--rm-legend-light);
+}
+
+.setting-group-filter.mod-error.is-active,
+.setting-group-filter.mod-error.is-active:hover {
+  background-color: var(--rm-destructive);
+  border-color: var(--rm-destructive);
+  color: var(--rm-legend-light);
+}
+
+.is-active .setting-group-filter-badge {
+  background-color: transparent;
+  color: var(--rm-legend-light);
+}
+
+.setting-hotkey.has-conflict {
+  background-color: var(--rm-destructive);
+  color: var(--rm-legend-light);
+}
+
+/* A formula that fails in a base marks its cell with DESTRUCTIVE at full strength, where Obsidian mixed it
+   to 60%: a blend, found once the screen pass read oklch(). The message beside it is error text, RED. */
+.bases-formula-error .warning-icon {
+  color: var(--rm-destructive);
+}
+
+/* A property's type warning, hovered, takes every icon's hover. Obsidian mixed its own orange in at 15%: a
+   blend of a value the kit does not paint, echoing a warning the YELLOW glyph already carries (§3). Found
+   once the screen pass read oklch(). */
+.metadata-property-warning-icon:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+/* A canvas group nobody gave a colour is not a label (§3's test), so it is not tinted. Obsidian filled it
+   and its name with the default card colour at 7% and 10%: a blend. It is the canvas, WHITE, inside its
+   LIGHT edge, with its name DARK on it, Lc 79.0; and the stand-in Obsidian draws while a card's content is
+   not drawn is the card, WHITE, where Obsidian washed it at 10%. A group or card given a colour is
+   content, and keeps Obsidian's paint. Found once the screen pass read oklch(). */
+.canvas-node-group:not(.is-themed) .canvas-node-content,
+.canvas-node-group:not(.is-themed) .canvas-group-label:not([contenteditable="true"]),
+.canvas-node:not(.is-themed) .canvas-node-placeholder {
+  background-color: transparent;
+}
+
+/* A canvas selection is drawn, not tinted: a frame in ACCENT, §2's colour for what is chosen, with nothing
+   inside it. Obsidian filled the box you drag at 10% ACCENT, and the box around a selection at 3% inside
+   an edge at 30%: blends. A card dragged in from the toolbar is the WHITE card it becomes, in the same
+   frame. */
+.canvas-selection,
+.canvas-selection.mod-group-selection {
+  background-color: transparent;
+  border-color: var(--rm-accent);
+}
+
+.canvas-node.is-dummy .canvas-node-container {
+  background-color: var(--rm-white);
+}
+
+/* The message on an empty canvas is ACCENT on the canvas, Lc 75.4. Obsidian set it on ACCENT at 10%, where
+   it measured 66.0. */
+.canvas-placeholder-message {
+  background-color: var(--rm-white);
+  color: var(--rm-accent);
+}
+
+/* A folder a note is dragged over is a drop target: its row ACCENT carrying WHITE, as in worksafe/zettlr/,
+   and the rows inside it left alone. Obsidian washed the whole folder in ACCENT at 10% and set the row's
+   name ACCENT on the wash. Found, with the canvas's, once the screen pass read oklch(). */
+.nav-folder.is-being-dragged-over {
+  background-color: transparent;
+}
+
+.nav-folder.is-being-dragged-over > .nav-folder-title,
+.tree-item-self.is-being-dragged-over {
+  background-color: var(--rm-accent);
+  color: var(--rm-white);
+  --nav-item-color-highlighted: var(--rm-white);
+  --icon-color: var(--rm-white);
+}
+
 /* A dropdown is a button: its arrow was a data URI stroked #000, which §3 reserves; it is drawn here from
    two gradients in the label's own colour. */
 .dropdown {
@@ -716,6 +832,26 @@ textarea::selection {
 
 .token.deleted {
   color: var(--rm-red);
+}
+
+/* So is the diff File recovery and Sync history draw. Obsidian tinted each line 20% DESTRUCTIVE or SUCCESS
+   and each changed word 40%, and set BLACK on the tints at Lc 72.9 and 75.0, 47.0 and 50.5: blends, and
+   the screen pass could not see them until it read oklch(). The lines are the field, deleted red and
+   inserted green at the ANSI text tier; a changed word is set 700, as marked text is. */
+.diff-line.mod-left {
+  background-color: transparent;
+  color: var(--rm-red);
+}
+
+.diff-line.mod-right {
+  background-color: transparent;
+  color: var(--rm-green);
+}
+
+.diff-line.mod-left .diff-changed,
+.diff-line.mod-right .diff-changed {
+  background-color: transparent;
+  font-weight: 700;
 }
 
 /* Callouts: a frame in the callout's colour, the title on it, and the content on a WHITE inset. The title

@@ -443,7 +443,14 @@ forced:
   computed size and weight demand. It found seven defects the gate could not —
   literals in the platform's own rules, a weight no variable carries, and two of
   the theme's own choices meeting a platform rule nobody had measured. A report,
-  not a gate: it needs a window.
+  not a gate: it needs a window. And it reads a colour in every notation the
+  browser reports one in, or says it cannot. Chromium writes a `color-mix()` in
+  the space it was mixed in — `color(srgb …)`, `oklch(…)` — and the probe read
+  only `rgb()` until 2026-09-29, so every blend Obsidian mixes was recorded as
+  nothing painted and the text on it measured against the ground beneath. The
+  next walk found nine of them, from a diff's words at Lc 47.0 to a conflict's
+  count at 53.0. A notation the probe cannot read is now listed as UNREAD, never
+  dropped: a value the checker cannot read is a value nobody is checking.
 - **It measures at the size the screen renders.** Every floor assumes about
   16 px (§5), and Obsidian's chrome renders at 12 to 15. Where a theme can set the
   size, it sets the size the floors assume, and says so as a choice (§0c), so the
@@ -640,9 +647,13 @@ a vault holding every kind of block, `XDG_CONFIG_HOME=DIR/config obsidian
 9223` reads what every window computed. A screenshot over the same port needs
 the window uncovered; the computed values do not. Measured 2026-09-25 in 24
 states of the main window, key and not: every painted value a kit value except
-the modal scrim, which §4 permits, and no text pair under its tier. The Settings
-window was probed once, before its last two changes (`README_OBSIDIAN.md`), and
-is the first thing the next pass should look at.
+the modal scrim, which §4 permits, and no text pair under its tier — a pass the
+probe's parse made too kind, since it read no blend Obsidian mixes (§8). Walked
+again 2026-09-29 on a virtual display, as Zettlr is, in 91 states of both
+windows, every Settings page among them: nine mixed blends found and answered,
+and a tenth by hand, the scrim again the only blend left. What that pass named
+and did not answer, and the two things the probe still cannot see, are in
+`README_OBSIDIAN.md`.
 
 On Zettlr the pass is the probe and a photograph, on a display of its own:
 `sh worksafe/zettlr/install.sh --qa DIR` builds a profile with a note holding
