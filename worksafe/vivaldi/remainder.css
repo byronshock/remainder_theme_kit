@@ -33,7 +33,7 @@
 #browser.theme-id-Remainder,
 #browser.theme-id-Remainder *:where(:not(.ThemePreview-Browser, .ThemePreview-Browser *)) {
   /* §5: the faces Vivaldi reads from variables. The interface face itself is set by rule, below. */
-  --monospaceFont: "Hack" !important;
+  --monospaceFont: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono" !important;
   --sansSerifFont: "Montserrat" !important;
 
   /* §5: every corner square. The theme sets --radius to 0; Vivaldi derives six more beside it, and

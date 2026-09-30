@@ -1,8 +1,8 @@
 /* ==UserStyle==
 @name           Remainder
 @namespace      github.com/byronshock/remainder_theme_kit
-@version        0.1.8
-@description    Remainder for websites: WHITE ground and documents, LIGHT fields and panels, ACCENT links kept underlined, SELECT selection carrying WHITE, the CURSOR caret, one BLACK rule at 44px, Montserrat and Hack, no curves, no hairlines. Tier: elevated — no elevation on this surface, but its reach is every site.
+@version        0.2.0
+@description    Remainder for websites: WHITE ground and documents, LIGHT fields and panels, ACCENT links kept underlined, SELECT selection carrying WHITE, the CURSOR caret, one BLACK rule at 44px, Montserrat and AtkynsonMono Nerd Font, no curves, no hairlines. Tier: elevated — no elevation on this surface, but its reach is every site.
 @author         Byron Shock, Ph.D.
 ==/UserStyle== */
 
@@ -40,6 +40,10 @@
    images off non-media, inline too — but not off sprite icons, or the icon vanishes and leaves its label.
    L5 font rules carry no !important: with it, every icon-font glyph renders as tofu.
 
+   0.2.0: the mono is AtkynsonMono Nerd Font, the Nerd Fonts build of Atkinson Hyperlegible Mono, with
+          Atkinson Hyperlegible Mono itself as the fallback; Hack retired (§5, the kit's 0.2). --rm-mono
+          only: no selector, no weight and no colour moved. The sheet still declares 400 and 700; the
+          mono renders at 500 where its 400 cuts are hidden (worksafe/cosmic/install.sh --fonts).
    0.1.8: the palette moved back. CAST 0.0128 -> 0.016, the value 0.1.6 backed off from, so every
           neutral and both chrome hues are one or two code values along; CURSOR and §3's three do not
           move, and no selector, no weight and not the 44px rule changed. Nothing moved off a floor:
@@ -112,7 +116,7 @@
   --rm-legend-dark:  #000000;
   --rm-rule: 44px;
   --rm-ui:   Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --rm-mono: Hack, "DejaVu Sans Mono", monospace;
+  --rm-mono: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
 }
 
 /* ---------- geometry (§5) ---------- */

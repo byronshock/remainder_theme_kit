@@ -2,7 +2,7 @@
 # Remainder for COSMIC (Pop!_OS) — user-level install. No sudo, nothing outside $HOME. (worksafe tier)
 # Implements AUTHORITY.md §2, §3, §5 and PLATFORM.md COSMIC. Re-runnable, and it backs up what it replaces.
 #
-# Usage: sh install.sh [--fonts|--no-fonts] [--icons|--icons-neutral|--no-icons]
+# Usage: sh install.sh [--fonts|--fonts-plain|--no-fonts] [--icons|--icons-neutral|--no-icons]
 #                      [--art|--black-field|--no-wallpaper] [--all] [--no-ask]
 #
 # Run it with no arguments on a terminal and it asks three questions -- fonts, icons, background --
@@ -11,8 +11,12 @@
 # blocks. With no terminal on stdin (a pipe, a provisioning run) nothing is asked at all and the
 # flags and their defaults stand alone.
 #
-#   --fonts    fetch Montserrat and Hack from their authoritative sources, verify, install per-user
-#              (§5). --no-fonts declines. Not asked when both are already on the machine.
+#   --fonts    fetch Montserrat and AtkynsonMono Nerd Font from their authoritative sources, verify,
+#              install per-user, and hide the mono's 400 cuts so it renders at 500 (§5). --no-fonts
+#              declines. Not asked when both are on the machine and no 400 cut of the mono is visible.
+#   --fonts-plain  the same, with Atkinson Hyperlegible Mono itself for the mono: §5's fallback, the
+#              Braille Institute's design without the Nerd Fonts icons. Offered on a terminal when the
+#              Nerd Font is declined.
 #   --icons    repaint this machine's own application icons along the kit's own lightness ramp (§4):
 #              every pixel keeps its lightness exactly, and hue and chroma come from that lightness --
 #              BLACK -> SELECT -> ACCENT -> LIGHT -> WHITE, neutral at both ends and the home hue
@@ -44,10 +48,11 @@
 set -e
 
 # Empty means unanswered: §0c asks, or falls back to the default, only for the ones left empty.
-WANT_FONTS=''; WANT_ICONS=''; BGCHOICE=''; RAMP=duotone; NOASK=0
+WANT_FONTS=''; MONO_SRC=nerd; WANT_ICONS=''; BGCHOICE=''; RAMP=duotone; NOASK=0
 for a in "$@"; do
   case "$a" in
     --fonts) WANT_FONTS=1 ;;
+    --fonts-plain) WANT_FONTS=1; MONO_SRC=plain ;;
     --no-fonts) WANT_FONTS=0 ;;
     --icons) WANT_ICONS=1; RAMP=duotone ;;
     --icons-neutral) WANT_ICONS=1; RAMP=neutral ;;
@@ -139,22 +144,52 @@ yesno() {   # yesno QUESTION DEFAULT(y|n) -- 0 for yes. Empty or EOF takes the d
   [ -n "$_reply" ] || _reply=$2
   case "$_reply" in [Yy]*) return 0 ;; *) return 1 ;; esac
 }
-have_font()      { fc-list 2>/dev/null | grep -qi ":$1:\|: $1:"; }
+# fontconfig lists a face under every name it has -- "Montserrat,Montserrat Medium", "AtkynsonMono Nerd
+# Font,AtkynsonMono NF" -- so a family is matched as one entry of that comma-separated list, not as the line.
+have_font()      { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
 have_icon_deps() { "$PY" -c 'import PIL, numpy, cairosvg' 2>/dev/null; }
+# §5's mono is AtkynsonMono Nerd Font, and Atkinson Hyperlegible Mono stands in for it where it is absent.
+# COSMIC's two mono settings take the Nerd Font's Mono variant -- the same design with its icons held to one
+# cell -- because cosmic-term offers only fixed-pitch faces and resets any other name to the first in its list,
+# and the plain variant is not flagged fixed-pitch.
+have_mono()      { have_font 'AtkynsonMono Nerd Font' || have_font 'Atkinson Hyperlegible Mono'; }
+cosmic_mono() {
+  if have_font 'AtkynsonMono Nerd Font Mono'; then echo 'AtkynsonMono Nerd Font Mono'
+  elif have_font 'Atkinson Hyperlegible Mono'; then echo 'Atkinson Hyperlegible Mono'
+  else echo 'AtkynsonMono Nerd Font Mono'; fi
+}
+# A 400 cut of the mono the CSS surfaces can see. Declared 400 resolves to it exactly and renders at 400,
+# not the 500 §5 chooses -- a package that installs the whole family puts one there.
+mono_400_visible() {
+  for f in 'AtkynsonMono Nerd Font' 'AtkynsonMono Nerd Font Mono' 'Atkinson Hyperlegible Mono'; do
+    [ -n "$(fc-list "$f:weight=80" family 2>/dev/null)" ] && return 0
+  done
+  return 1
+}
 
 # 1. fonts. Asked first because §5 makes them load-bearing: every contrast floor in §0e is a function
 # of what 12pt Montserrat renders at, so a machine without them is not running the measured kit.
 if [ "$ASK" = 1 ] && [ -z "$WANT_FONTS" ]; then
-  if have_font Montserrat && have_font Hack; then
-    say "Montserrat and Hack are already installed — not fetching them."
+  if have_font Montserrat && have_mono && ! mono_400_visible; then
+    say "Montserrat and the mono are already installed, the mono's 400 cuts hidden — not fetching them."
     WANT_FONTS=0
   else
     cat <<'Q'
-remainder: §5 declares Montserrat for the UI and Hack for mono, and every contrast floor in §0e is a
-           function of what they render at. They are fetched from the two projects themselves at a
-           pinned tag, checked against a recorded SHA-256, and installed for this user only.
+remainder: §5 declares Montserrat for the UI and AtkynsonMono Nerd Font for mono, and every contrast
+           floor in §0e is a function of what they render at. They are fetched from the two projects
+           themselves at a pinned tag, checked against a recorded SHA-256, and installed for this user
+           only. The mono renders at 500 and 700: where its 400 cuts are also on this machine, a
+           fontconfig file hides them from this user (delete it to undo), so 400 resolves to 500.
 Q
-    if yesno "Download and install them?" y; then WANT_FONTS=1; else WANT_FONTS=0; fi
+    if yesno "Download and install them?" y; then WANT_FONTS=1
+    else
+      cat <<'Q'
+remainder: the mono can be Atkinson Hyperlegible Mono itself instead: §5's fallback, the same design
+           without the Nerd Fonts icons, fetched from its own repository at a pinned commit and
+           checked the same way. Montserrat comes with it.
+Q
+      if yesno "Download and install those instead?" y; then WANT_FONTS=1; MONO_SRC=plain; else WANT_FONTS=0; fi
+    fi
   fi
 fi
 
@@ -210,15 +245,34 @@ fi
 mkdir -p "$CFG" "$STATE"        # the first thing this script writes, and not before here
 
 # --- 1. fonts (§5), asked for or --fonts ----------------------------------------------------------
-# UI Montserrat, mono Hack. Fetched from the projects themselves at a pinned tag and checked against a
-# recorded SHA-256 — not bundled, and not taken from a redistribution. Measured 2026-09-19; the Hack
-# files match the v3.003 release byte for byte.
+# UI Montserrat, mono AtkynsonMono Nerd Font. Fetched from the projects themselves at a pinned tag and
+# checked against a recorded SHA-256 — not bundled, and not taken from a redistribution.
 FONTS="$DATA/fonts/remainder"
-HACK_TAG=v3.003
-HACK_URL="https://github.com/source-foundry/Hack/releases/download/$HACK_TAG/Hack-$HACK_TAG-ttf.tar.xz"
-HACK_SHA=d9ed5d0a07525c7e7bd587b4364e4bc41021dd668658d09864453d9bb374a78d
-HACK_LICENSE_URL="https://raw.githubusercontent.com/source-foundry/Hack/$HACK_TAG/LICENSE.md"
-HACK_LICENSE_SHA=1f61bb7c790c59b4b0ecdf304628b94e42ae4c8020094a8c3da73381ab212623
+FCCONF="${XDG_CONFIG_HOME:-$HOME/.config}/fontconfig/conf.d"
+# The mono is the Nerd Fonts build of Atkinson Hyperlegible Mono, renamed AtkynsonMono because the OFL
+# reserves "Atkinson" and "Hyperlegible" for unmodified copies. The upstream repository
+# (googlefonts/atkinson-hyperlegible-next-mono) is archived, has no tags and publishes no patched build, so
+# the release that does is the authority. Recorded from the authoritative download at the pinned tag,
+# 2026-09-29, and equal to the SHA-256.txt Nerd Fonts publishes with the release.
+NERD_TAG=v3.5.1
+NERD_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/$NERD_TAG/AtkinsonHyperlegibleMono.tar.xz"
+NERD_SHA=a0fd13eb48ff2c7522f652369d2add4d285903f600525c6bb72be5cf2448ef55
+# The cuts are MEDIUM and BOLD, chosen 2026-09-29 (§5): 400 -> 500 for the margin Montserrat's cuts buy, and
+# 700 stays 700 because the Nerd build has no ExtraBold. Both variants: the plain one for everything that
+# takes a stack, and Mono for COSMIC's fixed-pitch-only settings (cosmic_mono, above).
+NERD_FACES="AtkynsonMonoNerdFont-Medium AtkynsonMonoNerdFont-Bold AtkynsonMonoNerdFont-MediumItalic
+AtkynsonMonoNerdFont-BoldItalic AtkynsonMonoNerdFontMono-Medium AtkynsonMonoNerdFontMono-Bold
+AtkynsonMonoNerdFontMono-MediumItalic AtkynsonMonoNerdFontMono-BoldItalic"
+# The fallback, fetched when the Nerd Font is declined (--fonts-plain). Its repository is archived and has no
+# tags, so it is pinned to its last commit, which cannot move. Same cuts; its faces are flagged fixed-pitch, so
+# COSMIC's terminal takes it as it is. Recorded from the authoritative download, 2026-09-29.
+AHM_COMMIT=154d50362016cc3e873eb21d242cd0772384c8f9
+AHM_RAW="https://raw.githubusercontent.com/googlefonts/atkinson-hyperlegible-next-mono/$AHM_COMMIT"
+AHM_FILES="fonts/ttf/AtkinsonHyperlegibleMono-Medium.ttf:43ee765e4c582789a77a032e0e8fb7ca119684ce99402df5f044f20afe84fb06
+fonts/ttf/AtkinsonHyperlegibleMono-Bold.ttf:51ad68fafd7ec68051f64983c9c23182a7084268b5cdb0a154dbd53ade079da6
+fonts/ttf/AtkinsonHyperlegibleMono-MediumItalic.ttf:3e00c71968c49e40674bb306b5b9e45aeacdace14e020d3163fd96bcdb79bb68
+fonts/ttf/AtkinsonHyperlegibleMono-BoldItalic.ttf:1286feda7848b1078576f2293201dff9428dad309c63220ed0825b771994a9a6
+OFL.txt:1ebb31cf7393164f20d10c1d48406cddb5314feff8465531cf1e4ba37e9dd740"
 MONT_TAG=v7.222
 MONT_RAW="https://raw.githubusercontent.com/JulietaUla/Montserrat/$MONT_TAG"
 # file:sha256 — the four faces §5 asks for, plus the licence the OFL requires to travel with them.
@@ -241,25 +295,39 @@ OFL.txt:41f82bb4d24b304f30f7136bc47abdd083782e4265c984160f5649d1e78ea49c"
 
 install_fonts() {
   TMP=$(mktemp -d); trap 'rm -rf "$TMP"' EXIT
-  mkdir -p "$FONTS/hack" "$FONTS/montserrat"
+  mkdir -p "$FONTS/montserrat"
 
-  say "fetching Hack $HACK_TAG from source-foundry/Hack"
-  fetch "$HACK_URL" "$TMP/hack.tar.xz" || return 1
-  verify "$TMP/hack.tar.xz" "$HACK_SHA" || return 1
-  tar xJf "$TMP/hack.tar.xz" -C "$TMP"
-  for f in Hack-Regular Hack-Bold Hack-Italic Hack-BoldItalic; do
-    [ -f "$TMP/$f.ttf" ] || { say "Hack tarball is missing $f.ttf" >&2; return 1; }
-    cp "$TMP/$f.ttf" "$FONTS/hack/"
-  done
-  fetch "$HACK_LICENSE_URL" "$TMP/Hack-LICENSE.md" || return 1
-  verify "$TMP/Hack-LICENSE.md" "$HACK_LICENSE_SHA" || return 1
-  cp "$TMP/Hack-LICENSE.md" "$FONTS/hack/LICENSE.md"
-
-  # Clear the family first. A face this kit installed under an earlier set of cuts does not go away on its
+  # Clear each family first. A face this kit installed under an earlier set of cuts does not go away on its
   # own, and CSS font matching takes an EXACT weight over a near one -- leave Regular on the machine and
   # font-weight 400 keeps resolving to it, so changing the cuts would do nothing at all and look like it
-  # had worked. Only this kit's own directory is touched; a Montserrat the user installed elsewhere is
-  # theirs and is not the kit's to remove.
+  # had worked. Only this kit's own directories are touched; a face the user installed elsewhere is theirs
+  # and is not the kit's to remove. Hack, §5's mono before 0.2, is left where an earlier run put it
+  # ($FONTS/hack): something on the machine may still name it.
+  if [ "$MONO_SRC" = plain ]; then
+    MONO_NAME="Atkinson Hyperlegible Mono $(echo "$AHM_COMMIT" | cut -c1-7)"
+    mkdir -p "$FONTS/atkinsonmono"; rm -f "$FONTS/atkinsonmono"/*.ttf
+    say "fetching Atkinson Hyperlegible Mono from googlefonts/atkinson-hyperlegible-next-mono at $(echo "$AHM_COMMIT" | cut -c1-7)"
+    echo "$AHM_FILES" | while IFS=: read -r path sha; do
+      [ -n "$path" ] || continue
+      base=$(basename "$path")
+      fetch "$AHM_RAW/$path" "$TMP/$base" || exit 1
+      verify "$TMP/$base" "$sha" || exit 1
+      cp "$TMP/$base" "$FONTS/atkinsonmono/$base"
+    done || return 1
+  else
+    MONO_NAME="AtkynsonMono Nerd Font $NERD_TAG"
+    mkdir -p "$FONTS/atkynsonmono"; rm -f "$FONTS/atkynsonmono"/*.otf
+    say "fetching AtkynsonMono Nerd Font from ryanoasis/nerd-fonts $NERD_TAG"
+    fetch "$NERD_URL" "$TMP/nerd.tar.xz" || return 1
+    verify "$TMP/nerd.tar.xz" "$NERD_SHA" || return 1
+    tar xJf "$TMP/nerd.tar.xz" -C "$TMP"
+    for f in $NERD_FACES LICENSE.txt; do
+      case "$f" in *.txt) ;; *) f="$f.otf" ;; esac
+      [ -f "$TMP/$f" ] || { say "Nerd Fonts tarball is missing $f" >&2; return 1; }
+      cp "$TMP/$f" "$FONTS/atkynsonmono/"
+    done
+  fi
+
   rm -f "$FONTS/montserrat"/*.ttf
   say "fetching Montserrat $MONT_TAG from JulietaUla/Montserrat"
   echo "$MONT_FILES" | while IFS=: read -r path sha; do
@@ -270,8 +338,16 @@ install_fonts() {
     cp "$TMP/$base" "$FONTS/montserrat/$base"
   done || return 1
 
+  # The mono's 400 cuts, hidden. The faces above have none, but a package that installs the whole family
+  # puts Regular beside them and declared 400 then renders at 400. rejectfont takes a face out of what every
+  # fontconfig client can see -- Firefox, Chromium, Electron -- for this user only; COSMIC's own text stack
+  # does not read it, which is why its settings name the weight outright (section 4). Delete it to undo.
+  mkdir -p "$FCCONF"
+  cp "$HERE/fontconfig/60-remainder-mono.conf" "$FCCONF/"
+
   command -v fc-cache >/dev/null 2>&1 && fc-cache -f "$FONTS" >/dev/null 2>&1 || true
-  say "fonts installed in $FONTS (Hack $HACK_TAG, MIT; Montserrat $MONT_TAG, SIL OFL 1.1)"
+  say "fonts installed in $FONTS ($MONO_NAME, Montserrat $MONT_TAG, SIL OFL 1.1)"
+  say "the mono's 400 cuts hidden by $FCCONF/60-remainder-mono.conf"
 }
 
 if [ "$WANT_FONTS" = 1 ]; then
@@ -280,9 +356,11 @@ elif [ "$ASK" = 0 ]; then
   # Only worth saying to someone who was not asked: §0e's floors are a function of these faces, so a
   # machine without them is not running the measured kit. Someone who just declined the question
   # knows that already and does not need the flag read back to them.
-  for f in Montserrat Hack; do
-    have_font "$f" || say "font '$f' not installed — run: sh install.sh --fonts"
-  done
+  have_font Montserrat || say "font 'Montserrat' not installed — run: sh install.sh --fonts"
+  have_mono || say "font 'AtkynsonMono Nerd Font' not installed — run: sh install.sh --fonts (or --fonts-plain)"
+  if have_mono && mono_400_visible; then
+    say "the mono's 400 cuts are visible, so it renders at 400 and not 500 — run: sh install.sh --fonts"
+  fi
 fi
 
 # --- 2. light mode (§2). The palette is WHITE fields and BLACK text; no dark builder is shipped. --
@@ -421,7 +499,7 @@ RON
 printf 'true' > "$BG/same-on-all"
 fi
 
-# --- 4. toolkit and panel: Montserrat UI, Hack mono, compact; panel LIGHT (§2) --------------------
+# --- 4. toolkit and panel: Montserrat UI, the mono at 500, compact; panel LIGHT (§2) --------------
 # The panel takes a flat Color because COSMIC would otherwise paint it with the window background.
 for d in com.system76.CosmicTk com.system76.CosmicPanel.Panel com.system76.CosmicPanel.Dock; do
   [ -d "$HERE/cosmic-config/$d/v1" ] || continue
@@ -431,6 +509,15 @@ for d in com.system76.CosmicTk com.system76.CosmicPanel.Panel com.system76.Cosmi
     cp "$f" "$CFG/$d/v1/"
   done
 done
+# monospace_font ships naming the Nerd Font's Mono variant at Medium. COSMIC's text stack finds faces by
+# reading font directories, not through fontconfig, so section 1's hidden 400 cuts are still there for it and
+# the weight is named outright. Where only the fallback is on the machine, the file names that instead.
+MONO=$(cosmic_mono)
+if [ "$MONO" != 'AtkynsonMono Nerd Font Mono' ]; then
+  sed "s/family: \"AtkynsonMono Nerd Font Mono\"/family: \"$MONO\"/" "$CFG/com.system76.CosmicTk/v1/monospace_font" \
+    > "$CFG/com.system76.CosmicTk/v1/monospace_font.new"
+  mv "$CFG/com.system76.CosmicTk/v1/monospace_font.new" "$CFG/com.system76.CosmicTk/v1/monospace_font"
+fi
 
 # --- 5. theme (§2, §3, §5): the gaps in remainder.ron ARE the rule width; change it there ---------
 # cosmic-settings prints two ERRORs on stderr -- "1:1: Expected identifier" and "failed to get key
@@ -472,6 +559,14 @@ if f'name: "{name}"' not in cur:
 open(os.path.join(cfg, 'syntax_theme_light'), 'w').write(f'"{name}"')
 print(f'remainder: terminal scheme "{name}" installed and selected')
 PY
+# The terminal's face is §5's mono, at 500 and 700 like everywhere else. cosmic-term keeps its own font
+# rather than the toolkit's, lists only fixed-pitch faces, and resets a name it does not list to the first
+# one it does -- so it takes the same Mono variant as monospace_font, by the same rule.
+for k in font_name font_weight bold_font_weight; do backup "$TERM_CFG/$k" "cosmic-term-$k.ron"; done
+printf '"%s"' "$MONO" > "$TERM_CFG/font_name"
+printf '500' > "$TERM_CFG/font_weight"
+printf '700' > "$TERM_CFG/bold_font_weight"
+say "terminal face: $MONO at 500, bold 700"
 
 # --- 7. icons (§4), asked for or --icons -----------------------------------------------------------------------
 # The user's own installed icons, repainted along the ramp through the values §2 authors and written as

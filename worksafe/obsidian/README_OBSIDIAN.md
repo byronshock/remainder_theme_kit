@@ -118,8 +118,8 @@ title: a LIGHT frame, BLACK at 700. Information has no hue, as on every surface
 
 **Tables and code draw no grid.** A table's header row is LIGHT carrying BLACK at
 700 over WHITE rows, with no lines between cells, as `worksafe/firefox/` does
-it. Code keeps the field's ground and is carried by its face, Hack, and by the
-colouring `worksafe/vscode/` chose (§0c): keywords and tags BLACK and bold,
+it. Code keeps the field's ground and is carried by its face, the mono (§5), and
+by the colouring `worksafe/vscode/` chose (§0c): keywords and tags BLACK and bold,
 comments DARK and italic, literals ACCENT, functions SELECT, inserted and deleted
 lines in the ANSI green and red.
 

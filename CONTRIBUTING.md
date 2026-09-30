@@ -138,6 +138,16 @@ if it carries a colour outside those definitions; `theme.json` names five of
 none. By the method pinned above the kit holds **64 distinct values**, with
 `worksafe/vivaldi/` and without it.
 
+**The Qt surface added none, 2026-09-21** — built before Obsidian, merged after
+Vivaldi, and counted at the time it was built. It added no value at all: its 63 palette slots — 21 roles in three groups, 22 in the
+qt6ct file — and the 13 groups of its KDE scheme land on nine values the kit
+already had: §2's seven, `neutral_6` and `neutral_9` of the COSMIC ladder, and
+the three ANSI normals as text that means error, warning and done. What it did
+add is two notations the method above misreads: `#AARRGGBB` lists, where
+`cut -c1-7` takes the alpha for part of the colour and reports seven values
+that do not exist, and decimal triples, which a hex scan does not see at all.
+`build/qt.py` reads both, and the count is unchanged read correctly.
+
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
@@ -308,9 +318,13 @@ python3 build/vivaldi.py --write   # regenerate the stylesheet, the declutter an
 python3 build/vivaldi.py --record  # re-record Vivaldi's own sizes from the installed build
 python3 build/vivaldi.py --coverage  # the installed build's variables and literals against the record (a report)
 python3 build/vivaldi.py --screen P  # what a running Vivaldi computed and painted, every window (a report)
+python3 build/qt.py                # every value, pair, adjacency and Fusion-derived value in the three scheme files
+python3 build/qt.py --derive       # the role table, the ladders, Fusion's derivations, and the Button trials
+python3 build/qt.py --write        # regenerate the qt5ct, qt6ct and KDE schemes from the role table
+python3 build/qt.py --installed    # the live machine: platform theme, plugins, the schemes in use, measured (a report)
 ```
 
-Eight are built. What a checker owes:
+Nine are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -528,6 +542,37 @@ forced:
   condition applied at every width; the record now keeps the condition, and the
   answer sits inside it.
 
+And three the ninth added, which a platform that paints derivations of the
+theme rather than the theme forced:
+
+- **It models the platform's derivation and measures the model on screen.**
+  Fusion paints none of the palette's values as given: every outline is Window
+  darkened by 40%, every button face a lightened, desaturated gradient of
+  Button, every menu Base lightened 8%, in Qt's own 16-bit HSV arithmetic. So
+  `build/qt.py` emulates `QColor` — the integer factors, the float32
+  conversions, the spec a colour is left in — computes every value the style
+  will paint from the committed palette, and holds each to the same bar as an
+  authored one: clear of every pole, not reserved, and carrying its text at the
+  tier. That is what chose the Button input: fed LIGHT, the modelled face
+  carried BLACK at Lc 63 at its bottom and every tab page at 66; fed
+  `neutral_9`, 76 and 83. Then the on-screen pass sampled the real window and
+  found the model's bytes exactly — `#ABA4A6` for the outline, `#CDC6C9` for
+  an unselected tab, `#3B0F27` around the progress bar — on Qt 5 and Qt 6
+  alike. A model that is not checked against the pixels is a claim.
+- **It reads what another writer will do to the same files.** COSMIC's daemon
+  exports its own Qt palette into the same two config files and into
+  kdeglobals, and it does so at every login and every theme change. The
+  checker's `--installed` report measures whatever the live config actually
+  points at, and the installer states, from the daemon's own marker, whether
+  the kit's scheme path will survive the next export (it does, in qt5ct.conf
+  and qt6ct.conf) or not (kdeglobals). A surface that shares its files with a
+  daemon owes the user the daemon's contract, measured, not a hope.
+- **A third notation, and the first with an alpha the platform honours.** The
+  KDE scheme writes decimal triples and the qt5ct scheme `#AARRGGBB`; a
+  translucent entry in the latter is blended by the style, so the checker
+  admits `FF` and nothing else, and the `--installed` report says how many of
+  a foreign scheme's roles are values the kit authors — four of COSMIC's 21.
+
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
 there is no file to scan. What must hold is the bar itself: *every value the
@@ -579,6 +624,8 @@ right".
 | the rule at 22 dp | a gap that made a 44 pt hit box only when both windows' edges were counted; awkward on screen | the gap is the handle zone, so it is the zone: 44 dp, 2026-09-21 (§5) |
 | `list.hoverBackground` SELECT, carrying WHITE by `list.hoverForeground` | BLACK on SELECT, Lc 0.0, in an extension's chat webview | a webview sets the ground alone and its text inherits `foreground`; an id whose platform default is a faint tint is a tint, so hover is LIGHT, 2026-09-21 |
 | Vivaldi's UI zoom at 140%, the least tenth that lifts its 11.5 px chrome to 16 | text at 16.1 px, and every icon, bar and gap 40% larger with it, on a desktop already scaled to 175% | read as a zoom on a zoom; looked at on this machine and retired the same day for the text alone at 14 px, CHOSEN under the floors, 2026-09-29 (`README_VIVALDI.md`) |
+| Qt's `Button` as LIGHT, §2's own assignment | Fusion lightens and desaturates what it is fed and paints a gradient: BLACK on the face's bottom stop Lc 63, on every tab page 66 (`build/qt.py --derive`) | the input is chosen against the derivation: `neutral_9` carries BLACK at 76 and 83 there; WHITE was tried and clips to `#FFFFFF`, DARK leaves WHITE at −70 on the face. 2026-09-21 |
+| the KDE `Button` set as LIGHT, flat | BLACK on it Lc 61.3 at the 400 the styles render, and nothing else the set names reads on it: ACCENT 45, DARK 48, the ANSI red 47 | DARK carrying WHITE, Lc −81.7, the pair `build/vscode.py` gives its secondary button; every text role on the set is WHITE. 2026-09-21 |
 
 A value with no measurement beside it is a guess, and the next person cannot
 tell it from a measured one.
@@ -690,6 +737,20 @@ the floors. Quick commands and the bookmark-added popup were not reached:
 Vivaldi handles its shortcuts in the browser process, which key events sent over
 DevTools do not reach. `README_VIVALDI.md` lists the states.
 
+On Qt the pass runs in a config directory of its own: `sh worksafe/qt/install.sh
+--into DIR`, then `XDG_CONFIG_HOME=DIR qt6ct` (and `qt5ct`), which are Qt
+applications themselves — a tab widget, buttons, a combo box, an edit, a
+progress bar — painted through the very plugin every other Qt application
+uses. COSMIC re-tiles every window when one opens, so a whole-screen diff finds
+the whole screen; anchor the crop on a value the model predicts and nothing
+else on the desktop paints (the tab page), and read pixel columns through each
+control against the model's stops. Measured 2026-09-21 on both toolkits: the
+outline, the tab outline, the unselected tab, the tab page, the selected tab's
+top, the progress outline and the default button's outline are the modelled
+bytes exactly; the gradient faces agree with their stops to the sampling of
+the first and last rows. The blue and orange in the glyphs are subpixel
+rendering (`PLATFORM.md`).
+
 What the pass is looking for: no hue in chrome that reads as a signal (§1); the
 three semantic hues present only where the meaning is (§3); one rule, the same
 width everywhere, carrying no state (§5); the cursor findable at a glance on a
@@ -714,6 +775,7 @@ motion, no blur.
 | `build/vivaldi_platform.json` | **recorded and committed**: Vivaldi's own sizes under 14 px, selectors and sizes with their `@media` or `@container` conditions, written by `build/vivaldi.py --record` off the installed build and never by hand |
 | `worksafe/vivaldi/theme.json` | generated **and committed**; guarded by `build/vivaldi.py`: the native theme, whose five colours are §2's and whose switches are the ones the checker measured with |
 | `build/zettlr_platform.css` | **recorded and committed**: Zettlr's own CSS, the platform the theme answers, written by `build/zettlr.py --record` from the installed build and a running window and never by hand; GPL-3.0, like Zettlr. A re-record may reorder its CodeMirror blocks — the order the editor happened to mount them in — without changing what they hold, and the theme it writes then differs in order only |
+| `worksafe/qt/qt5ct/colors/remainder.conf`, `worksafe/qt/qt6ct/colors/remainder.conf`, `worksafe/qt/kde/Remainder.colors` | generated **and committed**; guarded by `build/qt.py`. One role table, three notations: 21 `#AARRGGBB` per group for qt5ct, 22 for qt6ct, decimal triples for KDE |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |
@@ -756,11 +818,18 @@ copyleft: a derivative is shared under the same license. Color values are not
 copyrightable; what is licensed is the documents and code that express them.
 
 **The kit ships no fonts.** §5 declares two typefaces and `install.sh --fonts`
-fetches them from the projects themselves at a pinned tag — Hack v3.003 from
-`source-foundry/Hack` (MIT), Montserrat v7.222 from `JulietaUla/Montserrat`
-(SIL OFL 1.1), the repository its own `OFL.txt` names — verifying each file
-against a SHA-256 recorded in the installer and installing the license beside
-the faces. A file whose checksum does not match is not installed, and the
+fetches them from the projects themselves at a pinned tag. AtkynsonMono Nerd
+Font comes from `ryanoasis/nerd-fonts` v3.5.1 (SIL OFL 1.1). It is the Nerd
+Fonts build of Atkinson Hyperlegible Mono, whose own repository,
+`googlefonts/atkinson-hyperlegible-next-mono`, is archived, has no tags and
+publishes no patched build. Its tarball was recorded 2026-09-29, and the record
+equals the `SHA-256.txt` Nerd Fonts publishes with the release. Its fallback,
+Atkinson Hyperlegible Mono (`--fonts-plain`), comes from that archived
+repository, pinned to its last commit, `154d503`, since it has no tags and
+the commit cannot move; recorded 2026-09-29. Montserrat
+v7.222 comes from `JulietaUla/Montserrat` (SIL OFL 1.1), the repository its own
+`OFL.txt` names. Each file is verified against a SHA-256 recorded in the
+installer, and the license is installed beside the faces. A file whose checksum does not match is not installed, and the
 installer says so rather than carrying on.
 
 Adding or moving a font means re-recording those checksums from the

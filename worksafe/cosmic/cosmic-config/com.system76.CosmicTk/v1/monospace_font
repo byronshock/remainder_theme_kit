@@ -1,6 +1,6 @@
 (
-    family: "Hack",
-    weight: Normal,
+    family: "AtkynsonMono Nerd Font Mono",
+    weight: Medium,
     stretch: Normal,
     style: Normal,
 )

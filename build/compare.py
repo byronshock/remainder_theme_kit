@@ -63,7 +63,7 @@ PAIRS = [('BLACK', 'WHITE', 90, 'body text on the field', False),
          ('CURSOR', 'WHITE', 60, 'the cursor mark', True)]
 
 GR, INK, MU = A['WHITE'], A['BLACK'], A['DARK']
-UI, MONO = "Nimbus Sans, Helvetica, Arial, sans-serif", "Hack, DejaVu Sans Mono, monospace"
+UI, MONO = "Nimbus Sans, Helvetica, Arial, sans-serif", "AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono, monospace"
 W_, H_ = 1340, 1180
 o = [f'<rect width="{W_}" height="{H_}" fill="{GR}"/>']
 

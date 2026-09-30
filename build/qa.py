@@ -73,7 +73,7 @@ SEM = [('SUCCESS', '#006B54', '#FFFFFF'), ('WARNING', '#FCD116', '#000000'),
 # §5 declares one UI face and one mono face. The fallback is generic on purpose: naming another
 # kit's faces here would put a value in the picture this kit never chose.
 UI = "Montserrat, sans-serif"
-MONO = "Hack, monospace"
+MONO = "AtkynsonMono Nerd Font, Atkinson Hyperlegible Mono, monospace"
 RULE = 44                                                  # §5's reference width
 HINT = 4                                                   # §5: the key window's mark, CURSOR, the smallest width that is found
 W, H = 1120, 772

@@ -25,7 +25,7 @@
   --rm-green: #005800;
   --rm-yellow: #525200;
   --rm-face-ui: "Montserrat", sans-serif;
-  --rm-face-mono: "Hack", monospace;
+  --rm-face-mono: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
 }
 
 /* THE MIRROR. Every declaration Zettlr makes that puts a colour on the screen, or a face or a size the kit
@@ -665,9 +665,9 @@
 :root:where(:has(script[src="../main_window/index.js"])) .main-editor-wrapper {
   background-color: var(--rm-white);
 }
-/* a code file: Hack (§5) */
+/* a code file: the mono face (§5) */
 :root:where(:has(script[src="../main_window/index.js"])) .main-editor-wrapper.code-file .cm-editor {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
 }
 /* the field */
 :root:where(:has(script[src="../main_window/index.js"])) body.dark .main-editor-wrapper {
@@ -1784,15 +1784,15 @@
 }
 
 /* --- sheet 6f8a8e66: about --- */
-/* fixed-width text: Hack (§5) */
+/* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../about/index.js"])) div#sil-1-1-text {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
 }
 
 /* --- sheet 006790a2: about --- */
-/* fixed-width text: Hack (§5) */
+/* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../about/index.js"])) div#about-general p#uuid {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
   color: var(--rm-dark);
   font-size: 16px;
 }
@@ -1815,9 +1815,9 @@
 }
 
 /* --- sheet 1f2c9f0a: error --- */
-/* fixed-width text: Hack (§5) */
+/* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../error/index.js"])) div#error p#additional-info {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
 }
 
 /* --- sheet 604353db: log_viewer --- */
@@ -1855,9 +1855,9 @@
 :root:where(:has(script[src="../log_viewer/index.js"])) .message .expand-details {
   color: var(--rm-black);
 }
-/* fixed-width text: Hack (§5) */
+/* fixed-width text: the mono face (§5) */
 :root:where(:has(script[src="../log_viewer/index.js"])) .message .details {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
 }
 :root:where(:has(script[src="../log_viewer/index.js"])) .message .message .details .more {
   color: var(--rm-black);
@@ -2300,7 +2300,7 @@
   --zettlr-editor-primary-color: var(--rm-accent);
   --zettlr-editor-secondary-color: var(--rm-accent);
   --zettlr-editor-font: "Montserrat", sans-serif;
-  --zettlr-editor-code-font: "Hack", monospace;
+  --zettlr-editor-code-font: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
   --zettlr-editor-error-color: var(--rm-red);
   --zettlr-editor-scroller-color: var(--rm-black);
   --zettlr-editor-scroller-bg: var(--rm-white);
@@ -2363,9 +2363,9 @@
   color: var(--rm-black);
   font-size: 16px;
 }
-/* the gutter's labels: Hack at 16 px */
+/* the gutter's labels: the mono face at 16 px */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-footnote-gutter .cm-gutterElement {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .footnote-preview-container {
   font-size: 16px;
@@ -2376,9 +2376,9 @@
   border-bottom-color: transparent;
   background-color: transparent;
 }
-/* the gutter's labels: Hack at 16 px */
+/* the gutter's labels: the mono face at 16 px */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-heading-gutter .cm-gutterElement div {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
   font-size: 16px;
 }
 /* raw mode shows an alert as its markers, on the note: a note, tip or important one BLACK -- information has
@@ -2496,7 +2496,7 @@
   --zettlr-editor-code-blue: var(--rm-select);
   --zettlr-editor-code-cyan: var(--rm-black);
   --zettlr-editor-code-green: var(--rm-accent);
-  --zettlr-editor-code-font: "Hack", monospace;
+  --zettlr-editor-code-font: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
   --zettlr-editor-primary-color: var(--rm-accent);
   --zettlr-editor-secondary-color: var(--rm-accent);
   --zettlr-editor-font: "Montserrat", sans-serif;
@@ -2508,9 +2508,9 @@
   --zettlr-editor-citation-bg: transparent;
   --zettlr-editor-code-bg: transparent;
 }
-/* code: BLACK in Hack (§5) */
+/* code: BLACK in the mono face (§5) */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .code {
-  font-family: "Hack", monospace;
+  font-family: "AtkynsonMono Nerd Font", "Atkinson Hyperlegible Mono", monospace;
   color: var(--rm-black);
 }
 /* ...comments DARK and italic */
@@ -3083,8 +3083,8 @@ hr {
   color: var(--rm-white);
 }
 
-/* A code field -- the Assets Manager's editors -- is set in Hack (§5); CodeMirror asks for `monospace`, which
-   fontconfig answers with some other face. */
+/* A code field -- the Assets Manager's editors -- is set in the mono face (§5); CodeMirror asks for
+   `monospace`, which fontconfig answers with some other face. */
 :root:root .code-editor-wrapper .cm-editor .cm-scroller {
   font-family: var(--rm-face-mono);
 }
@@ -3214,8 +3214,8 @@ input[type="search"]::-webkit-search-cancel-button {
 
 /* Where Zettlr renders a note as HTML in its chrome -- the preview of a linked note -- the browser's own marks
    show through: <mark> in its yellow carrying #000000, <code> in whatever face `monospace` finds. Marked text
-   is LIGHT carrying BLACK at 700 and code is Hack, as in the editor. The print preview is the page as it will
-   print, and keeps its own. */
+   is LIGHT carrying BLACK at 700 and code is the mono face, as in the editor. The print preview is the page as
+   it will print, and keeps its own. */
 :root:root mark:not(#print-container *) {
   background-color: var(--rm-light);
   color: var(--rm-black);

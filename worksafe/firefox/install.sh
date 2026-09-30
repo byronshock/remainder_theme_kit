@@ -28,7 +28,8 @@
 #              both: elevated/remainder.user.css is the source and build/stylus_json.py generates the JSON.
 #   --no-ask   ask nothing; take the flags and the defaults. Implied when stdin is not a terminal.
 #
-# Firefox must be closed. user.js and the chrome stylesheets are read once, at startup.
+# The profile it installs into must be closed: user.js and the chrome stylesheets are read once, at startup.
+# Another Firefox -- another profile, a headless one a harness started -- does not matter and is not asked about.
 set -e
 
 WANT_UBLOCK=''; WANT_STYLUS=''; PROFILE=''; NOASK=0; STYLE=0
@@ -89,18 +90,7 @@ backup() {  # backup PATH LABEL — first run only, so a re-run never overwrites
   return 0
 }
 
-# --- 1. Firefox must be closed --------------------------------------------------------------------
-# Not politeness: Firefox reads user.js at startup and writes prefs.js at shutdown, so a running instance
-# overwrites what this script just installed, and userChrome.css is read once at startup as well.
-for p in firefox firefox-bin firefox-esr; do
-  if pgrep -x "$p" >/dev/null 2>&1; then
-    say "close Firefox first -- user.js and userChrome.css are read at startup, and a running Firefox" >&2
-    say "         overwrites prefs.js from memory when it exits." >&2
-    exit 1
-  fi
-done
-
-# --- 2. the profile -------------------------------------------------------------------------------
+# --- 1. the profile -------------------------------------------------------------------------------
 # installs.ini names the profile THIS Firefox install opens, which is the one the user will see; profiles.ini's
 # Default= is the fallback for a build that writes no installs.ini. Both live under the same root, and the root
 # moves with the packaging: deb, snap and flatpak each put it somewhere else -- and a Firefox that finds no
@@ -136,7 +126,27 @@ PY
 fi
 [ -d "$PROFILE" ] || { say "no Firefox profile at '$PROFILE'" >&2; exit 1; }
 
-# --- 3. the question, asked before anything is written ---------------------------------------------
+# The profile must be closed. Not politeness: Firefox reads user.js at startup and writes prefs.js at shutdown,
+# so a running instance overwrites what this script just installed, and userChrome.css is read once at startup
+# as well. What matters is whether THIS profile is open, not whether any Firefox is: a headless one a test
+# harness started, or another profile's, cannot touch it. A running Firefox holds a POSIX lock on the profile's
+# .parentlock for as long as it has the profile open, and that lock is visible across snap and flatpak sandboxes
+# where the pid in the profile's lock symlink is not. Taking it and letting go at once is how to ask.
+if [ -f "$PROFILE/.parentlock" ] && ! python3 - "$PROFILE/.parentlock" <<'PY'
+import fcntl, sys
+try:
+    with open(sys.argv[1], 'r+') as f:
+        fcntl.lockf(f, fcntl.LOCK_EX | fcntl.LOCK_NB)      # released when the file closes
+except OSError:
+    sys.exit(1)
+PY
+then
+  say "close Firefox first -- this profile is open, user.js and userChrome.css are read at startup, and a" >&2
+  say "         running Firefox overwrites prefs.js from memory when it exits.  Profile: $PROFILE" >&2
+  exit 1
+fi
+
+# --- 2. the question, asked before anything is written ---------------------------------------------
 ASK=1
 [ "$NOASK" = 1 ] && ASK=0
 { [ ! -t 0 ] || [ ! -t 1 ]; } && ASK=0
@@ -172,7 +182,7 @@ fi
 
 mkdir -p "$STATE"        # the first thing this script writes, and not before here
 
-# --- 4. the sheets and the prefs --------------------------------------------------------------------
+# --- 3. the sheets and the prefs --------------------------------------------------------------------
 STAMP=$(basename "$PROFILE")
 backup "$PROFILE/user.js" "firefox.$STAMP.user.js"
 backup "$PROFILE/chrome/userChrome.css" "firefox.$STAMP.userChrome.css"
@@ -181,7 +191,7 @@ mkdir -p "$PROFILE/chrome"
 cp "$HERE/user.js" "$PROFILE/user.js"
 cp "$HERE/chrome/userChrome.css" "$HERE/chrome/userContent.css" "$PROFILE/chrome/"
 
-# --- 5. uBlock Origin (§0), asked for or --ublock ----------------------------------------------------
+# --- 4. uBlock Origin (§0), asked for or --ublock ----------------------------------------------------
 UBLOCK_ID="uBlock0@raymondhill.net"
 UBLOCK_URL="https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi"
 STYLUS_ID="{7a7a4a92-a2a0-41d1-9fd7-1e92480d612d}"
@@ -210,17 +220,20 @@ if [ "$SIDELOADED" = 1 ]; then
   printf '\n// sideloaded by install.sh: enable extensions the user put in this profile\nuser_pref("extensions.autoDisableScopes", 14);\n' >> "$PROFILE/user.js"
 fi
 
-# --- 6. the fonts §5 declares, which this installer does not fetch -----------------------------------
-# One installer owns the checksums. worksafe/cosmic/install.sh pins Hack and Montserrat to a tag and verifies
-# each file against a SHA-256 recorded there (CONTRIBUTING.md §12); a second copy of those checksums in this
-# file would be a second thing to keep true. So this one only says whether the faces are here.
+# --- 5. the fonts §5 declares, which this installer does not fetch -----------------------------------
+# One installer owns the checksums. worksafe/cosmic/install.sh pins AtkynsonMono Nerd Font and Montserrat to
+# a tag and verifies each file against a SHA-256 recorded there (CONTRIBUTING.md §12); a second copy of those
+# checksums in this file would be a second thing to keep true. So this one only says whether the faces are
+# here. fontconfig lists a face under every name it has -- "Montserrat,Montserrat Medium" -- so a family is
+# matched as one entry of that comma-separated list, not as the whole line. Atkinson Hyperlegible Mono is the
+# mono's fallback (§5), and either one is the mono here.
 missing=''
-for f in Montserrat Hack; do
-  fc-list 2>/dev/null | grep -qi ":$f:\|: $f:" || missing="$missing $f"
-done
+have_font() { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
+have_font Montserrat || missing="$missing Montserrat"
+have_font 'AtkynsonMono Nerd Font' || have_font 'Atkinson Hyperlegible Mono' || missing="$missing 'AtkynsonMono Nerd Font'"
 [ -n "$missing" ] && say "font(s) not installed:$missing -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 
-# --- 7. what happened ---------------------------------------------------------------------------------
+# --- 6. what happened ---------------------------------------------------------------------------------
 [ "$WANT_UBLOCK" = 1 ] && U="uBlock Origin installed" || U="uBlock left alone (§0 default)"
 [ "$WANT_STYLUS" = 1 ] && Y="Stylus installed" || Y="Stylus left alone"
 cat <<MSG

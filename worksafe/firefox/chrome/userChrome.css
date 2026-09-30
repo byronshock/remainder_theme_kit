@@ -517,11 +517,16 @@
 .toolbarbutton-1:not([disabled]):hover > .toolbarbutton-icon,
 .toolbarbutton-1:not([disabled]):hover > .toolbarbutton-badge-stack,
 .bookmark-item:hover { background-color: var(--rm-select) !important; color: var(--rm-white) !important; }
-.toolbarbutton-1:not([disabled])[open] > .toolbarbutton-icon,
-.toolbarbutton-1:not([disabled]):active > .toolbarbutton-icon {
+/* Open, pressed and checked reach every box Firefox paints for them: the icon, the text, and the badge stack a
+   badged button draws in the icon's place. Firefox grounds all three with --toolbarbutton-background-color-active
+   and leaves their colour to inheritance, so a box these rules miss is BLACK carrying the bar's BLACK -- Lc 0.0,
+   a solid square. The sidebar button is badged and checked whenever the sidebar is expanded; it went missing that
+   way on Firefox 156, 2026-09-29. */
+.toolbarbutton-1:not([disabled])[open] > :is(.toolbarbutton-icon, .toolbarbutton-text, .toolbarbutton-badge-stack),
+.toolbarbutton-1:not([disabled]):active > :is(.toolbarbutton-icon, .toolbarbutton-text, .toolbarbutton-badge-stack) {
   background-color: var(--rm-black) !important; color: var(--rm-white) !important;
 }
-.toolbarbutton-1[checked] > .toolbarbutton-icon {
+.toolbarbutton-1[checked] > :is(.toolbarbutton-icon, .toolbarbutton-text, .toolbarbutton-badge-stack) {
   background-color: var(--rm-accent) !important; color: var(--rm-white) !important;   /* §2: a toggle is ACCENT */
 }
 toolbarseparator { border-color: var(--rm-white) !important; }
