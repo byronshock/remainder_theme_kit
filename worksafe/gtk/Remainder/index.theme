@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Remainder
+Comment=Remainder for GTK 3: adw-gtk3's rules, every colour answered by role (build/gtk.py)
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Remainder

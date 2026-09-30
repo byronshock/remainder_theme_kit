@@ -272,10 +272,13 @@ Tolerated, never echoed (§4). `PLATFORM.md` is the record:
 - **Menus.** The Vivaldi menu and every context menu are Chromium's own, drawn
   from the GTK theme (`extensions.theme.system_theme` 1). With no GTK stylesheet
   under `~/.config` — none on this machine — that is Adwaita: a `#FFFFFF` ground,
-  which §3 reserves, `#2E3436` text, `#E6E6E6` separators. A GTK 3 stylesheet
-  would reach them, and it would reach every GTK 3 application with them, so it
-  belongs to the COSMIC surface and not to this one.
-- **Dialogs** that are GTK's: the file picker, print.
+  which §3 reserves, `#2E3436` text, `#E6E6E6` separators. A GTK 3 theme
+  reaches them, and it reaches every GTK 3 application with them, so it is a
+  surface of its own and not part of this one: `worksafe/gtk/` (2026-09-30).
+  Vivaldi's menus under it have not been walked; Vivaldi was not on the machine
+  when that surface was built.
+- **Dialogs** that are GTK's: the file picker, print. `worksafe/gtk/` reaches
+  them too, unwalked here for the same reason.
 - **Web pages** are content (§0a). `elevated/remainder.user.css` reaches them
   through Stylus, from the Chrome Web Store, exactly as on Firefox; importing it
   is yours to choose.
