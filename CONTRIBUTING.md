@@ -303,8 +303,9 @@ python3 build/zettlr.py --record P # re-record Zettlr's own CSS from the install
 python3 build/zettlr.py --coverage # the installed build's stylesheets against the record (a report)
 python3 build/zettlr.py --screen P # what a running Zettlr computed and painted, every window (a report)
 python3 build/vivaldi.py           # every variable resolved in every region; every pair, adjacency and rank
-python3 build/vivaldi.py --derive  # the roles, the UI zoom, and what the native theme alone paints
+python3 build/vivaldi.py --derive  # the roles, the sizes, and what the native theme alone paints
 python3 build/vivaldi.py --write   # regenerate the stylesheet, the declutter and theme.json
+python3 build/vivaldi.py --record  # re-record Vivaldi's own sizes from the installed build
 python3 build/vivaldi.py --coverage  # the installed build's variables and literals against the record (a report)
 python3 build/vivaldi.py --screen P  # what a running Vivaldi computed and painted, every window (a report)
 ```
@@ -480,7 +481,7 @@ And four the seventh added, which a platform that paints from literals forced:
   own red under a misspelling, which a hue test passes as DESTRUCTIVE. It also
   names what no stylesheet reaches: the flags in a language menu are emoji.
 
-And three the eighth added, which a platform that derives its colours at run time
+And four the eighth added, which a platform that derives its colours at run time
 forced:
 
 - **It proves the cascade it assumes.** Vivaldi's script derives its colour
@@ -508,6 +509,17 @@ forced:
   paints each theme's preview from that theme's own variables, a pin on every
   element repainted them all in the kit's, and the pins now stop at a preview —
   in `:where()`, so the exclusion costs no rank.
+- **It proves a size it raises shrinks nothing.** Vivaldi writes its sizes as
+  literals, so each one under the chosen 14 px is recorded and answered at its own
+  selector (`build/vivaldi_platform.json`). An answer can reach further than the
+  rule it answers, and both ways it did were found by one check: `--screen` reads
+  every text's size with the kit's stylesheet switched off and then on, and names
+  any that got smaller. The scope in `:is()` added an id's weight and let a plain
+  `button { 13px }` outrank the welcome page's `.welcome-button { 16px }`; the
+  scope is now in `:where()`, so each answer has its rule's own specificity and
+  wins only by coming later. And a size recorded without its `@container`
+  condition applied at every width; the record now keeps the condition, and the
+  answer sits inside it.
 
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
@@ -559,6 +571,7 @@ right".
 | the mark at 8 dp, then at 11 (a quarter of the rule) | corners rounded to 12 and 16 px — cosmic-comp rounds the band to a radius equal to its thickness, and no theme radius reaches it; 11 also rendered 16 px on two sides and 17 on the others | the smallest width that renders whole and uniform at every quarter-step scale and is found from the corner of the eye: 4 dp, 6 px here, the corner cut 5/3/2/1/1 px, 2026-09-21 (§5) |
 | the rule at 22 dp | a gap that made a 44 pt hit box only when both windows' edges were counted; awkward on screen | the gap is the handle zone, so it is the zone: 44 dp, 2026-09-21 (§5) |
 | `list.hoverBackground` SELECT, carrying WHITE by `list.hoverForeground` | BLACK on SELECT, Lc 0.0, in an extension's chat webview | a webview sets the ground alone and its text inherits `foreground`; an id whose platform default is a faint tint is a tint, so hover is LIGHT, 2026-09-21 |
+| Vivaldi's UI zoom at 140%, the least tenth that lifts its 11.5 px chrome to 16 | text at 16.1 px, and every icon, bar and gap 40% larger with it, on a desktop already scaled to 175% | read as a zoom on a zoom; looked at on this machine and retired the same day for the text alone at 14 px, CHOSEN under the floors, 2026-09-29 (`README_VIVALDI.md`) |
 
 A value with no measurement beside it is a guess, and the next person cannot
 tell it from a measured one.
@@ -655,9 +668,14 @@ are photographed off the whole display. Measured 2026-09-29 with the tabs on top
 and at the side, in the layout this machine's own profile uses, key and not, and
 in a private window; the start page, a web page, the address field's suggestions,
 all eight side panels, Settings' General and Themes pages, and the first-run
-pages: every painted value a kit value, no text pair under its tier, and no
-readable hue off the kit's families outside content, after about twenty fixes the
-pass itself found. Quick commands and the bookmark-added popup were not reached:
+pages: every painted value a kit value, no text pair under its tier at the kit's
+16 px tiers, and no readable hue off the kit's families outside content, after
+about twenty fixes the pass itself found. Walked again at the UI's own zoom with
+the text at 14 px, auto-hide on as on this machine's profile: every text 14 px or
+larger, none smaller than Vivaldi alone makes it. At 14 px, eight 400-weight pairs
+sit under the Lc 90 `build/apca.py` asks there; the checker lists them every run,
+and they are recorded rather than gated, since the size is a choice made under
+the floors. Quick commands and the bookmark-added popup were not reached:
 Vivaldi handles its shortcuts in the browser process, which key events sent over
 DevTools do not reach. `README_VIVALDI.md` lists the states.
 
@@ -682,6 +700,7 @@ motion, no blur.
 | `worksafe/zettlr/remainder-declutter.css` | generated **and committed**; guarded by `build/zettlr.py`, which also fails if it names any colour at all |
 | `worksafe/vivaldi/remainder.css` | generated **and committed**; guarded by `build/vivaldi.py`, which fails if it is not what the tables produce. The only literal colours in it are the `--rm-*` definitions |
 | `worksafe/vivaldi/remainder-declutter.css` | generated **and committed**; guarded by `build/vivaldi.py`, which also fails if it names any colour at all |
+| `build/vivaldi_platform.json` | **recorded and committed**: Vivaldi's own sizes under 14 px, selectors and sizes with their `@media` or `@container` conditions, written by `build/vivaldi.py --record` off the installed build and never by hand |
 | `worksafe/vivaldi/theme.json` | generated **and committed**; guarded by `build/vivaldi.py`: the native theme, whose five colours are §2's and whose switches are the ones the checker measured with |
 | `build/zettlr_platform.css` | **recorded and committed**: Zettlr's own CSS, the platform the theme answers, written by `build/zettlr.py --record` from the installed build and a running window and never by hand; GPL-3.0, like Zettlr. A re-record may reorder its CodeMirror blocks — the order the editor happened to mount them in — without changing what they hold, and the theme it writes then differs in order only |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |

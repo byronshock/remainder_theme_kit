@@ -2,14 +2,14 @@
 # Remainder for Vivaldi — per-user install. No sudo, nothing outside $HOME. (worksafe tier)
 # Implements AUTHORITY.md §0, §2, §3, §5 and PLATFORM.md Vivaldi. Re-runnable, and it backs up what it replaces.
 #
-# Usage: sh install.sh [--user-data-dir DIR]... [--qa DIR] [--no-declutter] [--no-zoom] [--no-ask]
+# Usage: sh install.sh [--user-data-dir DIR]... [--qa DIR] [--no-declutter] [--no-ask]
 #
 # Vivaldi keeps its settings in a user-data directory -- ${XDG_CONFIG_HOME:-~/.config}/vivaldi for the Arch, deb and
 # rpm builds, vivaldi-snapshot beside it for the snapshot, ~/.var/app/com.vivaldi.Vivaldi/config/vivaldi for the
 # Flatpak -- holding Local State and one folder per profile (Default, Profile 1, ...). For each profile this adds the
 # Remainder theme to Settings > Themes and selects it, copies the interface stylesheet (remainder.css) and the
-# declutter (remainder-declutter.css) into the folder Vivaldi loads interface stylesheets from, sets the UI zoom,
-# and merges settings.json into Preferences; in Local State it switches on the experiment that loads those
+# declutter (remainder-declutter.css) into the folder Vivaldi loads interface stylesheets from, and merges
+# settings.json into Preferences; in Local State it switches on the experiment that loads those
 # stylesheets, vivaldi://experiments > "Allow CSS modifications". Both files are saved under
 # ~/.local/state/remainder on the first run. Undo it by selecting another theme in Settings > Themes -- the
 # stylesheet is scoped to Remainder and paints nothing under any other -- or by putting the saved files back.
@@ -21,16 +21,13 @@
 #   --no-declutter       paint only: the theme, and not the stylesheet that removes motion and blur, nor the
 #                        settings that switch off the tips, nags and promotions, so §0's larger half stays where the
 #                        platform put it.
-#   --no-zoom            leave the UI zoom where it is. The kit sets it so the interface's smallest text renders at
-#                        the 16 px every contrast floor assumes (§5); without it, Vivaldi's 11.5 px chrome is under
-#                        the size the kit measured its pairs at.
 #   --no-ask             accepted for parity with the other installers; nothing is asked anyway.
 #
 # Vivaldi must be closed. It keeps Preferences and Local State in memory and writes them back when it quits, so a
 # running Vivaldi would undo all of this (PLATFORM.md Vivaldi).
 set -e
 
-DECLUTTER=1; ZOOM=1; DIRS=''; QA=''
+DECLUTTER=1; DIRS=''; QA=''
 while [ $# -gt 0 ]; do
   case "$1" in
     --user-data-dir) shift; DIRS="$DIRS
@@ -40,7 +37,6 @@ ${1#--user-data-dir=}" ;;
     --qa) shift; QA="$1" ;;
     --qa=*) QA="${1#--qa=}" ;;
     --no-declutter) DECLUTTER=0 ;;
-    --no-zoom) ZOOM=0 ;;
     --no-ask) ;;
     # The help text is the comment block above: line 2 to the first line that is not a comment, less that line.
     -h|--help) sed -n '2,/^[^#]/p' "$0" | sed '$d; s/^# \{0,1\}//'; exit 0 ;;
@@ -158,9 +154,9 @@ done
 mkdir -p "$STATE"        # the first thing this script writes, and not before here
 
 # --- 3. per user-data directory: the experiment; per profile: the theme, the stylesheets, the settings ----------
-python3 - "$HERE" "$STATE" "$DECLUTTER" "$ZOOM" "$FOUND" <<'PY'
-import json, math, os, re, shutil, sys
-here, state, declutter, zoom = sys.argv[1], sys.argv[2], sys.argv[3] == '1', sys.argv[4] == '1'
+python3 - "$HERE" "$STATE" "$DECLUTTER" "$FOUND" <<'PY'
+import json, os, re, shutil, sys
+here, state, declutter = sys.argv[1], sys.argv[2], sys.argv[3] == '1'
 strip = re.compile(r'("(?:\\.|[^"\\])*")|//[^\n]*|/\*.*?\*/', re.S)
 def jsonc(text):
     s = strip.sub(lambda m: m.group(1) or '', text)
@@ -189,10 +185,6 @@ if not declutter:                      # paint only: the theme's selection, the 
                        'theme': {'schedule': t['schedule'], 'dim_blurred': t['dim_blurred']},
                        'settings': {'mono_icons': kit['vivaldi']['settings']['mono_icons']}},
            'webkit': kit['webkit']}
-# Vivaldi's UI zoom is a Chromium zoom level -- log base 1.2 of the factor -- against the interface's own host.
-UI_HOST = 'mpognobbkildjkofajifpdfhcoklimli'
-PARTITION = 'x' + f'Storage/ext/{UI_HOST}/def'.encode().hex().upper()
-UI_ZOOM = 1.4                          # build/vivaldi.py UI_ZOOM: the least tenth that lifts 11.5 px to 16
 # The shipped toolbars, for the one promotion that lives in a toolbar: the VPN button. A toolbar the user has
 # never changed is not in Preferences at all, so its default is read off the installed build.
 defaults = {}
@@ -203,7 +195,7 @@ for p in ('/opt/vivaldi/resources/vivaldi/prefs_definitions.json',
         defaults = {k: v.get('default') for k, v in tb.items() if isinstance(v, dict) and isinstance(v.get('default'), list)}
         break
 
-rows = [l.split('|') for l in sys.argv[5].split('\n') if l.strip()]
+rows = [l.split('|') for l in sys.argv[4].split('\n') if l.strip()]
 if not rows:
     sys.exit('remainder: no profile reached the install step -- this is a bug in install.sh')
 for udd in sorted({r[1] for r in rows}):
@@ -258,11 +250,6 @@ for label, udd, profile in rows:
             if isinstance(items, list) and 'VPNButton' in items:
                 tb[name] = [i for i in items if i != 'VPNButton']; changed.append(f'vivaldi.toolbars.{name}')
 
-    if zoom:
-        level = math.log(UI_ZOOM) / math.log(1.2)
-        z = prefs.setdefault('partition', {}).setdefault('per_host_zoom_levels', {}).setdefault(PARTITION, {})
-        if abs((z.get(UI_HOST) or {}).get('zoom_level', 0) - level) > 1e-9:
-            z[UI_HOST] = {'zoom_level': level, 'last_modified': '0'}; changed.append('partition.per_host_zoom_levels')
     replace(prefs_path, prefs)
     print(f'remainder: [{pdir}] the theme is selected and its stylesheet is in {mods}; Preferences: '
           + (', '.join(changed) if changed else 'already set'))
@@ -280,7 +267,6 @@ done
 
 # --- 5. what happened -------------------------------------------------------------------------------------
 [ "$DECLUTTER" = 1 ] && D="the declutter too (§0)" || D="the declutter left out (--no-declutter)"
-[ "$ZOOM" = 1 ] && Z="the UI zoom at 140%" || Z="the UI zoom left alone (--no-zoom)"
 if [ -n "$QA" ]; then cat <<MSG
 remainder: the QA profile is at $QA/profile. Open it on a display of its own, with DevTools on a port of its own, and
            read what it paints:
@@ -292,6 +278,6 @@ MSG
   exit 0
 fi
 cat <<MSG
-remainder: Remainder installed; $D; $Z. What was replaced is in $STATE
+remainder: Remainder installed; $D. What was replaced is in $STATE
            Start Vivaldi: Settings > Themes shows Remainder selected. To go back, select another theme there.
 MSG

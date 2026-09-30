@@ -662,9 +662,12 @@ them rather than pretending to measure them:
   about what a desktop should look like and not a measurement, and it has a
   price this section will not hide: over the photograph's light studio ground
   the desktop's own labels fall to Lc −35.9 at the median, under every floor in
-  §0e. It is the one place the kit knowingly ships under one. The installer
+  §0e. It is one of two places the kit knowingly ships under one. The installer
   states the number in the question that offers it, and the flat field is the
-  second answer.
+  second answer. The other is Vivaldi's chrome text, set at 14 px by choice
+  (2026-09-29): at that size eight of its 400-weight pairs read under the Lc 90
+  APCA asks, and `build/vivaldi.py` prints them every run
+  (`worksafe/vivaldi/README_VIVALDI.md`).
 
 ## 6. Principles
 

@@ -29,10 +29,11 @@ ways, and this surface uses both. Three things measured off the installed build 
     the tabs is the titlebar, wherever it is -- ACCENT carrying WHITE when key, LIGHT carrying BLACK at 700 when
     not -- and so is the header above it when the tabs are at the side.
 
-  THE UI RENDERS UNDER THE SIZE THE FLOORS ASSUME. Vivaldi sets its chrome at 11.5 px in 110 rules and 13 px in
-    34, and every floor in §0e assumes about 16 (§5). Vivaldi has its own User Interface Zoom, which scales the
-    whole of window.html and no web page; the installer sets it to UI_ZOOM (CHOSEN, below), so the tier the
-    checker applies is the tier on the screen.
+  THE UI RENDERS UNDER THE SIZE THE FLOORS ASSUME. Vivaldi writes its chrome's sizes as literals, 11.5 px in 110
+    rules and 13 px in 34, and every floor in §0e assumes about 16 (§5). Its own User Interface Zoom at 140% was
+    tried first and retired: it scaled icons, bars and spacing with the text. So the text alone is raised, to
+    CHROME_PX (CHOSEN, below: 14 px, under the floors' 16), rule by rule from a record of Vivaldi's own sizes, and
+    the checker prints what that costs against the floors rather than calling it a pass.
 
 So the surface is a role table over a record of the platform's variables, and the derivation ships here
 (CONTRIBUTING.md §8):
@@ -43,6 +44,8 @@ So the surface is a role table over a record of the platform's variables, and th
                region that changes its ground: the key strip, the non-key window, the fields. Weight follows the
                ground, as in worksafe/firefox/: a LIGHT surface carries BLACK at 700 (Lc 61.2, the 16px/700
                tier), a WHITE one 400 (Lc 91.8), the ACCENT strip WHITE at 400 (Lc -78.5).
+  SIZES        every size Vivaldi sets under CHROME_PX, recorded off the installed build (build/vivaldi_platform
+               .json, by --record) and raised to it at its own selector and specificity, later in the cascade.
   RULES        what no variable reaches, found by --screen on the running window.
   SETTINGS     settings.json: the theme selected, and §0's larger half -- the tips, the nags, the promotions,
                the motion -- switched off by preference.
@@ -50,14 +53,15 @@ So the surface is a role table over a record of the platform's variables, and th
                --no-declutter). It names no colour.
 
     python3 build/vivaldi.py              check every value, pair and adjacency in the committed theme
-    python3 build/vivaldi.py --derive     the roles, the zoom, and the native theme's own derivation, measured
+    python3 build/vivaldi.py --derive     the roles, the sizes, and the native theme's own derivation, measured
     python3 build/vivaldi.py --write      regenerate the stylesheet, the declutter and theme.json
+    python3 build/vivaldi.py --record     re-record Vivaldi's own sizes from the installed build
     python3 build/vivaldi.py --coverage   the installed build's variables and literals against the record (a report)
     python3 build/vivaldi.py --screen P   what a running Vivaldi paints, read over its DevTools port P: every
                                           window's computed styles, and each window photographed (a report;
                                           worksafe/vivaldi/README_VIVALDI.md says how)
 """
-import base64, io, json, math, os, re, sys, urllib.request
+import base64, io, json, os, re, sys, urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import ok, poles as P, apca, cosmic as C
 from zettlr import Page      # the stdlib DevTools client, carried from build/zettlr.py rather than copied
@@ -142,20 +146,96 @@ def native():
     return {k: (ROLES[v].upper() if k.startswith('color') and k != 'colorPosition' else v) for k, v in NATIVE.items()}
 
 
-# --- 3. the zoom ----------------------------------------------------------------------------------------
-# CHOSEN (§0c, §5). Vivaldi sets its chrome text at 11.5 px in 110 rules and at 13 px in 34 (style/common.css,
-# 8.2.4133.76); the floors assume about 16. UI zoom scales window.html and nothing else, so it is the one knob that
-# raises every size together and keeps Vivaldi's own proportions. 1.4 is the least tenth that lifts 11.5 px to 16
-# (11.5 x 1.3 = 14.95; x 1.4 = 16.1). Vivaldi stores it as a Chromium zoom level, log base 1.2 of the factor,
-# against the interface's own host in the profile's Preferences; the installer writes it there (--no-zoom leaves it).
-SMALLEST_UI_PX = 11.5
-UI_ZOOM = math.ceil(16 / SMALLEST_UI_PX * 10) / 10
-UI_HOST = 'mpognobbkildjkofajifpdfhcoklimli'
-UI_PARTITION = 'x' + f'Storage/ext/{UI_HOST}/def'.encode().hex().upper()
+# --- 3. the size ----------------------------------------------------------------------------------------
+# CHOSEN (§0c, §5) by Byron, 2026-09-29, and under the floors: the chrome's text at 14 px. Vivaldi writes its sizes
+# as literals -- 11.5 px in 110 rules, 13 px in 34, 10 to 12 px in 22 more (style/common.css, 8.2.4133.76) -- under a
+# 13 px root on #app, and every floor in §0e assumes about 16. The first answer was Vivaldi's own UI zoom at 140%,
+# the least tenth that lifts 11.5 px to 16; it scaled the icons, bars and spacing with the text, on a desktop
+# already scaled to 175%, and was looked at and retired the same day (CONTRIBUTING.md §9). So the text alone is
+# raised, as worksafe/obsidian/ and worksafe/zettlr/ raise theirs, and to 14 px, not 16: every size Vivaldi sets
+# under CHROME_PX is RECORDED off the installed build (RECORD, by --record) and answered at its own selector, at
+# its own specificity -- the scope is in :where() -- so it wins by coming later, exactly where Vivaldi's rule did,
+# and never over a more specific rule of Vivaldi's that sets a larger size (an :is() scope did, and shrank the
+# welcome pages' 16 px to 14); the root takes CHROME_PX too, for everything that inherits. What 14 px costs against the
+# floors is measured by the checker and printed beside the pairs, and --screen checks that no text got smaller.
+CHROME_PX = 14
+RECORD = os.path.join(ROOT, 'build', 'vivaldi_platform.json')
+SCOPE_SUBJECT = ':where(#browser.theme-id-Remainder *)'   # a descendant of the kit's #browser, at no specificity
 
 
-def zoom_level(factor=UI_ZOOM):
-    return math.log(factor) / math.log(1.2)
+def record():
+    """{'build', 'recorded', 'sizes': [[selector list, px], ...]} -- Vivaldi's own sizes under CHROME_PX."""
+    if not os.path.exists(RECORD):
+        return {'build': '?', 'recorded': '?', 'sizes': []}
+    return json.load(open(RECORD))
+
+
+CONDITIONAL = ('@media', '@container', '@supports')
+
+
+def _style_rules(css):
+    """(the @media / @container conditions around it, selector list, body) for every style rule of a stylesheet,
+    in order. A rule inside @keyframes, @property or @position-try is not a style rule and is not read."""
+    out, stack, buf, i = [], [], '', 0
+    css = COMMENT.sub('', css)
+    while i < len(css):
+        ch = css[i]
+        if ch == '{':
+            prelude, buf = ' '.join(buf.split()), ''
+            if prelude.startswith('@') and prelude.split()[0] in CONDITIONAL:
+                stack.append(prelude); i += 1; continue
+            depth, j = 1, i + 1
+            while depth:
+                depth += {'{': 1, '}': -1}.get(css[j], 0); j += 1
+            if not prelude.startswith('@'):
+                out.append((tuple(stack), prelude, css[i + 1:j - 1]))
+            i = j; continue
+        if ch == '}':
+            if stack:
+                stack.pop()
+            buf = ''
+        elif ch == ';':
+            buf = ''
+        else:
+            buf += ch
+        i += 1
+    return out
+
+
+def small_sizes(css):
+    """[[conditions, selector list, px]] for every font-size a stylesheet sets in px under CHROME_PX, in the order it
+    sets them, each with the @media or @container conditions it holds under: a size Vivaldi sets for a narrow
+    window only is raised for a narrow window only (taken without its condition, the welcome pages' 16 px went to
+    14 wherever the window was wide)."""
+    out = []
+    for conds, sel, body in _style_rules(css):
+        for d in re.split(r';(?![^(]*\))', body):
+            if ':' not in d:
+                continue
+            k, v = d.split(':', 1)
+            m = re.fullmatch(r'([\d.]+)px(\s*!important)?', v.strip())
+            if k.strip() == 'font-size' and m and float(m.group(1)) < CHROME_PX:
+                out.append([list(conds), ', '.join(_split_top(sel)), float(m.group(1))])
+    return out
+
+
+def _subject_scoped(sel):
+    """One complex selector, matching only inside the kit's #browser at its own specificity: SCOPE_SUBJECT on its
+    subject, before a pseudo-element if it ends in one."""
+    depth, cut = 0, len(sel)
+    for i, ch in enumerate(sel):
+        depth += {'(': 1, ')': -1}.get(ch, 0)
+        if depth == 0 and sel.startswith('::', i):
+            cut = i
+            break
+    head, pseudo = sel[:cut], sel[cut:]
+    if not head or head[-1] in ' >+~':
+        head += '*'
+    return head + SCOPE_SUBJECT + pseudo
+
+
+def size_rules():
+    return [(conds, ', '.join(_subject_scoped(x) for x in _split_top(sel)), px) for conds, sel, px in record()['sizes']]
 
 
 # --- 4. the role table ------------------------------------------------------------------------------------
@@ -247,7 +327,9 @@ def _vars():
 # Regions that change the ground, each re-declaring what reads it. A scope's selectors are written with the scope
 # and its every descendant, so a variable a region re-declares cannot be undone by an inherited one. They are
 # listed lowest first, each outranking the one before it wherever both can match, and the checker proves it.
-STRIP = ':is(#header, .tabbar-wrapper)'
+# The strip: the header, the tab bar wherever it is, and the window's own title bar, which auto-hide moves out of the
+# header to slide it over the page -- found on this machine's own profile, 2026-09-29, where it stayed LIGHT.
+STRIP = ':is(#header, .tabbar-wrapper, #titlebar)'
 NONKEY = (f'{BASE}.isblurred',)
 NONKEY_TAB = (f'{BASE}.isblurred {STRIP} .tab.active',)
 KEY_STRIP = (f'{BASE}.hasfocus.color-behind-tabs-on {STRIP}',)
@@ -319,6 +401,9 @@ RULES = [
     ('The current tab carries BLACK at 700 in both states: on LIGHT when the window is key, where 700 is the tier, '
      'and on WHITE when not, where it costs nothing -- weight is safe in one direction only (AUTHORITY.md §5).',
      f'{BASE} {STRIP} .tab.active', [('font-weight', '700')]),
+    ('The window\'s title bar takes its text from the strip it is part of. Under auto-hide it sits in a wrapper '
+     'outside the strip and inherits that wrapper\'s colour, BLACK, onto ACCENT.',
+     f'{BASE} #titlebar', [('color', 'var(--colorFg)')]),
     ('The window buttons sit on the strip and take its ground; Vivaldi gives them a black wash of their own.',
      f'{BASE} .window-buttongroup button', [('background-color', 'transparent'), ('opacity', '1')]),
     ('', f'{BASE} .window-buttongroup button:hover', [('background-color', 'var(--colorBgDark)')]),
@@ -350,7 +435,7 @@ RULES = [
      f'{BASE} :is(.dashboard-widget, .vivaldi-settings .settings-content, .dialog-content, .modal-wrapper) '
      ':is(input[type=text], input[type=number], input[type=url], input[type=email], input[type=password], '
      'input[type=search], input:not([type]), textarea, select)',
-     [('border', '1px solid {black}'), ('box-shadow', 'none')]),
+     [('border', '1px solid {black}'), ('box-shadow', 'none'), ('padding-inline', '4px')]),
     ('A box or a radio button that is on is a toggle, and §2 gives toggles ACCENT; its tick is WHITE (Lc -78.5).',
      f'{BASE} :is(input[type=checkbox], input[type=radio]):checked',
      [('background-color', '{accent}'), ('border-color', '{accent}'), ('color', '{white}')]),
@@ -366,9 +451,7 @@ RULES = [
      'yet read is its BLACK outline alone.',
      f'{BASE} .welcome-navigation .nav-page:not(.nav-page-completed, .nav-page-active)', [('background-color', 'transparent')]),
     ('', f'{BASE} .welcome-navigation .nav-page.nav-page-completed', [('background-color', '{dark}')]),
-    ('A badge counts in the chrome\'s own size: Vivaldi sets it at 10 px, 14 at the zoom. 11.5 is the chrome\'s '
-     'smallest, the size UI_ZOOM was derived from. No line around it (§5).',
-     f'{BASE} .button-badge', [('font-size', '11.5px'), ('border-color', 'transparent')]),
+    ('No line around a badge (§5).', f'{BASE} .button-badge', [('border-color', 'transparent')]),
     ('§5: no hairline under the strip, and no shading inside the bookmark glyph: both are black washes.',
      f'{BASE} #tabs-tabbar-container', [('box-shadow', 'none !important')]),
     ('', f'{BASE} .add-bookmark-shadow', [('fill', 'none')]),
@@ -676,6 +759,21 @@ def theme_text():
         out.append(',\n'.join(_scoped(sels)) + ' {')
         out += _decl_lines(decls, important=True)
         out.append('}')
+    out.append('')
+    out += _comment(f'THE SIZES (§5): the chrome\'s text at {CHROME_PX} px, CHOSEN and under the 16 every floor assumes; '
+                    'build/vivaldi.py section 3 says why. The root, for everything that inherits; then every size '
+                    f'Vivaldi sets under {CHROME_PX} px, at its own selector, recorded off {record()["build"]} on '
+                    f'{record()["recorded"]} (build/vivaldi_platform.json), with Vivaldi\'s size beside it.')
+    out.append(BASE + ' {')
+    out.append(f'  font-size: {CHROME_PX}px;')
+    out.append('}')
+    for conds, sel, px in size_rules():
+        ind = '  ' * len(conds)
+        out += [f'{"  " * k}{c} {{' for k, c in enumerate(conds)]
+        out.append(',\n'.join(ind + x for x in _split_top(sel)) + ' {')
+        out.append(f'{ind}  font-size: {CHROME_PX}px;   /* {px:g} px */')
+        out.append(f'{ind}}}')
+        out += [f'{"  " * k}}}' for k in reversed(range(len(conds)))]
     for note, sel, decls in RULES:
         out.append('')
         out += _comment(note)
@@ -928,6 +1026,22 @@ def check():
         bad += bool(under)
         print(f'  {name:14} {lo}' + (f'  DOES NOT OUTRANK {", ".join(under)}' if under else ''))
 
+    # --- the sizes: every one Vivaldi sets under CHROME_PX is answered, from the record -------------------------
+    rec = record()
+    if not rec['sizes']:
+        fail(f'{os.path.relpath(RECORD, ROOT)} is missing or empty: run --record with Vivaldi installed')
+    by = {}
+    for _, _, px in rec['sizes']:
+        by[px] = by.get(px, 0) + 1
+    print(f"\nsizes: the chrome's text at {CHROME_PX} px (CHOSEN, under the 16 the floors assume); "
+          f"{len(rec['sizes'])} of Vivaldi's own under it ({sum(1 for c, _, _ in rec['sizes'] if c)} under a @media or "
+          f"@container condition, kept), recorded off {rec['build']} on {rec['recorded']}: "
+          + ', '.join(f'{n} at {px:g} px' for px, n in sorted(by.items(), reverse=True)))
+    for _, sel, _ in size_rules():
+        for x in _split_top(sel):
+            if SCOPE_SUBJECT not in x:
+                fail(f'a size rule reaches outside the kit\'s #browser: {x[:80]}')
+
     # --- every colour variable, resolved under the theme, in every context ------------------------------------
     contexts = [()] + [chain(s[0]) for s in SCOPES] + [('key strip', 'fields'), ('non-key', 'fields')]
     counts, offl = {}, []
@@ -976,6 +1090,18 @@ def check():
             fail(f'{t}: §3 reserves {tc[0]} for legend on a semantic ground, not on {gr}')
         print(f"  {tr:12} on {gr:12} Lc {lc:7.1f}  floor {floor:3.0f}  {'ok ' if good else 'LOW'}  "
               f"{'+'.join(ctx) or 'base':18} {why}")
+
+    at = next(t for t, why in apca.GUIDANCE if f'{CHROME_PX}px/400' in why)
+    short = [(t, g, ctx, why, apca.lc(colour(resolve(t, ctx))[0], colour(resolve(g, ctx))[0]))
+             for t, g, ctx, floor, why in PAIRS if floor == 75]
+    short = [x for x in short if abs(x[4]) < at]
+    print(f"\nat the size on screen, {CHROME_PX} px -- recorded, not gated: CHROME_PX is a choice made under the floors. "
+          f"build/apca.py asks Lc {at} of text at {CHROME_PX}px/400, where the pairs above were measured at 16px/400's "
+          f"75; {len(short)} of the 400-weight pairs sit under it. Its table names no tier for {CHROME_PX}px/700, so "
+          "the 700 pairs are left at 16px/700's 60 and are not claimed:")
+    for t, g, ctx, why, lc in short:
+        tr, gr = role_of(colour(resolve(t, ctx))[0]), role_of(colour(resolve(g, ctx))[0])
+        print(f"  {tr:12} on {gr:12} Lc {lc:7.1f}  {at - abs(lc):4.1f} short  {'+'.join(ctx) or 'base':18} {why}")
 
     # --- the rules that set both sides --------------------------------------------------------------------
     print("\npairs the rule blocks author:")
@@ -1091,6 +1217,17 @@ def coverage():
           f'{len(loose)}')
     for n in loose:
         print(f'  {n}')
+    live = [(tuple(c), sel, px) for c, sel, px in small_sizes(css)]
+    rec = [(tuple(c), sel, px) for c, sel, px in record()['sizes']]
+    added, gone = [x for x in live if x not in rec], [x for x in rec if x not in live]
+    print(f"\nsizes under {CHROME_PX} px against the record ({record()['build']}): {len(live)} in the installed build, "
+          f"{len(rec)} recorded" + ('' if added or gone else ', the same'))
+    for c, sel, px in added:
+        print(f"  NEW    {px:g} px  {' '.join(c) + ' ' if c else ''}{sel[:90]}")
+    for c, sel, px in gone:
+        print(f"  GONE   {px:g} px  {' '.join(c) + ' ' if c else ''}{sel[:90]}")
+    if added or gone:
+        print('  -- run --record, then --write')
     body = COMMENT.sub('', css)
     lits = {'hex': len(HEX.findall(body)), 'rgb/hsl': len(re.findall(r'\b(?:rgba?|hsla?)\(', body)),
             'color-mix': body.count('color-mix(')}
@@ -1181,12 +1318,13 @@ def ui_zoom(page):
 
 
 def parsed_rules(page, path=THEME):
-    """(rules the running browser parses out of the committed file, rules the file holds). A string or a bracket
-    left open ends a stylesheet where it happens and says nothing, so the count is the check."""
+    """(rules the running browser parses out of the committed file, rules the file holds -- a @media block and each
+    rule in it counted). A string or a bracket left open ends a stylesheet where it happens and says nothing, so the
+    count is the check."""
     text = open(path, encoding='utf8').read()
     want = COMMENT.sub('', text).count('{')
-    got = page.eval('((t) => { const s = new CSSStyleSheet(); s.replaceSync(t); return s.cssRules.length; })('
-                    + json.dumps(text) + ')')
+    got = page.eval('((t) => { const s = new CSSStyleSheet(); s.replaceSync(t); const n = rs => [...rs].reduce((a, r) => '
+                    'a + 1 + (r.cssRules ? n(r.cssRules) : 0), 0); return n(s.cssRules); })(' + json.dumps(text) + ')')
     return got, want
 
 
@@ -1201,6 +1339,7 @@ def screen(port, brief=False):
     print(f"the custom-UI stylesheet is {'loaded' if loaded else 'NOT LOADED: is the experiment on, and the folder set?'}\n")
     for page in pages:
         report(page, page.eval(_probe_js()), ui_zoom(page), brief)
+        size_report(page, ui_zoom(page))
         pixel_report(page)
     return True
 
@@ -1233,7 +1372,7 @@ def report(page, shot, zoom, brief=False):
         print(f"  {prop:10} {hx}{' blend' if blend else '      '} {len(rs):4}x  e.g. {rs[0]['where'][-90:]}")
     print(f"\n{sum(len(v) for k, v in by.items() if role_of(k[1]) and not k[2])} values on the kit's ladder, {off} off it")
     print(f'\ntext pairs as painted (the floor is the tier for the weight the element computed -- a glyph\'s, or '
-          f'disabled text\'s, is the mark tier; the size is the computed size at the UI zoom, {zoom:g})'
+          f'disabled text\'s, is the mark tier; SMALL is under CHROME_PX, {CHROME_PX} px, at the UI zoom, {zoom:g})'
           + (', the ones to look at:' if brief else ':'))
     pairs = {}
     glyph = lambda r: ' > svg' in r['where'] or r['where'].startswith('svg')
@@ -1247,7 +1386,7 @@ def report(page, shot, zoom, brief=False):
         floor = 30 if tier == 'glyph' else 60 if tier else 75
         low = abs(lc) < floor
         flag = ('cap' if low and t.upper() in CAPS else 'LOW' if low else 'FADED' if faded else
-                'SMALL' if size < 15.95 and tier != 'glyph' else 'ok')
+                'SMALL' if size < CHROME_PX - 0.05 and tier != 'glyph' else 'ok')
         weight = 'mark' if tier == 'glyph' else '700' if tier else '400'
         if brief and flag == 'ok':
             continue
@@ -1262,6 +1401,34 @@ def report(page, shot, zoom, brief=False):
         rs = [r for r in recs if r['prop'] == extra]
         if rs:
             print(f"\n{extra}: {len(rs)} element(s), e.g. {rs[0]['value'][:90]} on {rs[0]['where'][-60:]}")
+    print()
+
+
+# The sizes are answered at Vivaldi's own selectors, one step up, and a selector can also match an element Vivaldi
+# sizes larger by another rule of lower rank: the kit's 14 px would then shrink it. So --screen reads every text's
+# size with the interface stylesheet switched off and on, and names any that got smaller.
+SHRINK = r"""(() => {
+  const link = [...document.querySelectorAll('link[rel=stylesheet]')].find(l => l.href.includes('css-mods'));
+  if (!link) return null;
+  const els = [...document.querySelectorAll('#browser *')].filter(e => [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim()));
+  const size = () => els.map(e => parseFloat(getComputedStyle(e).fontSize));
+  const on = size(); link.disabled = true; const off = size(); link.disabled = false; size();
+  const name = e => e.tagName.toLowerCase() + ((typeof e.className === 'string' && e.className) ? '.' + e.className.trim().split(/\s+/).slice(0, 2).join('.') : '');
+  const shrank = []; let under = 0;
+  els.forEach((e, i) => { if (on[i] < off[i] - 0.01) shrank.push([name(e), off[i], on[i], e.textContent.trim().slice(0, 24)]);
+                          if (on[i] < __PX__ - 0.01 && e.getBoundingClientRect().width > 0) under++; });
+  return {count: els.length, shrank, under};
+})()"""
+
+
+def size_report(page, zoom):
+    got = page.eval(SHRINK.replace('__PX__', str(CHROME_PX / (zoom or 1))))
+    if got is None:
+        print('sizes: the interface stylesheet is not loaded\n'); return
+    print(f"sizes: {got['count']} texts; {len(got['shrank'])} smaller under the kit than under Vivaldi alone, "
+          f"{got['under']} under {CHROME_PX} px")
+    for where, off, on, sample in got['shrank'][:12]:
+        print(f"  SHRANK  {off:g} -> {on:g} px  {sample!r}  {where[:70]}")
     print()
 
 
@@ -1290,8 +1457,10 @@ def pixels(page, top=8):
     hued = chroma >= P.C_FLOOR
     rects = page.eval(f"[...document.querySelectorAll({json.dumps(', '.join(CONTENT_SELECTORS))})].map(e => {{ "
                       "const r = e.getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom]; })") or []
+    # A picture is drawn a little outside its layout box -- the address field's favicon two pixels left of it,
+    # measured 2026-09-29 -- so each is left out with two pixels to spare on every side.
     for x0, y0, x1, y1 in rects:
-        hued[max(0, int(y0 * dpr)):max(0, int(y1 * dpr) + 1), max(0, int(x0 * dpr)):max(0, int(x1 * dpr) + 1)] = False
+        hued[max(0, int(y0 * dpr) - 2):max(0, int(y1 * dpr) + 3), max(0, int(x0 * dpr) - 2):max(0, int(x1 * dpr) + 3)] = False
     ceiling, on = np.full(chroma.shape, -1.0), {}
     for fam, roles in FAMILIES.items():
         for role in roles:
@@ -1332,6 +1501,25 @@ def pixel_report(page, save=None):
     print()
 
 
+def write_record():
+    css = _read('style/common.css')
+    if css is None:
+        print(f'record: no Vivaldi interface at {VIVALDI_RES}'); return False
+    import subprocess
+    try:
+        build = subprocess.run(['vivaldi', '--version'], capture_output=True, text=True).stdout.split()[1]
+    except (OSError, IndexError):
+        build = '?'
+    import datetime
+    out = {'build': build, 'recorded': datetime.date.today().isoformat(),
+           'note': 'Vivaldi\'s own font-size declarations under CHROME_PX, read off resources/vivaldi/style/common.css '
+                   'by build/vivaldi.py --record: selectors and sizes only. Never hand-edit.',
+           'sizes': small_sizes(css)}
+    open(RECORD, 'w').write(json.dumps(out, indent=1, ensure_ascii=False) + '\n')
+    print(f"wrote {os.path.relpath(RECORD, ROOT)}: {len(out['sizes'])} sizes under {CHROME_PX} px, off {build}")
+    return True
+
+
 def _print_derivations():
     print("=== the roles the stylesheet may name, and nothing else ===")
     for name, hx in ROLES.items():
@@ -1340,9 +1528,11 @@ def _print_derivations():
                'a pole by construction: the meaning, present' if name in SIGNAL and P.readable(hx) and gap < req else
                'neutral, no readable hue' if not P.readable(hx) else f'clears {gap:.1f}deg from {fam}, needs {req:.1f}')
         print(f"  --rm-{name:13} {hx}  {tag:44} {SOURCE[name]}")
-    print(f"\n=== the UI zoom (CHOSEN) ===\n  the least tenth that lifts {SMALLEST_UI_PX} px to 16: {UI_ZOOM}  "
-          f"({SMALLEST_UI_PX} x {UI_ZOOM - 0.1:.1f} = {SMALLEST_UI_PX * (UI_ZOOM - 0.1):.2f}; x {UI_ZOOM} = "
-          f"{SMALLEST_UI_PX * UI_ZOOM:.2f})\n  stored as zoom_level {zoom_level():.10f} under partition {UI_PARTITION}")
+    rec = record()
+    print(f"\n=== the size (CHOSEN, under the floors) ===\n  the chrome's text at {CHROME_PX} px; the root and "
+          f"{len(rec['sizes'])} of Vivaldi's own sizes raised to it (recorded off {rec['build']}, {rec['recorded']}):")
+    for px in sorted({px for _, _, px in rec['sizes']}, reverse=True):
+        print(f"    {px:5g} px  {sum(1 for _, _, x in rec['sizes'] if x == px):4} declarations")
     print("\n=== what the native theme alone paints: the engine's derivation from the kit's four, against the table ===")
     for n, v in ENGINE.items():
         c = colour(v)
@@ -1361,6 +1551,8 @@ if __name__ == '__main__':
         _print_derivations(); sys.exit(0)
     if '--write' in sys.argv:
         write(); sys.exit(0)
+    if '--record' in sys.argv:
+        sys.exit(0 if write_record() else 1)
     if '--coverage' in sys.argv:
         sys.exit(0 if coverage() else 1)
     if '--screen' in sys.argv:

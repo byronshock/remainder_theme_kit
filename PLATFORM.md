@@ -555,7 +555,11 @@ package), 2026-09-29, on COSMIC.
   page. It is a Chromium zoom level — log base 1.2 of the factor — in the
   profile's `Preferences` at `partition.per_host_zoom_levels`, against the
   extension's host in the partition `Storage/ext/<id>/def`, hex-encoded and
-  prefixed `x`. At 100% the chrome's text is 11.5 px in 110 rules and 13 px in 34.
+  prefixed `x`. It scales the icons, bars and spacing with the text.
+- **The chrome's sizes are literals**: 11.5 px in 110 rules, 13 px in 34, 10 to
+  12 px in 22 more, under a 13 px root on `#app`, and a few of them inside
+  `@container` queries on named containers (the welcome pages' cards), so a size
+  depends on the width of the element around it as well as on the rule.
 - **Preferences**: `Preferences` in each profile folder, `Local State` beside
   them, listing the profiles under `profile.info_cache`.
   `resources/vivaldi/prefs_definitions.json` holds every `vivaldi.*` preference

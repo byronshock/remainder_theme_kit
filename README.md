@@ -330,9 +330,8 @@ Vivaldi, per user, no sudo, with Vivaldi closed — it writes its settings back
 from memory when it quits:
 
 ```
-sh worksafe/vivaldi/install.sh                   # theme, UI zoom and declutter, every profile
+sh worksafe/vivaldi/install.sh                   # theme and declutter, every profile
 sh worksafe/vivaldi/install.sh --no-declutter    # paint only
-sh worksafe/vivaldi/install.sh --no-zoom         # leave the UI zoom alone
 ```
 
 Vivaldi draws its interface as a web page and takes a theme two ways, and the
@@ -341,9 +340,10 @@ transparency, blur and background image off — and an interface stylesheet,
 which Vivaldi loads once an experiment is on, pinning every colour variable its
 script derives from those four. The strip that holds the tabs is the key
 titlebar, wherever it is: ACCENT when the window is key, LIGHT when not, BLACK in
-a private window. Vivaldi's chrome text is 11.5 px, so the installer sets its UI
-zoom to 140%, the least tenth that brings it to 16. Its menus are Chromium's and
-follow the GTK theme, which the kit does not set. Details, the measurements and
+a private window. Vivaldi's chrome text is 11.5 px; the stylesheet raises it to
+14 px and leaves icons and spacing alone — a choice made under the 16 the floors
+assume, and the checker lists what it costs. Its menus are Chromium's and follow
+the GTK theme, which the kit does not set. Details, the measurements and
 what is left over: `worksafe/vivaldi/README_VIVALDI.md`.
 
 Windows 11, administrator, and no terminal to fight — **double-click

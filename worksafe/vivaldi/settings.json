@@ -4,8 +4,8 @@
 // build -- the Arch vivaldi package 8.2.4133.76, 2026-09-29 -- in resources/vivaldi/prefs_definitions.json. Vivaldi
 // stores an enum as its index, so those are written as numbers with the name beside them. This file carries no
 // colour; the theme (theme.json and remainder.css) does, and build/vivaldi.py proves it. The installer also writes
-// what cannot be written here: the theme entry itself, the stylesheet folder, the UI zoom, and the experiment
-// that loads the stylesheet, which lives in Local State.
+// what cannot be written here: the theme entry itself, the stylesheet folder, and the experiment that loads the
+// stylesheet, which lives in Local State. It leaves the UI zoom alone.
 {
   "vivaldi": {
     "themes": {

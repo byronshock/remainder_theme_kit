@@ -17,11 +17,12 @@ Measured on **Vivaldi 8.2.4133.76** (the Arch `vivaldi` package) on COSMIC,
 
 | File | What it does | Generated |
 |---|---|---|
-| `remainder.css` | the interface stylesheet: every colour variable Vivaldi defines — 87 of them, 74 its script derives from the theme and 13 its stylesheet mixes from those — pinned to a kit value in six regions, and 36 rules for what no variable reaches. Scoped to the Remainder theme. **Generated and committed** (`CONTRIBUTING.md` §11); `build/vivaldi.py` fails if it is not what the tables now produce. | yes |
+| `remainder.css` | the interface stylesheet: every colour variable Vivaldi defines — 87 of them, 74 its script derives from the theme and 13 its stylesheet mixes from those — pinned to a kit value in six regions; the chrome's text raised to 14 px at each of the 166 selectors where Vivaldi sets it smaller; and 39 rules for what no variable reaches. Scoped to the Remainder theme. **Generated and committed** (`CONTRIBUTING.md` §11); `build/vivaldi.py` fails if it is not what the tables now produce. | yes |
 | `remainder-declutter.css` | §0's larger half, as far as a stylesheet reaches it: motion and blur removed. It carries no colour. **Generated and committed**, and installed unless `--no-declutter`. | yes |
 | `theme.json` | the native theme: §2's four as Vivaldi's four, and every switch that would composite something under the chrome — transparency, blur, a background image, the page's own colour on the strip — off. **Generated and committed.** | yes |
+| `build/vivaldi_platform.json` | the record: every size Vivaldi's stylesheet sets under 14 px, selector and size, with the `@media` or `@container` condition it holds under. Written by `build/vivaldi.py --record` off the installed build, never by hand. | recorded |
 | `settings.json` | the theme selected, for private windows too; the schedule that swaps in Vivaldi's own themes, off; §0's tips, nags and promotions, off; Settings' monochrome icons; the fonts for pages that name none. Merged key by key into each profile's `Preferences`. | no |
-| `install.sh` | finds Vivaldi's user-data directories (native, snapshot, Flatpak, or `--user-data-dir`) and every profile in each, and for each profile: adds and selects the theme, copies the two stylesheets into the folder Vivaldi loads, sets the UI zoom, takes the VPN button out of the toolbars, merges the settings, and switches on the experiment in `Local State`. Saves `Preferences` and `Local State` under `~/.local/state/remainder` on the first run. `--qa DIR` builds a QA profile instead. | no |
+| `install.sh` | finds Vivaldi's user-data directories (native, snapshot, Flatpak, or `--user-data-dir`) and every profile in each, and for each profile: adds and selects the theme, copies the two stylesheets into the folder Vivaldi loads, takes the VPN button out of the toolbars, merges the settings, and switches on the experiment in `Local State`. Saves `Preferences` and `Local State` under `~/.local/state/remainder` on the first run. `--qa DIR` builds a QA profile instead. | no |
 
 `settings.json` is JSON with comments, and each key quotes the shipped default
 it changes, read off `prefs_definitions.json` in the installed build. Vivaldi
@@ -55,15 +56,27 @@ it, one specificity step up, and the checker proves the steps rank the way it
 resolves them. The whole stylesheet is scoped to `#browser.theme-id-Remainder`,
 so selecting another theme in Settings › Themes undoes it.
 
-**The UI renders under the size the floors assume, and Vivaldi has a zoom for
-it.** Vivaldi sets its chrome at 11.5 px in 110 rules and 13 px in 34, and every
-contrast floor in §0e assumes about 16 (§5). Obsidian and Zettlr had their text
-set at 16 px rule by rule; Vivaldi has its own User Interface Zoom, which scales
-the whole interface and no web page, and keeps Vivaldi's proportions. The
-installer sets it to **140%** (CHOSEN): the least tenth that lifts 11.5 px to 16
-(× 1.3 gives 14.95, × 1.4 gives 16.1). The interface is 40% larger than
-Vivaldi ships it, and its text now reads at the size of the rest of the
-desktop's. `--no-zoom` leaves your zoom alone, and the floors then do not hold.
+**The chrome's text is 14 px: raised, and still under the size the floors
+assume.** Vivaldi writes its sizes as literals — 11.5 px in 110 rules, 13 px in
+34, 10 to 12 px in 22 more — under a 13 px root, and every contrast floor in §0e
+assumes about 16 (§5). The first answer was Vivaldi's own User Interface Zoom at
+140%, the least tenth that lifts 11.5 px to 16. It scales everything, the icons,
+bars and spacing with the text, and on a desktop already scaled to 175% it read
+as a zoom on a zoom; it was looked at and retired the same day (`CONTRIBUTING.md`
+§9). So the text alone is raised, as Obsidian's and Zettlr's are, and to **14 px**
+(CHOSEN, 2026-09-29), not 16: every size Vivaldi sets under 14 px is recorded off
+the installed build and answered at its own selector, and the root takes 14 px
+for everything that inherits. Icons, tab heights and spacing stay Vivaldi's.
+
+14 px is a choice made under the floors, and what it costs is measured rather
+than hidden. The pairs are gated at the kit's 16 px tiers, as on every other
+surface; at 14 px, `build/apca.py` asks Lc 90 of text at 400, and eight of the
+400-weight pairs sit under it — WHITE on ACCENT (−78.5) on the key strip, WHITE
+on SELECT (−87.5) on a selected row, WHITE on DARK (−81.7) on a private window's
+hovered tab, DARK on WHITE (79.0) for secondary text in a field. BLACK on WHITE
+(91.8) clears it. The checker prints the list every run. It also costs room: the
+weather widget's footer wraps to two lines, and speed dials' titles are cut
+sooner.
 
 ## The shape of it
 
@@ -102,6 +115,11 @@ its buttons — is a titlebar too, so both go ACCENT while the window is key. Th
 is more ACCENT than a top strip, in the layout you choose for it, and it carries
 the same one state. The address field on that column is a field there too: WHITE,
 where Vivaldi paints it in the accent's dark shade until it is focused.
+
+**Auto-hide slides the window's own title bar over the page**, out of the header,
+and a title bar is part of the strip: ACCENT carrying WHITE when the window is
+key, in whichever layout. It was LIGHT there — found on this machine's own
+profile, which has auto-hide on, and not in the first pass, which did not.
 
 **A private window is BLACK, where Vivaldi's is violet.** Vivaldi says a window is
 private with a violet theme of its own — a hue carrying a state, which §6.8 gives
@@ -155,9 +173,10 @@ button is taken out of it.
 ## The ladder
 
 ```
-python3 build/vivaldi.py --derive       # the roles, the zoom, and what the native theme alone paints
+python3 build/vivaldi.py --derive       # the roles, the sizes, and what the native theme alone paints
 python3 build/vivaldi.py                # every value, pair and adjacency in the committed stylesheet
 python3 build/vivaldi.py --write        # regenerate the stylesheet, the declutter and theme.json
+python3 build/vivaldi.py --record       # re-record Vivaldi's own sizes off the installed build
 python3 build/vivaldi.py --coverage     # the installed build's variables and literals against the record
 python3 build/vivaldi.py --screen P     # what a running Vivaldi paints (below); --brief for the defects only
 ```
@@ -187,27 +206,38 @@ one before it that can match the same element — a key window's and a non-key
 window's cannot — since a region that ranked lower would lose to the one it
 answers and the browser would resolve it differently from the checker.
 `--coverage` re-reads the installed `bundle.js` and `style/common.css` and reports
-what was renamed or added since.
+what was renamed or added since, and every size under 14 px that is not the one
+recorded.
+
+**The sizes are answered where Vivaldi sets them, and nowhere else.** Each of
+the 166 recorded sizes is raised at its own selector, scoped to the kit's
+`#browser` in `:where()`, so it has exactly the specificity of Vivaldi's own rule
+and wins by coming later — exactly where Vivaldi's did. An `:is()` scope was
+tried first; it added an id's weight, so a plain `button { 13px }` outranked the
+welcome page's `.welcome-button { 16px }` and shrank it. And each size keeps the
+`@media` or `@container` condition it holds under: taken without it, a size
+Vivaldi sets for a narrow welcome card applied at every width.
 
 ## Reached, measured
 
 `--screen` asks a running Vivaldi, over its DevTools port, what every visible
 element of every interface window computed, composites each text's ground from
 its ancestors, and reports every value off the ladder and every text pair under
-the tier its computed weight demands, at the computed size times the UI zoom.
-Then it photographs each window and reads the pixels for what no computed style
+the tier its computed weight demands, and every text under 14 px at the UI
+zoom. It reads every text's size with the interface stylesheet switched off and
+on, and names any the kit made smaller. Then it photographs each window and reads the pixels for what no computed style
 sees. It reads blends however Chromium writes them — `rgba()`, and `color(srgb
 …)`, which is how it reports a `color-mix()`; a probe that read only the first
 missed the widgets' 65% wash — and it counts the rules the browser parses out of
 the stylesheet.
 
 Run on QA profiles built by `install.sh --qa`, on an invisible display,
-2026-09-29:
+2026-09-29 — first at the 140% zoom, then again at 100% with the text at 14 px:
 
 - **the main window**, tabs on top and at the side, and in your own layout — the
   navigation and the address field in the tab column, tab stacks as accordions,
-  the status bar as an overlay — key and not key, and a private window, key and
-  not;
+  the status bar as an overlay, auto-hide on — key and not key, and a private
+  window, key and not;
 - **the start page** with its speed dials, its weather and currency widgets and
   its groups; a web page; four tabs, one hovered; the address field's suggestions
   with the search-suggestions prompt;
@@ -222,9 +252,12 @@ which the table had pinned as a hover; the address field on a side strip in the
 accent's dark shade; the side header's title WHITE on LIGHT; the current tab's
 title WHITE on LIGHT; buttons and drop-downs filled with gradients; the window
 buttons', the panel's edge, the bookmark glyph's and the close button's black
-washes; the widgets' 65% wash; titles and labels faded by opacity; a badge at
-14 px; boxes WHITE on a WHITE page; Settings' list at 400 on LIGHT; and the theme
-previews, which the pins had repainted.
+washes; the widgets' 65% wash; titles and labels faded by opacity; boxes WHITE
+on a WHITE page; Settings' list at 400 on LIGHT; the theme previews, which the
+pins had repainted; and, at 14 px, the welcome page's text shrunk by the two
+scoping mistakes above, and the auto-hide title bar LIGHT carrying BLACK. At
+100%, every text in every state walked is 14 px or larger and none is smaller
+than Vivaldi alone makes it.
 
 **Not walked**: quick commands and the bookmark-added popup — Vivaldi handles its
 shortcuts in the browser process, which synthetic key events over DevTools do not
@@ -254,8 +287,6 @@ Tolerated, never echoed (§4). `PLATFORM.md` is the record:
   start page or the Bookmarks panel, and Vivaldi remembers not to add them back
   (`vivaldi.bookmarks.deleted_partners`).
 - **Real shadows**, under popups, cards and the current tab (§4).
-- **The header's height.** With the tabs at the side the window's title sits in a
-  strip Vivaldi does not grow with the zoom, so it reads small in it.
 - **The 2 px outline** COSMIC draws around every window. It is the compositor's.
 
 ## Installing, and undoing
@@ -272,10 +303,9 @@ stay, and load beside the kit's. Then it adds the theme, selects it, and merges
 the settings; in `Local State` it switches on the experiment.
 
 ```
-sh worksafe/vivaldi/install.sh                      # every profile: theme, zoom and declutter
+sh worksafe/vivaldi/install.sh                      # every profile: theme and declutter
 sh worksafe/vivaldi/install.sh --user-data-dir DIR  # one user-data directory (repeatable)
 sh worksafe/vivaldi/install.sh --no-declutter       # paint only
-sh worksafe/vivaldi/install.sh --no-zoom            # leave the UI zoom alone
 sh worksafe/vivaldi/install.sh --qa DIR             # a QA profile of its own (below)
 ```
 
@@ -286,9 +316,10 @@ writes them back when it quits, which would undo all of it. The process is
 there.
 
 To undo, select another theme in Settings › Themes: the stylesheet is scoped to
-Remainder and paints nothing under any other. Settings › Appearance puts the
-zoom back, and the switches the declutter turned off are each in Settings where
-Vivaldi keeps them. Or, with Vivaldi closed, put the two saved files back from
+Remainder and paints nothing under any other. The switches the declutter turned
+off are each in Settings where Vivaldi keeps them. The installer leaves the UI
+zoom alone; the first version of it set 140%, and Settings › Appearance › *User
+Interface Zoom* puts that back to 100%. Or, with Vivaldi closed, put the two saved files back from
 `~/.local/state/remainder/`.
 
 The QA profile is how the pass above was run, and how to look at a change without
