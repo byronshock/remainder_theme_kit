@@ -162,8 +162,10 @@ On a terminal that asks three questions before writing anything, and Ctrl-C
 before the last one leaves the machine untouched:
 
 1. **Fonts** — fetch and install Montserrat and AtkynsonMono Nerd Font, and
-   hide the mono's 400 cuts so it renders at 500? Not asked when both are
-   already on the machine and no 400 cut of the mono is visible. Default yes.
+   hide the mono's 400 cuts so it renders at 500? Declined, it offers
+   Atkinson Hyperlegible Mono itself instead (`--fonts-plain`). Not asked when
+   both are already on the machine and no 400 cut of the mono is visible.
+   Default yes.
 2. **Icons** — generate the icon theme from this machine's own icons? Not
    offered when the generator's dependencies are missing. Default yes.
 3. **Background** — the museum photograph, the flat BLACK field, or leave the
