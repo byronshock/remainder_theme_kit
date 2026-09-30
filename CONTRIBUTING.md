@@ -148,6 +148,21 @@ add is two notations the method above misreads: `#AARRGGBB` lists, where
 that do not exist, and decimal triples, which a hex scan does not see at all.
 `build/qt.py` reads both, and the count is unchanged read correctly.
 
+**The GTK 3 surface added 55, 2026-09-30, and every one is content.** Its theme
+defines the same fifteen values as Obsidian's as `@rm_*` names and paints its
+own rules from nothing else. But it is adw-gtk3's own rules answered, and adw-gtk3
+styles a few things that are pictures of something: an avatar's colour (GNOME's
+fourteen avatar gradients, each generated from a person's name), a disk-usage
+chart's file types, a colour-temperature scale. Those rules are carried as the
+platform wrote them, and `build/gtk.py` names each by its selector
+(`CONTENT_SELECTORS`) and fails on a colour anywhere else that is not a kit name.
+By a count of every `#RRGGBB` in `worksafe/`, `elevated/`, `palette.json` and
+`poles.json`, Markdown and images skipped, comments stripped, the kit holds 55
+more distinct values with `worksafe/gtk/` than without it. That count does not
+reproduce the 64 above: it reads 71 without `worksafe/gtk/`. The method has
+drifted again, in some detail of the comment stripping, so the difference is the
+figure to trust.
+
 The two reserved values are the first reserved-legend use in the kit: `#FFFFFF`
 on DESTRUCTIVE and on SUCCESS, in `worksafe/firefox/chrome/` and
 `elevated/remainder.user.css` — the close button, the destructive button, and
@@ -322,9 +337,15 @@ python3 build/qt.py                # every value, pair, adjacency and Fusion-der
 python3 build/qt.py --derive       # the role table, the ladders, Fusion's derivations, and the Button trials
 python3 build/qt.py --write        # regenerate the qt5ct, qt6ct and KDE schemes from the role table
 python3 build/qt.py --installed    # the live machine: platform theme, plugins, the schemes in use, measured (a report)
+python3 build/gtk.py               # every platform declaration answered; every value, pair and adjacency in the theme
+python3 build/gtk.py --derive      # the roles, the names, and what every adw-gtk3 expression became
+python3 build/gtk.py --write       # regenerate the theme, the declutter and the glyphs from the record and the tables
+python3 build/gtk.py --record      # re-record adw-gtk3 from the installed build
+python3 build/gtk.py --coverage    # the installed adw-gtk3 against the record (a report)
+python3 build/gtk.py --screen DIR  # Nemo on a display of its own, walked, read from inside and photographed (a report)
 ```
 
-Nine are built. What a checker owes:
+Ten are built. What a checker owes:
 
 - **Every value in a committed surface file is traceable to a named ladder.**
   `NOT DERIVED BY ANY LADDER` is a defect, and it catches the value someone
@@ -573,6 +594,34 @@ theme rather than the theme forced:
   admits `FF` and nothing else, and the `--installed` report says how many of
   a foreign scheme's roles are values the kit authors — four of COSMIC's 21.
 
+And three the tenth added, which a platform whose every state is a tint of two
+others forced:
+
+- **It answers by context, and fails on a context it does not know.** adw-gtk3
+  writes a state as the ink mixed into the ground — `mix(fg, bg, 0.9)` a button
+  at rest, 0.85 hovered — so the same expression is a LIGHT face on the window and
+  a WHITE one on a tool bar, and no row keyed on the expression can answer it.
+  `build/gtk.py` reads each selector for the surface its element sits on, the
+  element and its state, and takes the kit's ground and ink for that; a selector
+  whose element it does not know is `UNCLASSIFIED`, this surface's `NOT DERIVED BY
+  ANY LADDER`. Where the selector is silent about its surface, the platform's
+  colour says which one it meant (`@headerbar_fg_color` is ink on the strip), and
+  that is the only use the checker makes of the expression.
+- **It reads the running application from the inside.** A web surface's probe
+  asks the browser; GTK 3 has no such port. So `build/gtk_probe.c` is a GTK module
+  the application loads, and on a signal it writes every window's CSS node tree
+  with each computed value and the stylesheet line that set it — which GTK keeps
+  only under `GTK_DEBUG=interactive` — then puts every widget through hover,
+  press, checked, selected and disabled, and the window through not-key. The
+  photograph is read beside it, content masked. It found thirteen defects the gate
+  could not, the worst a rule that reached further than it said.
+- **It does not write what reaches further than it says.** GTK 3 has no
+  `!important` and a rule names only the states it cares about, so a platform rule
+  for a window that is not key (`button.flat:backdrop`) also matched a toggled
+  button and cleared its fill under its WHITE glyph. The kit shows key state in the
+  strip and nowhere else, so those rules — 255 selectors — are not written, and the
+  checker lists what it drops and why (`--derive`).
+
 **The icon theme has a checker too, and it is a different shape.** Its output is
 never committed and never redistributed (§4), and its values are not a ladder, so
 there is no file to scan. What must hold is the bar itself: *every value the
@@ -625,6 +674,8 @@ right".
 | `list.hoverBackground` SELECT, carrying WHITE by `list.hoverForeground` | BLACK on SELECT, Lc 0.0, in an extension's chat webview | a webview sets the ground alone and its text inherits `foreground`; an id whose platform default is a faint tint is a tint, so hover is LIGHT, 2026-09-21 |
 | Vivaldi's UI zoom at 140%, the least tenth that lifts its 11.5 px chrome to 16 | text at 16.1 px, and every icon, bar and gap 40% larger with it, on a desktop already scaled to 175% | read as a zoom on a zoom; looked at on this machine and retired the same day for the text alone at 14 px, CHOSEN under the floors, 2026-09-29 (`README_VIVALDI.md`) |
 | Qt's `Button` as LIGHT, §2's own assignment | Fusion lightens and desaturates what it is fed and paints a gradient: BLACK on the face's bottom stop Lc 63, on every tab page 66 (`build/qt.py --derive`) | the input is chosen against the derivation: `neutral_9` carries BLACK at 76 and 83 there; WHITE was tried and clips to `#FFFFFF`, DARK leaves WHITE at −70 on the face. 2026-09-21 |
+| adw-gtk3's rules for a window that is not key, answered like the rest | a toggled tool bar button in a window that was not key lost its ACCENT under `button.flat:backdrop` and kept its WHITE glyph, on LIGHT | the rules for a window that is not key are not written outside the strip; key state is the strip's alone (`worksafe/gtk/README_GTK.md`). 2026-09-30 |
+| a hovered row in a WHITE list as LIGHT, as `worksafe/obsidian/` has it | BLACK at 400 on it, Lc 61.2 against 75 | no fill: GTK 3's own Adwaita draws none, and the pointer marks the row. 2026-09-30 |
 | the KDE `Button` set as LIGHT, flat | BLACK on it Lc 61.3 at the 400 the styles render, and nothing else the set names reads on it: ACCENT 45, DARK 48, the ANSI red 47 | DARK carrying WHITE, Lc −81.7, the pair `build/vscode.py` gives its secondary button; every text role on the set is WHITE. 2026-09-21 |
 
 A value with no measurement beside it is a guess, and the next person cannot
@@ -751,6 +802,20 @@ bytes exactly; the gradient faces agree with their stops to the sampling of
 the first and last rows. The blue and orange in the glyphs are subpixel
 rendering (`PLATFORM.md`).
 
+On GTK 3 the pass is the probe and a photograph, on a display of its own:
+`python3 build/gtk.py --screen DIR` builds a profile under DIR (the committed
+theme linked, the user's fonts, sample files, settings in memory, a session bus
+with no portals), starts `Xvfb :77` and a stand-in window manager that lets GTK
+draw its own title bar and tells it which window is key, compiles
+`build/gtk_probe.c` into Nemo, and walks it by keyboard through 18 states — the
+three views, selection and renaming, the menus, a split, tabs, search, the window
+not key, and three dialogs. Measured 2026-09-30 over 1,375 computed trees, after
+thirteen fixes the pass itself found: every painted value a kit value, no text or
+glyph under its tier, and no readable hue in the chrome off the kit's families.
+Nothing composites on that display, so a shadow's margin photographs black; and
+it is X, where the desktop is Wayland, so the title bar and key state are owed a
+look on the desktop. `README_GTK.md` lists the states and what is left.
+
 What the pass is looking for: no hue in chrome that reads as a signal (§1); the
 three semantic hues present only where the meaning is (§3); one rule, the same
 width everywhere, carrying no state (§5); the cursor findable at a glance on a
@@ -776,6 +841,9 @@ motion, no blur.
 | `worksafe/vivaldi/theme.json` | generated **and committed**; guarded by `build/vivaldi.py`: the native theme, whose five colours are §2's and whose switches are the ones the checker measured with |
 | `build/zettlr_platform.css` | **recorded and committed**: Zettlr's own CSS, the platform the theme answers, written by `build/zettlr.py --record` from the installed build and a running window and never by hand; GPL-3.0, like Zettlr. A re-record may reorder its CodeMirror blocks — the order the editor happened to mount them in — without changing what they hold, and the theme it writes then differs in order only |
 | `worksafe/qt/qt5ct/colors/remainder.conf`, `worksafe/qt/qt6ct/colors/remainder.conf`, `worksafe/qt/kde/Remainder.colors` | generated **and committed**; guarded by `build/qt.py`. One role table, three notations: 21 `#AARRGGBB` per group for qt5ct, 22 for qt6ct, decimal triples for KDE |
+| `worksafe/gtk/Remainder/gtk-3.0/gtk.css` | generated **and committed**; guarded by `build/gtk.py`, which fails if it is not what the record and the tables produce. The only literal colours in it are the `@rm_*` definitions and the content rules the checker names |
+| `worksafe/gtk/Remainder/gtk-3.0/remainder-declutter.css`, `assets/*.svg`, `index.theme` | generated **and committed**; guarded by `build/gtk.py`: the declutter names no colour, and the glyphs are symbolic and name no fill |
+| `build/gtk_platform.css` | **recorded and committed**: adw-gtk3's `gtk-3.0/gtk.css` as installed, with its version, date and SHA-256 in the header, written by `build/gtk.py --record` and never by hand; LGPL-2.1, carried under its §3 as GPL-3.0-or-later |
 | `arc_ramps.svg`, `magenta_field.svg` | pixel-grid renders of several MB; regenerate, never commit |
 | `*.png` | rasters of the committed SVGs. The SVG is the artifact; a PNG beside it is a second copy that goes stale silently |
 | the icon theme | built at install time into `~/.local/share/icons/remainder` from the icons that machine already has. The user's own brands in the user's own paint; the kit has no license to redistribute anybody's brand art (§4) |

@@ -771,6 +771,73 @@ radii and blends; the title bar on COSMIC; the palette of a Flatpak without the
 per-application override; and kdeglobals on COSMIC across a theme change while
 `apply_theme_global` is on.
 
+## GTK 3
+
+Measured on GTK 3.24.52 (the CachyOS `gtk3` package) with adw-gtk3 6.5 (`adw-gtk-theme`) and Nemo 6.6.4, on
+COSMIC, 2026-09-30, and read off Nemo's source at the 6.6.4 tag.
+
+- **A theme is a directory** — `~/.local/share/themes/NAME/gtk-3.0/gtk.css` (or `~/.themes/NAME`) with an
+  `index.theme` beside `gtk-3.0/` — and it is named by `org.gnome.desktop.interface gtk-theme` (gsettings),
+  which GTK 3 reads on COSMIC, or by `gtk-theme-name` in `~/.config/gtk-3.0/settings.ini` where no settings
+  service answers. GTK watches the setting and restyles every open window when it changes. `GTK_THEME=NAME`
+  in an application's environment loads that theme's CSS but leaves `GtkSettings:gtk-theme-name` at the
+  setting's value, so an application that reads the name — Nemo does — sees the setting, not the variable.
+- **The cascade has five priorities**: fallback 1, theme 200, settings 400, application 600, and the user's
+  `~/.config/gtk-3.0/gtk.css` at 800. A theme's rule loses to any rule an application adds at its own
+  priority; it reaches such a rule only through the named colours the rule reads. There is no `!important`.
+  `@import` may stand anywhere in a sheet and imports in place: a sheet imported last wins ties.
+- **Named colours resolve across every provider, highest priority first.** A `@define-color` in the user's
+  `gtk.css` redefines that name for every rule that reads it, the theme's own included (measured: a theme rule
+  reading `@x` took the user sheet's value; one reading a name the user sheet did not define kept the
+  theme's). So a theme that must not be repainted by a user sheet paints from names no one else defines.
+- **COSMIC's GTK export** is that user sheet. With the toolkit setting `apply_theme_global` on,
+  cosmic-settings-daemon writes `~/.config/gtk-3.0/gtk.css` (and gtk-4.0's) defining libadwaita's colour names
+  — `window_bg_color`, `headerbar_bg_color`, `accent_bg_color` and the rest — for adw-gtk3 to read
+  (read in the daemon's binary; the setting is off on this machine and the file was not measured). adw-gtk3
+  is a dependency of `cosmic-settings` and `cosmic-settings-daemon`, so it is on every COSMIC machine; it
+  defines libadwaita's names, GTK 3's own (`theme_bg_color`, `borders`, the `wm_*` set) and GNOME's palette
+  (`blue_3` and the rest).
+- **The font.** `GtkSettings:gtk-font-name` comes from gsettings `font-name`; a family named without a size
+  renders at 10 pt, 13.3 px at 96 dpi. A theme may set `font-family`, `font-size` and `font-weight` on
+  `window`, and they win over the setting (measured on a label).
+- **A theme sets weight, and GTK 3 dims by opacity.** adw-gtk3's `.dim-label`, subtitles and a disabled
+  spinner are the ink at `opacity` 0.55 or 0.5 over whatever is beneath, and a disabled icon is
+  `-gtk-icon-effect: dim`; both are blends.
+- **The title bar is GTK's own on COSMIC.** GTK 3 has no xdg-decoration support, so on Wayland it draws a
+  client-side title bar (`headerbar.titlebar.default-decoration`) for a window that sets none, Nemo's
+  included, and styles it from the theme. On X it does so only when `gtk_window_supports_client_shadow`
+  holds: `_NET_WM_CM_S0` owned, `_GTK_FRAME_EXTENTS` in `_NET_SUPPORTED`, and an RGBA visual; `GTK_CSD=1`
+  asks for it. A window that is not key carries `:backdrop` on every node — GTK learns it from the
+  compositor on Wayland and from `_NET_WM_STATE_FOCUSED` on X when the window manager advertises that
+  atom. So a theme can show key state here, which libcosmic's own header bars cannot (COSMIC, above).
+- **A popup menu's CSS nodes hang under the item that opened it**: `menubar > menuitem#File > window.popup >
+  menu > menuitem`. A descendant selector written for the menu bar (`menubar accelerator`) reaches every
+  menu it opens; write the child path.
+- **What GTK computed, and from where.** `gtk_style_context_to_string` with
+  `GTK_STYLE_CONTEXT_PRINT_RECURSE | GTK_STYLE_CONTEXT_PRINT_SHOW_STYLE` prints a window's CSS node tree with
+  every computed value and the `file:line:column` that set it — but only for a process started with
+  `GTK_DEBUG=interactive`, since without it GTK keeps no record of the rule; with it GTK also opens the
+  inspector, which can be hidden. A module named in `GTK_MODULES` (`gtk_module_init`) runs inside any GTK 3
+  application and can call it. The Arch package is not built with `G_ENABLE_DEBUG`, and `interactive` works
+  regardless.
+- **Nemo 6.6** adds two sheets of its own at start: `nemo-style-fallback.css` at fallback priority (the
+  sidebar's disk-usage bar, as the style properties `-NemoPlacesTreeView-disk-full-bg-color` and
+  `-fg-color`) and `nemo-style-application.css` at application priority (the drop bar, and the desktop's
+  icons, whose label colours are literals). Unless the theme's name contains `mint`, `arc`, `numix` or
+  `matcha`, it reads the theme's CSS (`gtk_css_provider_get_named`) and, if the text contains no `nemo`,
+  adds `nemo-style-fallback-mandatory.css` at application priority as well: the inactive pane's shading,
+  the rename box, the floating status bar, all from `@theme_*` names. Its places sidebar is
+  `box.sidebar > scrolledwindow.nemo-places-sidebar > treeview.places-treeview`, with no viewport between
+  them, where adw-gtk3's rules for it expect one. Its window is `window.nemo-window`; the pane that does not
+  have focus in a split carries `.nemo-inactive-pane`. It answers `org.freedesktop.FileManager1` on the
+  session bus.
+
+**Cannot reach:** GTK 4 and libadwaita applications, which take no theme (only named colours from the user's
+`gtk-4.0/gtk.css`); a Flatpak's GTK 3 application, which needs a filesystem override to see the theme and
+was not tried (none is installed here); an application's own literals at application priority, Nemo's
+desktop icons among them; and what a GTK 3 window's CSD shadow paints outside the window, which is the
+compositor's to blend.
+
 ## Claude Code
 
 Custom theme JSON in `~/.claude/themes/`, selected with `/theme`, or
