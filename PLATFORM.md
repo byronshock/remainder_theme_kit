@@ -136,8 +136,9 @@ derivation and record it.
 
 ## Firefox
 
-Draws its own chrome and hands it to a per-profile stylesheet — so it is the
-one surface that can show key/non-key state where the platform will not.
+Draws its own chrome and hands it to a per-profile stylesheet — so it can
+show key/non-key state where the platform will not (so can VS Code, Obsidian and
+Vivaldi, below).
 Measured on 155.0.1 (deb), 2026-09-19, except where noted.
 
 - `user.js` for prefs; `chrome/userChrome.css` and `userContent.css` for
@@ -219,7 +220,12 @@ Measured on 155.0.1 (deb), 2026-09-19, except where noted.
   `browser.preferences.moreFromMozilla`.
 - **The profile root moves with the packaging**: `~/.mozilla/firefox` (deb),
   `~/snap/firefox/common/.mozilla/firefox`,
-  `~/.var/app/org.mozilla.firefox/.mozilla/firefox`. Inside it, `installs.ini`
+  `~/.var/app/org.mozilla.firefox/.mozilla/firefox` — and
+  `${XDG_CONFIG_HOME:-~/.config}/mozilla/firefox` on a machine where Firefox
+  found no `~/.mozilla` at its first start: measured 2026-09-23 on 156.0.1 (the
+  Arch package), which created no `~/.mozilla` at all and keeps `profiles.ini`
+  there; its libxul carries both `XDG_CONFIG_HOME` and a `MOZ_LEGACY_HOME`
+  override. Where `~/.mozilla` exists it is still the root. Inside it, `installs.ini`
   names the profile *this install* opens, which is not always the one
   `profiles.ini` marks `Default=1`.
 - **The running process is named `firefox-bin`**, not `firefox`: on the deb
@@ -238,15 +244,32 @@ on COSMIC.
 
 - A colour theme is an extension: a folder holding a `package.json` with
   `contributes.themes` and the theme JSON it points at. **A folder copied into
-  the extensions directory is picked up** — the scanner lists it and writes its
-  own `extensions.json` beside it — so no `.vsix` and no CLI is needed to
-  install one. It is seen on the next window reload or start.
+  the extensions directory is picked up only while there is no
+  `extensions.json` beside it.** On a directory without one, the scanner lists
+  the folder and writes that file from what it finds (the 1.137.0 measurement,
+  on a fresh directory). The first marketplace install writes
+  `extensions.json`, and from then on it is the record of what is installed: a
+  folder it does not list is logged `Marked extension as removed` on the next
+  start, its name goes into `.obsolete` in the same directory, and the theme
+  never appears — 1.138.0 (Code - OSS, 2026-09-23), five consecutive starts,
+  with `workbench.colorTheme` naming the theme throughout; the window fell
+  back to the build's default, Dark 2026. Appending the folder's entry to
+  `extensions.json` in the form VS Code writes (`identifier`, `version`,
+  `location` as URI components, `relativeLocation`, `metadata`) and dropping
+  its name from `.obsolete` registers it: `code --list-extensions` reads the
+  same record and listed it at once, and the start that followed logged no
+  removal. So no `.vsix` and no CLI is needed to install one, but the entry is.
+  It is seen on the next window reload or start.
 - Where each packaging keeps things (per user, no elevation):
   `~/.vscode/extensions` and `~/.config/Code/User/settings.json` (deb, rpm, tar);
   `~/.var/app/com.visualstudio.code/data/vscode/extensions` and
   `~/.var/app/com.visualstudio.code/config/Code/User/settings.json` (Flatpak);
   `~/.vscode-insiders` and `~/.config/Code - Insiders` (Insiders);
   `~/.vscode-oss` and `~/.config/VSCodium` (VSCodium);
+  `~/.vscode-oss` and `~/.config/Code - OSS` (Code - OSS, the Arch `code`
+  package: the same extensions directory as VSCodium, since both set
+  `dataFolderName` to `.vscode-oss`, and its own config folder; 1.138.0,
+  2026-09-23);
   `~/.var/app/com.vscodium.codium/data/codium` and `…/config/VSCodium` (VSCodium
   Flatpak).
 - **`settings.json` is JSON with comments and trailing commas**, and VS Code
@@ -324,6 +347,261 @@ on COSMIC.
 **Cannot reach:** the workbench face (above); font weight; border widths and
 radii; the onboarding window; the file icons' own colours, other than by
 choosing an icon theme (`vs-minimal` is monochrome and takes `icon.foreground`).
+
+## Obsidian
+
+Electron: the whole window is a web page, and a theme is a stylesheet that can
+set weight, size, radius and structure as well as colour. Measured on 1.13.7
+(the Arch `obsidian` package, on the system `electron43`), 2026-09-25, on COSMIC.
+
+- **A theme belongs to a vault, not to the user.** It is a folder,
+  `<vault>/.obsidian/themes/<Name>/`, holding `theme.css` and `manifest.json`,
+  and it is selected by `cssTheme` in `<vault>/.obsidian/appearance.json`. A CSS
+  snippet is a file in `<vault>/.obsidian/snippets/`, switched on by its name in
+  `enabledCssSnippets` in the same file. There is no per-user theme: an installer
+  goes vault by vault. A vault kept in a git repository usually ignores
+  `.obsidian/`, so writing there does not touch the repository.
+- **The vault list is `obsidian.json`** in the app's config directory:
+  `${XDG_CONFIG_HOME:-~/.config}/obsidian` for the Arch package (measured). The
+  Flatpak's `~/.var/app/md.obsidian.Obsidian/config/obsidian` and the Snap's
+  `~/snap/obsidian/current/.config/obsidian` are the platforms' conventions and
+  are *not verified on a machine*. The same file holds the app-wide settings:
+  `frame` (`"native"` gives the compositor's frame; absent, the frame is hidden
+  and the app draws its own titlebar) and `updateDisabled`.
+- **Obsidian opens only a vault that list names.** A folder path on its command
+  line, or an `obsidian://open?path=` link to a vault it does not list, opens
+  the vault picker; writing the entry into `obsidian.json` first, with
+  `"open": true`, opens it. `XDG_CONFIG_HOME` moves the whole profile — the list,
+  window state, local storage — so a test profile is one variable away.
+- **Settings and themes are watched.** A change on disk to `appearance.json` or
+  `app.json` is re-read (`reloadConfig`, on the vault's own watcher), and a change
+  to the selected theme's `theme.css` reloads it, so an installer can write both
+  with Obsidian open and the window follows at once.
+- **The app is two archives.** The package ships `app.asar`, a loader, and
+  `obsidian.asar`, the app — `app.css`, `app.js` — and Obsidian checks GitHub for
+  a newer `obsidian-X.Y.Z.asar` on start and hourly, downloads it into its config
+  directory, and loads that over the packaged one; `obsidian.log` there names the
+  one it loaded. So the build to read is not always the package's. An asar is a
+  pickled length, a JSON index and the files, and Python reads it with `struct`.
+- **The window knows when it is key.** `is-focused` is toggled on `<body>` with
+  the window's focus, and with the hidden frame the top 40 px — the tab strips,
+  the sidebar toggles and the window buttons — are painted from
+  `--titlebar-background` and `--titlebar-background-focused`. So a theme can
+  show key state, which COSMIC's own header bars cannot. With `frame` native the
+  compositor paints the titlebar instead.
+- **Settings open in a window of their own** by default on 1.13.7
+  (`settingsPopoutWindow`): an `about:blank` page the main window fills, with the
+  theme, its own titlebar and its own `is-focused`.
+- **Colour arrives as custom properties, most of them derived.** 873 variables
+  on `body` and `.theme-light` in `app.css`, 302 of which take a colour; hover,
+  selection, tags, the current file and the scrollbars are
+  `color-mix(in oklch, X N%, transparent)`, a blend rather than a value. The
+  accent is `hsl()` of three variables. A few colours are literals in rules and
+  reach no variable — tooltip and notice text, the dropdown's arrow (a data URI),
+  the radio button's circle — and a theme overrides the rule. A custom property
+  is computed where it is declared, so a region that redefines one variable does
+  not change another declared on `body` that reads it.
+- **Motion is mostly literal.** Of 85 `transition` and `animation` declarations
+  in `app.css`, 14 read the `--anim-duration-*` variables and 66 carry a literal
+  duration; there is no `prefers-reduced-motion` query. The app's own animation
+  helper sets an inline transition with its own timer beside the
+  `transitionend`, so durations near zero strand nothing.
+- **The type is a theme slot.** `--font-interface-theme`, `--font-text-theme` and
+  `--font-monospace-theme` sit under the user's own choice in Settings, which
+  wins. The chrome's sizes are variables too, at 12, 13 and 15 px; the note's
+  text is `baseFontSize`, default 16.
+- **Sync keeps its connection outside the vault**, in the app's own storage, so
+  nothing in a vault's files says whether it syncs. Its core plugin ships on, and
+  with no account connected shows an error status icon.
+- **The release notes open after an update**, decided by a value in the app's
+  local storage (`most-recently-installed-version`), not by a setting.
+- **`--remote-debugging-port`** works on this build and exposes each window —
+  the popouts included — as a DevTools target; `getComputedStyle` over it reads
+  back what the cascade produced, and a screenshot over it needs the window
+  uncovered, where the computed values do not.
+
+**Cannot reach:** the release notes after an update; a plugin's own stylesheet;
+the graph's canvas, except through the `--graph-*` variables it reads at load;
+the titlebar under the native frame.
+
+## Zettlr
+
+Electron: every window is a web page, and there is no theme slot — one
+stylesheet of the user's own is the whole mechanism. Measured on 4.8.0 (the
+CachyOS `zettlr` package, on the system `electron43`), 2026-09-25 and 26, on
+COSMIC.
+
+- **`custom.css` in the data directory is loaded last, in every window**, as
+  `<link id="custom-css-link" href="safe-file://…">` after all of Zettlr's own
+  stylesheets, and `@import` relative to it works. It is read as each window
+  opens, and pushed to every open window when it is saved from Assets Manager ›
+  Custom CSS (the `css-provider` command `set-custom-css`).
+- **The data directory** is `${XDG_CONFIG_HOME:-~/.config}/Zettlr` for the Arch
+  package (measured); the Flatpak's `~/.var/app/com.zettlr.Zettlr/config/Zettlr`
+  is its convention and *not verified on a machine*. `XDG_CONFIG_HOME` moves all
+  of it, the single-instance lock included, so a test profile is one variable
+  away and runs beside the real one. `--data-dir=DIR` also exists, but the lock
+  is taken before that flag is read, so a second instance started with it finds
+  the first and exits.
+- **`config.json` is held in memory and written back when Zettlr quits**, so an
+  edit made while it runs is lost: an installer needs it closed. With no
+  `config.json` Zettlr takes the start for a first start, and with a `version` in
+  it that differs from the running build, for an update; either opens the
+  onboarding window before the main one.
+- **The frame is a setting**, `window.nativeAppearance`, applied on restart.
+  Off — the default on Linux — Zettlr draws its menubar and toolbar in the page
+  and Electron draws the window buttons over the toolbar; they are not in the
+  page, and no stylesheet reaches them. On, the desktop draws a titlebar and the
+  menus become a native menu bar. Dark mode is `darkMode`, switched by
+  `autoDarkMode` (`off`, `system`, `schedule`), and the editor follows it or not
+  by `darkModeEditor`.
+- **The window does not know when it is key.** Nothing in the page changes with
+  the window's focus, so a theme cannot show key state.
+- **The CSS is in the bundles and in CodeMirror.** Each window's bundle carries
+  its stylesheets as strings (css-loader) and inserts them at the end of
+  `<head>` when it runs: 76 across fourteen windows, most colours written as
+  literals rather than variables. CodeMirror 6 writes its styles at run time into
+  one `<style>` element first in `<head>`, under numbered scope classes (`.ͼ1`,
+  …) that differ by window and by the order modules were mounted in; a module is
+  mounted only while its extension runs — raw mode has one of its own — and stays
+  mounted after. One more stylesheet is written at run time, `#system-css`: the
+  platform's accent as two variables.
+- **Each window names itself to CSS.** Its page loads its own bundle,
+  `<script src="../main_window/index.js">`, `../assets/index.js`, and so on, so
+  `:has(script[src=…])` on the root tells one window's page from another's.
+- **Some states are styled only under `body.dark` or `body.darwin`.** On Linux in
+  light mode a chosen radio button, a shortcut that is not bound and a pressed
+  toolbar toggle have no style of their own.
+- **The chrome's text is 10 to 15 px.** The note's size is a setting.
+- **Update checks are compiled out** of this package: Preferences says so, and
+  the Updater window reports none.
+- **The Arch package is one archive run by the system Electron**,
+  `/usr/lib/zettlr/app.asar`, so its process is `electron` with that path; the
+  other packagings name it `zettlr`. `zettlr --version` prints the version.
+- **The splash screen shows only when starting takes over a second**, measured
+  from when the config is loaded.
+- **`--remote-debugging-port`** exposes every window as a DevTools target, and
+  `--inspect=PORT` the main process's Node inspector. Menus, context menus
+  included, are HTML in the window's own page on Linux, so they are read with
+  it. On a virtual
+  display (`Xvfb`, with `--ozone-platform=x11`) every window renders and can be
+  photographed over the port without reaching the desktop.
+- **Chromium 150 in Electron 43.7, where it matters to a theme.** A selection's
+  ink is inherited from the element around it (`::selection` highlight
+  inheritance), and `getComputedStyle(el, '::selection')` reports `currentColor`
+  there wrongly, so what it paints has to be read off the pixels. The native
+  spelling mark in a text field is styled by `::spelling-error`, with
+  `text-decoration`. An emoji is drawn by a colour font, which `color` does not
+  reach; the language-variant menus in Preferences › Spellchecking label their
+  entries with flag emoji.
+
+**Cannot reach:** the window buttons; key state; the menus under the native
+frame; emoji and pictures; Zettlr's update checks, on this package.
+
+## Vivaldi
+
+Chromium, with the whole interface drawn as one web page: `window.html` in
+Vivaldi's own component extension (`mpognobbkildjkofajifpdfhcoklimli`), the web
+in `<webview>`s beneath it. Measured on 8.2.4133.76 (the Arch `vivaldi`
+package), 2026-09-29, on COSMIC.
+
+- **Two knobs, and a theme needs both.** A native theme is a JSON entry in each
+  profile's `Preferences` — `vivaldi.themes.user`, selected by
+  `vivaldi.themes.current`, and by `vivaldi.themes.current_private` in a private
+  window. Interface stylesheets are an experiment (below).
+- **A native theme is four colours and some switches**: background, foreground,
+  highlight, accent, a window colour, and `colorPosition` (`tabbar`,
+  `addressbar`, `unified`; `accentOnWindow` is the older spelling of `tabbar`),
+  `accentFromPage`, `alpha`, `blur`, `backgroundImage`, `transparencyTabBar`,
+  `transparencyTabs`, `radius`, `contrast`. The interface's script derives 42
+  colour variables from the four by lightening, darkening and mixing — walking a
+  value away from the background until it clears a ΔE the `contrast` setting
+  scales — and 30 more from the background image, and sets them inline on
+  `#browser`, with classes beside them: `theme-id-<id>`, `theme-light` or
+  `theme-dark`, `color-behind-tabs-on`, `unified-ui`, `color-accent-from-page`.
+  Its stylesheet mixes 13 more from those with `color-mix()`. Under `alpha` 0.5
+  the unified style composites the background image through the chrome.
+- **`vivaldi.theme.schedule.enabled` is `system` by default**, and it selects
+  Vivaldi's own light or dark theme (`vivaldi.theme.schedule.o_s`) over
+  `themes.current` whenever the desktop flips. A theme installed with it on is
+  replaced at the next flip.
+- **Interface stylesheets are an experiment**: vivaldi://experiments › *Allow CSS
+  modifications*, the feature `VivaldiCssMods`, stored in `Local State` as the
+  entry `vivaldi-css-mods@1` in `browser.enabled_labs_experiments`. With it on,
+  every `.css` file in the folder at `vivaldi.appearance.css_ui_mods_directory`
+  is served as `chrome://vivaldi-data/css-mods/css` and linked into `window.html`
+  after Vivaldi's own stylesheet. It is author origin, so its `!important` beats
+  the inline variables on `#browser`; but Vivaldi re-declares variables on
+  descendants — the tab strip, the non-key window's header, break mode — so a
+  value meant everywhere has to be declared at every element (importance does
+  not cross inheritance: Firefox, above).
+- **The start page, Settings — in a tab or a window of its own — the welcome
+  pages, the side panels and the popups are all `window.html`.** The start page's
+  own document, `chrome://vivaldi-webui/startpage`, is empty, and the interface
+  draws over it. So one stylesheet reaches all of them.
+- **Menus are not the page.** The Vivaldi menu and every context menu are
+  Chromium's own views, drawn from the GTK theme while
+  `extensions.theme.system_theme` is 1 (the default here): GTK 3's stylesheet in
+  `~/.config/gtk-3.0` if there is one, Adwaita's colours if not. No interface
+  stylesheet reaches them.
+- **The window knows when it is key**: `#browser` carries `hasfocus` or
+  `isblurred`. `vivaldi.theme.dim_blurred` (default on Linux) re-declares the
+  colour variables on a non-key window's header, footer and panels, paler.
+- **A private window carries no class of its own on `#browser`.** Its indicator,
+  `.UrlBar-PrivateWindowIndicator`, is rendered into the address toolbar, and is
+  hidden with that toolbar in the layouts that put the address field in the tab
+  bar; `:has()` finds it either way.
+- **User Interface Zoom** (Settings › Appearance) scales `window.html` and no web
+  page. It is a Chromium zoom level — log base 1.2 of the factor — in the
+  profile's `Preferences` at `partition.per_host_zoom_levels`, against the
+  extension's host in the partition `Storage/ext/<id>/def`, hex-encoded and
+  prefixed `x`. It scales the icons, bars and spacing with the text.
+- **The chrome's sizes are literals**: 11.5 px in 110 rules, 13 px in 34, 10 to
+  12 px in 22 more, under a 13 px root on `#app`, and a few of them inside
+  `@container` queries on named containers (the welcome pages' cards), so a size
+  depends on the width of the element around it as well as on the rule.
+- **Preferences**: `Preferences` in each profile folder, `Local State` beside
+  them, listing the profiles under `profile.info_cache`.
+  `resources/vivaldi/prefs_definitions.json` holds every `vivaldi.*` preference
+  with its default, and a Linux one where it differs. An enum is stored as its
+  index. A toolbar never changed is not in `Preferences` at all. Both files are
+  held in memory and written back when Vivaldi quits, so an edit made while it
+  runs is lost.
+- **The process is `vivaldi-bin`** whatever user-data directory it runs in, so
+  the name cannot say which is open; Chromium's `SingletonLock` in the directory,
+  a symlink to `host-pid`, can. `--user-data-dir` starts a second instance with a
+  lock of its own, beside the first.
+- **A fresh profile opens a setup wizard and a welcome tab**, both
+  `window.html`; `vivaldi.welcome.read_pages` and
+  `vivaldi.startup.has_seen_welcome_page` mark them done. `--no-first-run` does
+  not.
+- **Promotions live in preferences, and one in a toolbar**: the extension
+  banner, the tab-bar popup's tips, a suggested speed dial, suggested top sites,
+  the default-browser check, the prompt to enable search suggestions
+  (`vivaldi.address_bar.show_search_suggestions_warning`, where -1 is
+  dismissed), the donation banner in Settings
+  (`vivaldi.settings.donation_promo_dismissed`, hidden once it is over 0), and
+  the VPN button, a toolbar item (`VPNButton`). A new profile's partner speed
+  dials are bookmarks in `Bookmarks`, remembered in
+  `vivaldi.bookmarks.deleted_partners` once deleted, so they do not come back.
+- **Settings' page icons are coloured** unless `vivaldi.settings.mono_icons`.
+- **Settings › Themes draws each theme as a picture** painted from that theme's
+  own variables on the preview element, so a rule that sets the variables on
+  every element repaints the previews too.
+- **`--remote-debugging-port`** exposes every interface window as an `app`
+  target at `window.html`, and web pages as `page` targets. Keyboard shortcuts
+  are handled in the browser process: key events dispatched over DevTools reach
+  the page and not them. On a virtual display (`Xvfb`, with
+  `--ozone-platform=x11`) every window renders, and a native menu shows only in
+  a photograph of the whole display.
+- **The packaging**: `/opt/vivaldi` for the deb, rpm and Arch packages, user
+  data in `${XDG_CONFIG_HOME:-~/.config}/vivaldi`, the snapshot in
+  `vivaldi-snapshot` beside it; the Flatpak `com.vivaldi.Vivaldi` keeps
+  `~/.var/app/com.vivaldi.Vivaldi/config/vivaldi` by its convention, *not verified
+  on a machine*.
+
+**Cannot reach:** menus (GTK's); GTK dialogs; web pages, except through an
+extension; the shortcuts, over DevTools.
 
 ## Claude Code
 

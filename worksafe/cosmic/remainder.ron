@@ -1,7 +1,7 @@
 // Remainder — COSMIC theme. Import: cosmic-settings appearance import remainder.ron (install.sh does it).
 // Schema: libcosmic cosmic-theme ThemeBuilder v2. Implements AUTHORITY.md §2, §3, §5, §6 and PLATFORM.md COSMIC.
 // Every value here is a value some ladder derived; build/cosmic.py checks each one against the pole test.
-// Neutrals: WHITE #EFE5E9  LIGHT #B8AEB2  DARK #4A4145  BLACK #0F090C.  Chrome: ACCENT #773556  SELECT #531537.
+// Neutrals: WHITE #F1E4E9  LIGHT #BAADB2  DARK #4B4045  BLACK #10080C.  Chrome: ACCENT #763555  SELECT #521436.
 // The chrome carries no hue a user can read as a signal, which is the whole kit (§0a).
 (
     palette: Light((
@@ -11,23 +11,23 @@
         bright_red:    "#AF1E2DFF",   // DESTRUCTIVE, FHWA red
         bright_green:  "#006B54FF",   // SUCCESS, FHWA green
         bright_orange: "#FCD116FF",   // WARNING, FHWA yellow
-        gray_1: "#B8AEB2FF",          // LIGHT
-        gray_2: "#B8AEB2FF",          // LIGHT
+        gray_1: "#BAADB2FF",          // LIGHT
+        gray_2: "#BAADB2FF",          // LIGHT
         // Eleven slots where §2 has four. Interpolated in OKLab lightness at the cast (0.016),
         // ANCHORED so the kit's own four land exactly on 0, 3, 8 and 10: COSMIC derives component
         // colors from this ramp, so a ramp containing §2's ladder puts more of what the platform
         // paints back on the kit's values. build/cosmic.py --derive shows the steps (dE 7.3-8.6).
-        neutral_0:  "#0F090CFF",      // = BLACK
-        neutral_1:  "#211A1DFF",
-        neutral_2:  "#352D30FF",
-        neutral_3:  "#4A4145FF",      // = DARK
-        neutral_4:  "#5E5559FF",
-        neutral_5:  "#746A6EFF",
-        neutral_6:  "#8A8084FF",
-        neutral_7:  "#A1979BFF",
-        neutral_8:  "#B8AEB2FF",      // = LIGHT
-        neutral_9:  "#D3C9CDFF",
-        neutral_10: "#EFE5E9FF",      // = WHITE
+        neutral_0:  "#10080CFF",      // = BLACK
+        neutral_1:  "#22191DFF",
+        neutral_2:  "#362C30FF",
+        neutral_3:  "#4B4045FF",      // = DARK
+        neutral_4:  "#5F5459FF",
+        neutral_5:  "#756A6EFF",
+        neutral_6:  "#8B7F84FF",
+        neutral_7:  "#A2969BFF",
+        neutral_8:  "#BAADB2FF",      // = LIGHT
+        neutral_9:  "#D5C8CDFF",
+        neutral_10: "#F1E4E9FF",      // = WHITE
         // The accent picker offers nine swatches, and every one is an accent the user may choose,
         // so every one has to be legal: clear of every pole and able to carry the WHITE titlebar
         // text §2 puts on the accent. Three hues — §1's working arc at its floor 295.4, at the
@@ -39,21 +39,21 @@
         // red, orange, yellow or green here to put in the slot that asks for one. The arc's two
         // edges clear the pole test by 20 deg more than it requires and sit exactly on the kit's
         // own stricter 31.4 deg guard (§1).
-        accent_blue:      "#806EB0FF",   // arc floor 295.4, Lc 60 tier
+        accent_blue:      "#7F6EAFFF",   // arc floor 295.4, Lc 60 tier
         accent_indigo:    "#53417FFF",   // arc floor 295.4, Lc 78
-        accent_purple:    "#37235EFF",   // arc floor 295.4, Lc 87
-        accent_pink:      "#98679EFF",   // derived centre 323.2, Lc 60
-        accent_red:       "#693A6FFF",   // derived centre 323.2, Lc 78
-        accent_orange:    "#481B4EFF",   // derived centre 323.2, Lc 87
-        accent_yellow:    "#A96284FF",   // home 351.0, Lc 60
-        accent_green:     "#773556FF",   // home 351.0, Lc 78 — the kit's choice, = ACCENT
-        accent_warm_grey: "#531537FF",   // home 351.0, Lc 87 — = SELECT
-        ext_warm_grey: "#4A4145FF",      // DARK
-        ext_orange:    "#481B4EFF",
-        ext_yellow:    "#A96284FF",
-        ext_blue:      "#806EB0FF",
-        ext_purple:    "#693A6FFF",
-        ext_pink:      "#98679EFF",
+        accent_purple:    "#36225DFF",   // arc floor 295.4, Lc 87
+        accent_pink:      "#98669EFF",   // derived centre 323.2, Lc 60
+        accent_red:       "#683A6EFF",   // derived centre 323.2, Lc 78
+        accent_orange:    "#481A4DFF",   // derived centre 323.2, Lc 87
+        accent_yellow:    "#A86283FF",   // home 351.0, Lc 60
+        accent_green:     "#763555FF",   // home 351.0, Lc 78 — the kit's choice, = ACCENT
+        accent_warm_grey: "#521436FF",   // home 351.0, Lc 87 — = SELECT
+        ext_warm_grey: "#4B4045FF",      // DARK
+        ext_orange:    "#481A4DFF",
+        ext_yellow:    "#A86283FF",
+        ext_blue:      "#7F6EAFFF",
+        ext_purple:    "#683A6EFF",
+        ext_pink:      "#98669EFF",
         ext_indigo:    "#53417FFF",
     )),
     // Denser than COSMIC's default (4/8/12/16/24/32/48/64/128). Inherited from the parent kit as
@@ -73,19 +73,19 @@
         radius_l:  (0.0, 0.0, 0.0, 0.0),
         radius_xl: (0.0, 0.0, 0.0, 0.0),
     ),
-    neutral_tint:           Some("#B8AEB2FF"),  // LIGHT: derived neutrals take the cast and no other hue
-    bg_color:               Some("#EFE5E9FF"),  // WHITE: window backgrounds, fields, lists (§2). This
+    neutral_tint:           Some("#BAADB2FF"),  // LIGHT: derived neutrals take the cast and no other hue
+    bg_color:               Some("#F1E4E9FF"),  // WHITE: window backgrounds, fields, lists (§2). This
                                                 //   libcosmic paints header bars with it too, so every
                                                 //   window reads as non-key; §2's ACCENT key titlebar is
                                                 //   unreachable here (PLATFORM.md, README_COSMIC.md).
                                                 //   COSMIC derives its row and card surface from this.
-    primary_container_bg:   Some("#B8AEB2FF"),  // LIGHT: nav sidebars — §2 gives LIGHT to panels. BLACK
+    primary_container_bg:   Some("#BAADB2FF"),  // LIGHT: nav sidebars — §2 gives LIGHT to panels. BLACK
                                                 //   text on it is Lc 61.2, the pair §2 authors for it.
-    secondary_container_bg: Some("#EFE5E9FF"),  // WHITE: lists, cards, content wells
-    text_tint:              Some("#0F090CFF"),  // BLACK text. This slot tints a near-black toward a hue
+    secondary_container_bg: Some("#F1E4E9FF"),  // WHITE: lists, cards, content wells
+    text_tint:              Some("#10080CFF"),  // BLACK text. This slot tints a near-black toward a hue
                                                 //   and cannot set one — which costs this kit nothing,
                                                 //   because BLACK is a near-black with the kit's own cast.
-    accent:      Some("#773556FF"),  // ACCENT: links, toggles, nav indicators, focus, selection (§2). COSMIC
+    accent:      Some("#763555FF"),  // ACCENT: links, toggles, nav indicators, focus, selection (§2). COSMIC
                                      //   has one accent and cannot split focus from it (PLATFORM.md). It is
                                      //   dark, so libcosmic lightens it for accent-as-text; unlike the parent
                                      //   kit that costs nothing here, because the hypothesis constrains hue

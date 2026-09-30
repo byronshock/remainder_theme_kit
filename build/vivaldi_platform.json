@@ -1,0 +1,839 @@
+{
+ "build": "8.2.4133.76",
+ "recorded": "2026-09-29",
+ "note": "Vivaldi's own font-size declarations under CHROME_PX, read off resources/vivaldi/style/common.css by build/vivaldi.py --record: selectors and sizes only. Never hand-edit.",
+ "sizes": [
+  [
+   [],
+   "#app",
+   13.0
+  ],
+  [
+   [],
+   ".win #titlebar #pagetitle",
+   12.0
+  ],
+  [
+   [],
+   ".mac #titlebar #pagetitle, #titlebar #pagetitle .linux.alt",
+   13.0
+  ],
+  [
+   [],
+   ".mosaic-tile .follower-badge",
+   11.5
+  ],
+  [
+   [],
+   "#switch > .toolbar.toolbar-vertical .page-zoom-controls",
+   11.5
+  ],
+  [
+   [],
+   ".item-count, .tree-item .nickname",
+   11.5
+  ],
+  [
+   [],
+   "#browser .sortselector",
+   11.5
+  ],
+  [
+   [],
+   ".button-popup .undo-wrapper .undo-item .undo-text .action-timestamp .timestamp",
+   11.5
+  ],
+  [
+   [],
+   ".button-popup .undo-wrapper .undo-item .undo-text .subject",
+   11.5
+  ],
+  [
+   [],
+   ".dialog-header > .step-counter, .dialog-footer > .step-counter",
+   11.5
+  ],
+  [
+   [],
+   ".dialog-add-feed .last-updated-title li",
+   11.5
+  ],
+  [
+   [],
+   ".dialog-add-feed label",
+   11.5
+  ],
+  [
+   [],
+   ".import-calendar .import-pathname input[type=text], .import-data .import-pathname input[type=text], .import-masterpassword .import-pathname input[type=text], .open-session .import-pathname input[type=text]",
+   11.5
+  ],
+  [
+   [],
+   "#modal-bg.import-data-dialog .import-pathname ol li:before, #modal-bg.welcome-import-data-dialog .import-pathname ol li:before",
+   10.0
+  ],
+  [
+   [],
+   ".TranslatePopup-FooterText",
+   11.5
+  ],
+  [
+   [],
+   ".WorkspacePopup-Items .workspace-item-wrapper .title .tab-count, .WorkspacePopup-Items .this-window .title .tab-count",
+   11.5
+  ],
+  [
+   [],
+   ".selectbox .selectbox-title",
+   13.0
+  ],
+  [
+   [],
+   ".button-badge",
+   10.0
+  ],
+  [
+   [],
+   ".HintTooltip:before",
+   10.0
+  ],
+  [
+   [],
+   ".HintTooltip__content",
+   11.5
+  ],
+  [
+   [],
+   ".master-detail .master-items .item .item-badge, .MailAccountSheet .master-items .item .item-badge",
+   10.0
+  ],
+  [
+   [],
+   ".master-detail .master-items .item .item-meta, .MailAccountSheet .master-items .item .item-meta",
+   11.5
+  ],
+  [
+   [],
+   "#browser .toolbar-editor .dialog-content .draggable-button",
+   11.5
+  ],
+  [
+   [],
+   ".cardview .dateCreated",
+   11.5
+  ],
+  [
+   [],
+   ".cardview .dateModified",
+   11.5
+  ],
+  [
+   [],
+   ".tab",
+   12.0
+  ],
+  [
+   [],
+   ".tab .stack-counter",
+   11.5
+  ],
+  [
+   [],
+   "#vivaldi-tooltip .tooltip .tooltip-item .thumbnail-text",
+   12.0
+  ],
+  [
+   [],
+   "#window-panel .vivaldi-tree .title .pill",
+   11.5
+  ],
+  [
+   [],
+   ".about-page .header-section .update-status p",
+   13.0
+  ],
+  [
+   [],
+   ".about-page .footer-credits",
+   11.5
+  ],
+  [
+   [],
+   ".about-page .footer-credits h3",
+   13.0
+  ],
+  [
+   [],
+   ".PrivacyDash-User p",
+   11.5
+  ],
+  [
+   [],
+   ".PrivacyDash-Title",
+   13.0
+  ],
+  [
+   [],
+   ".PrivacyDash-StatusBlock",
+   11.5
+  ],
+  [
+   [],
+   ".BreakModePopup",
+   13.0
+  ],
+  [
+   [],
+   ".PwaInstallPopup-Content .FormFeedback",
+   11.5
+  ],
+  [
+   [],
+   ".PwaInstallPopup-Errors",
+   11.5
+  ],
+  [
+   [],
+   ".addressfield-popup-container a",
+   11.5
+  ],
+  [
+   [],
+   ".addressfield-popup-container .addressfield-popup .device-list-container .device-list .device-item .device-paired-badge",
+   11.5
+  ],
+  [
+   [],
+   ".addressfield-popup-container .addressfield-popup .dialog-footer .permission-query-container label",
+   13.0
+  ],
+  [
+   [],
+   ".addressfield-popup-container .addressfield-popup .dialog-footer.block-popups label",
+   13.0
+  ],
+  [
+   [],
+   ".addressfield-popup-container .addressfield-popup label",
+   11.5
+  ],
+  [
+   [],
+   ".bookmark-bar",
+   11.5
+  ],
+  [
+   [],
+   "#panels .webpanel-stack .webpanel .webpanel-header .webpanel-title",
+   13.0
+  ],
+  [
+   [],
+   "#session-panel .SessionItem-Date",
+   11.5
+  ],
+  [
+   [],
+   ".session-recovery .session-recovery-wrapper .session-recovery-content .crash-recovery-option",
+   13.0
+  ],
+  [
+   [],
+   ".SpeedDial--Icon .thumbnail-title",
+   11.5
+  ],
+  [
+   [],
+   ".SpeedDial--Tiny .thumbnail-title",
+   11.5
+  ],
+  [
+   [],
+   ".SpeedDialView-Settings-BackgroundImages .images .selectbox-label",
+   11.5
+  ],
+  [
+   [],
+   ".SpeedDial-Blocked-Counter .Blocked-Info",
+   13.0
+  ],
+  [
+   [],
+   ".startpage #modal-bg.startpage-drawer section .SpeedDial .dial-title",
+   11.5
+  ],
+  [
+   [],
+   ".info",
+   11.5
+  ],
+  [
+   [],
+   "#browser.win .settings-header",
+   12.0
+  ],
+  [
+   [],
+   ".vivaldi-settings .setting-section .proton-promo .container p",
+   11.5
+  ],
+  [
+   [],
+   ".vivaldi-settings .setting-mail-account .detail-content .mail-setup-description",
+   13.0
+  ],
+  [
+   [],
+   ".vivaldi-settings .setting-group.setting-cookies .count",
+   11.5
+  ],
+  [
+   [],
+   "#browser .tolerance .gesture-preview",
+   11.5
+  ],
+  [
+   [],
+   ".theme-schedule-timeline",
+   11.5
+  ],
+  [
+   [],
+   ".ChainedCommand-Item .floating-label > span",
+   11.5
+  ],
+  [
+   [],
+   ".setting-site-permissions label .DeviceGrants-Count",
+   11.5
+  ],
+  [
+   [],
+   ".setting-site-permissions .PermissionItem-DeviceGrants .DeviceGrant-Revoke",
+   11.5
+  ],
+  [
+   [],
+   ".quick-command-container .quick-commands .quick-command-sectionheader .QuickCommand-Title--Subtitle",
+   10.0
+  ],
+  [
+   [],
+   ".quick-command-container .quick-commands .quick-command-timestamp",
+   10.0
+  ],
+  [
+   [],
+   ".startpage .history .manager-content header",
+   11.5
+  ],
+  [
+   [],
+   ".startpage .history .more-info .moreinfo-activity-labels, .startpage .history .more-info .moreinfo-link-labels",
+   11.5
+  ],
+  [
+   [],
+   ".startpage .history .manager-content .CalendarMonth-Day",
+   11.5
+  ],
+  [
+   [],
+   ".startpage .history .timeline .CalendarMonth-Day span",
+   11.5
+  ],
+  [
+   [],
+   ".startpage .history .timeline .CalendarMonth-Day span.heat span.Cal__Day__year",
+   10.0
+  ],
+  [
+   [],
+   ".startpage .history .timeline .CalendarMonth-Day span.heat span.Cal__Day__month",
+   13.0
+  ],
+  [
+   [],
+   ".startpage .history .CalendarMonth-DayOfWeek",
+   11.5
+  ],
+  [
+   [],
+   ".calendar-event .cal-event-body-edit .cal-event-body-edit-label",
+   11.5
+  ],
+  [
+   [],
+   ".calendar-grid-agenda .calendar-add-event-button",
+   13.0
+  ],
+  [
+   [],
+   ".calendar-grid-hours .hour",
+   11.5
+  ],
+  [
+   [],
+   ".calendar-grid-agenda .cal-tasks-row .cal-tasks-row-date",
+   11.5
+  ],
+  [
+   [],
+   ".manager-content .calendar-grid-agenda .cal-tasks-row .cal-tasks-row-date",
+   13.0
+  ],
+  [
+   [],
+   ".account-settings.master-detail-wrapper > h3",
+   11.5
+  ],
+  [
+   [],
+   ".CalendarMonth-Week, .CalendarMonth-DayOfWeek",
+   10.0
+  ],
+  [
+   [],
+   ".CalendarPicker-Account",
+   11.5
+  ],
+  [
+   [],
+   "#calendar_panel .PeriodPicker h1",
+   13.0
+  ],
+  [
+   [],
+   ".MonthDayPicker-Day",
+   10.0
+  ],
+  [
+   [],
+   ".MonthDayPicker-DayOfWeek",
+   10.0
+  ],
+  [
+   [],
+   ".SearchDropdown-ItemEventCalendar",
+   11.5
+  ],
+  [
+   [],
+   ".SearchDropdown-ItemDate",
+   11.5
+  ],
+  [
+   [],
+   ".DownloadItem-FileSize",
+   11.5
+  ],
+  [
+   [],
+   ".panel-pathfield .speed",
+   11.5
+  ],
+  [
+   [],
+   ".contact-view .contact-type-picker",
+   11.5
+  ],
+  [
+   [],
+   ".contact-view .add",
+   11.5
+  ],
+  [
+   [],
+   ".webpageview #mail_view.horizontal .mail-preview, .webpageview #mail_view.vertical_wide .mail-preview",
+   11.5
+  ],
+  [
+   [],
+   ".webpageview #mail_view.horizontal .vivaldi-tree .tree-row .mail_entry .mailattachment, .webpageview #mail_view.vertical_wide .vivaldi-tree .tree-row .mail_entry .mailattachment, .webpageview #mail_view.horizontal .vivaldi-tree .tree-row .mail_entry .mailsize, .webpageview #mail_view.vertical_wide .vivaldi-tree .tree-row .mail_entry .mailsize, .webpageview #mail_view.horizontal .vivaldi-tree .tree-row .mail_entry .maildate, .webpageview #mail_view.vertical_wide .vivaldi-tree .tree-row .mail_entry .maildate",
+   13.0
+  ],
+  [
+   [],
+   ".webpageview #mail_view.vertical .mail_entry .maildate .mailDateInfo",
+   11.5
+  ],
+  [
+   [],
+   ".webpageview #mail_view #mail_detail .mail-detail-header .mail-details .mail-detail-main .label",
+   13.0
+  ],
+  [
+   [],
+   ".mail_entry.mail_entry .body_preview",
+   11.5
+  ],
+  [
+   [],
+   "#mail_composer > main .editor-html-toolbar input, .mail-signature > main .editor-html-toolbar input, #mail_composer > main .editor-html-toolbar select, .mail-signature > main .editor-html-toolbar select",
+   11.5
+  ],
+  [
+   [],
+   ".editor-mode-toggle .editor-mode-toggle-option",
+   11.5
+  ],
+  [
+   [],
+   ".button-with-dropdown-container .status, .button-with-dropdown-container .dropdown-menu",
+   13.0
+  ],
+  [
+   [],
+   ".StatusPopup-Footer.PrefetchProgress .prefetch-details",
+   11.5
+  ],
+  [
+   [],
+   ".StatusPopup-MailReceiver",
+   11.5
+  ],
+  [
+   [],
+   ".StatusPopup-LogEntryTags",
+   11.5
+  ],
+  [
+   [],
+   ".StatusPopup-LogEntryTimestamp",
+   11.5
+  ],
+  [
+   [],
+   ".StatusPopup-Account .button-toolbar .ToolbarButton-Button",
+   11.5
+  ],
+  [
+   [],
+   ".StatusPopup-AccountStatus",
+   11.5
+  ],
+  [
+   [],
+   ".MailLabels-Label",
+   11.5
+  ],
+  [
+   [],
+   ".MailAccountSheet.welcome-content-inner .ShowMailTipsAndTricks",
+   13.0
+  ],
+  [
+   [],
+   ".MailAccountSheet.welcome-content-inner .setting-section",
+   13.0
+  ],
+  [
+   [],
+   ".vertical_wide .MailListButtons .toolbar-insideinput, .horizontal .MailListButtons .toolbar-insideinput, .vivaldi-settings .MailListButtons .toolbar-insideinput",
+   11.5
+  ],
+  [
+   [],
+   ".MailListButtons--popUp",
+   11.5
+  ],
+  [
+   [],
+   ".MailListButtons-MessageCount",
+   11.5
+  ],
+  [
+   [],
+   ".MailListButtons-Label",
+   11.5
+  ],
+  [
+   [],
+   ".MailWarningMessage",
+   11.5
+  ],
+  [
+   [],
+   ".MailWarningMessage:before",
+   11.5
+  ],
+  [
+   [],
+   ".menubar",
+   12.0
+  ],
+  [
+   [],
+   ".menu > ul > li .menu-description",
+   11.5
+  ],
+  [
+   [],
+   ".topmenu .horizontal-menu-pagetitle",
+   12.0
+  ],
+  [
+   [],
+   ".panel .TranslatePanel-ShowTranslateHistory .credits",
+   11.5
+  ],
+  [
+   [],
+   ".panel .TranslatePanel-Pages .Translate-Characters",
+   11.5
+  ],
+  [
+   [],
+   ".panel .TranslatePanel .TranslatePanel-Row .TranslatePanel-Row-Heading",
+   11.5
+  ],
+  [
+   [],
+   ".welcome-content .welcome-pref .info",
+   13.0
+  ],
+  [
+   [],
+   ".cards-container.cards-container-a11y .vivaldi-settings",
+   13.0
+  ],
+  [
+   [],
+   ".MailAccountSheet .email-provider-signup-welcome-page",
+   13.0
+  ],
+  [
+   [],
+   ".MailAccountSheet .email-provider-signup-welcome-page h2",
+   13.0
+  ],
+  [
+   [],
+   ".welcome-panel .welcome-panel-container.cards-container.cards-container-layouts .welcome-card .card-text",
+   13.0
+  ],
+  [
+   [
+    "@container welcome_card_container (max-width: 840px)"
+   ],
+   "#app .welcome-content-inner",
+   13.0
+  ],
+  [
+   [],
+   ".theme-test .theme-test-list > .color-swatch input",
+   11.0
+  ],
+  [
+   [],
+   ".theme-test .circle-chart text",
+   10.0
+  ],
+  [
+   [],
+   ".ThemePreview-Label-Meta",
+   10.0
+  ],
+  [
+   [],
+   ".UnsplashCredit",
+   11.5
+  ],
+  [
+   [],
+   ".sync-status .avatar-username .user-info .username",
+   13.0
+  ],
+  [
+   [],
+   ".image-inspector .image-kelvinscale",
+   11.5
+  ],
+  [
+   [],
+   ".SiteInfo-Field p",
+   11.5
+  ],
+  [
+   [],
+   ".SiteInfo .DeviceGrant-Type",
+   11.5
+  ],
+  [
+   [],
+   "#app .SiteInfoButton > button > .button-badge",
+   11.5
+  ],
+  [
+   [],
+   ".OmniDropdown .search-suggestion-warning",
+   11.5
+  ],
+  [
+   [],
+   ".OmniLinkItem-Badge",
+   11.5
+  ],
+  [
+   [],
+   ".OmniLinkItem-TabSwitchLabel",
+   11.5
+  ],
+  [
+   [],
+   ".UrlBar-PrivateWindowIndicator",
+   11.5
+  ],
+  [
+   [],
+   ".UrlBar-AddressField .pageload .pageload-ticker",
+   10.0
+  ],
+  [
+   [],
+   ".SingleShortcut-Toolbar .FormFeedback",
+   11.5
+  ],
+  [
+   [],
+   "#app .AutoHideButtonPopup",
+   13.0
+  ],
+  [
+   [],
+   "footer .toolbar-statusbar",
+   11.5
+  ],
+  [
+   [],
+   ".ProxyPopup-Login",
+   11.5
+  ],
+  [
+   [],
+   ".ProxyPopup-TIME",
+   11.5
+  ],
+  [
+   [],
+   ".ClockPopup h3",
+   10.0
+  ],
+  [
+   [],
+   ".popup-scrollarea .ClockPopup-Header button",
+   10.0
+  ],
+  [
+   [],
+   ".BookmarkButton",
+   11.5
+  ],
+  [
+   [],
+   ".BookmarkPopup",
+   13.0
+  ],
+  [
+   [],
+   ".Dashboard-Widgets .dashboard-widget-header .title",
+   11.5
+  ],
+  [
+   [],
+   "#browser .Dashboard-PrivacyStatsWidget .privacy-stats-wrapper .counter-wrapper > div .title",
+   13.0
+  ],
+  [
+   [],
+   ".Dashboard .feed-wrapper .feed-row .title-row .date, .Dashboard .email-wrapper .feed-row .title-row .date",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard .feed-wrapper .feed-row .content-row .content, .Dashboard .email-wrapper .feed-row .content-row .content",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard .feed-wrapper .email-item .data-row .date, .Dashboard .email-wrapper .email-item .data-row .date",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard .feed-wrapper .email-item .content-row .content, .Dashboard .email-wrapper .email-item .content-row .content",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard .shortcut-list .item p, .Dashboard .top-sites-wrapper .item p",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard-Webpage .url-wrapper .not-secure, .Dashboard-Webpage .url-wrapper .UrlFragments, .Dashboard-Webpage .url-wrapper .UrlFragment--Highlight",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard-Date .date-wrapper .week-display",
+   13.0
+  ],
+  [
+   [],
+   ".Dashboard-WeatherWidget .weather-wrapper .provider",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard-CurrencyWidget .provider, .Dashboard-CurrencyWidget .external-link",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard-CurrencyWidget .currency-overview li .name-and-rate",
+   11.5
+  ],
+  [
+   [],
+   ".Dashboard-CurrencyWidget .currency-overview li .trend",
+   11.5
+  ],
+  [
+   [],
+   ".dashboard-list-wrapper .button-wrapper .add-button div",
+   11.5
+  ],
+  [
+   [],
+   ".TabButtonPopup > header .qc-entry .quick-command-search",
+   13.0
+  ],
+  [
+   [],
+   ".TabButtonPopup .button-badge",
+   11.5
+  ],
+  [
+   [],
+   ".TabButtonPopup .workspace-name",
+   11.5
+  ],
+  [
+   [],
+   ".TabButtonPopup label.window-entry .title .pill",
+   11.5
+  ],
+  [
+   [],
+   ".TabButtonPopupSuggestion .suggested-reading > div",
+   11.5
+  ],
+  [
+   [],
+   ".NotesManager-Footer",
+   11.5
+  ]
+ ]
+}

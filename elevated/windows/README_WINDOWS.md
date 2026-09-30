@@ -63,15 +63,15 @@ non-ASCII byte rather than leaving that to be noticed later.
 
 | Surface | Value | Text |
 |---|---|---|
-| titlebar, key window | ACCENT `#773556` | WHITE — Lc −78.5 |
-| titlebar, non-key window | LIGHT `#B8AEB2` | BLACK — Lc 61.3 |
-| the desktop field | BLACK `#0F090C` | — §5, flat, no wallpaper |
-| window backgrounds, lists, menus, tooltips | WHITE `#EFE5E9` | BLACK — Lc 91.9 |
-| panels, buttons, toolbars, the scrollbar trough | LIGHT `#B8AEB2` | BLACK — Lc 61.3 |
-| the selected row, the highlighted menu item | SELECT `#531537` | WHITE — Lc −87.5 |
-| hover and links | ACCENT `#773556` | Lc 75.4 on the field |
-| disabled | DARK `#4A4145` | Lc 48.4 on a panel |
-| every border and frame | BLACK `#0F090C` | — the rule (§5) |
+| titlebar, key window | ACCENT `#763555` | WHITE — Lc −78.5 |
+| titlebar, non-key window | LIGHT `#BAADB2` | BLACK — Lc 61.2 |
+| the desktop field | BLACK `#10080C` | — §5, flat, no wallpaper |
+| window backgrounds, lists, menus, tooltips | WHITE `#F1E4E9` | BLACK — Lc 91.8 |
+| panels, buttons, toolbars, the scrollbar trough | LIGHT `#BAADB2` | BLACK — Lc 61.2 |
+| the selected row, the highlighted menu item | SELECT `#521436` | WHITE — Lc −87.5 |
+| hover and links | ACCENT `#763555` | Lc 75.4 on the field |
+| disabled | DARK `#4B4045` | Lc 48.4 on a panel |
+| every border and frame | BLACK `#10080C` | — the rule (§5) |
 | the text cursor indicator | CURSOR `#007891` | — **a manual step, see below** |
 
 Thirty-one slots, six of §2's seven values, and nothing interpolated. Windows'
@@ -125,14 +125,14 @@ python3 build/windows.py --derive
 
 | idx | hex | L | WHITE on it | BLACK on it | |
 |---|---|---|---|---|---|
-| 0 | `#AE6788` | 0.602 | −58.3 | 35.7 | a hover tint; takes dark text |
-| 1 | `#9B5677` | 0.544 | −65.9 | 28.0 | |
-| 2 | `#894666` | 0.487 | −72.5 | 21.0 | |
-| 3 | `#773556` | 0.428 | −78.5 | 14.5 | **ACCENT**, exactly |
-| 4 | `#652546` | 0.370 | −83.5 | 8.7 | |
-| 5 | `#531537` | 0.311 | −87.5 | 0.0 | **SELECT**, exactly |
-| 6 | `#420328` | 0.253 | −89.8 | 0.0 | |
-| 7 | `#773556` | 0.428 | −78.5 | 14.5 | emphasis slot, off the ramp |
+| 0 | `#AE6789` | 0.603 | −58.1 | 35.8 | a hover tint; takes dark text |
+| 1 | `#9B5677` | 0.544 | −65.8 | 28.0 | |
+| 2 | `#894566` | 0.485 | −72.5 | 20.8 | |
+| 3 | `#763555` | 0.426 | −78.5 | 14.3 | **ACCENT**, exactly |
+| 4 | `#642445` | 0.366 | −83.6 | 8.4 | |
+| 5 | `#521436` | 0.308 | −87.5 | 0.0 | **SELECT**, exactly |
+| 6 | `#410227` | 0.249 | −89.8 | 0.0 | |
+| 7 | `#763555` | 0.426 | −78.5 | 14.3 | emphasis slot, off the ramp |
 
 Five of these are new values and they are the only ones this surface adds; the
 kit's distinct-value count went from 60 to 65 (CONTRIBUTING §2, re-measured
@@ -188,7 +188,7 @@ without asking you to sign out.
    at another hue — §2 gives a locator its own hue because its whole job is to be
    found fast on a field of text, and solved at the home hue it came out within
    3 Lc of ACCENT. PLATFORM.md gives a Settings path for this and no registry key.
-2. **Edge's frame.** `edge://settings/appearance`, custom theme colour `#773556`.
+2. **Edge's frame.** `edge://settings/appearance`, custom theme colour `#763555`.
    It is a Preferences entry rather than a registry key, so it cannot be scripted —
    PLATFORM.md records that.
 3. **Sign out and back in once** if anything still looks like Windows. A few
@@ -221,11 +221,11 @@ five notations Windows stores colour in:
 
 | Notation | Where |
 |---|---|
-| `15 9 12` decimal triple, bare and quoted | `.theme` and `.reg` colour tables |
-| `dword:00563577` ABGR, alpha high | DWM `AccentColor`, `AccentColorInactive`, and `Explorer\Accent` |
-| `0XC4773556` in the `.theme`, `"ColorizationColor"=dword:c4773556` in the `.reg` — AARRGGBB, alpha C4 | `[VisualStyles] ColorizationColor`, and the DWM `ColorizationColor` / `ColorizationAfterglow` DWORDs. The checker tells this DWORD from the ABGR one by its key name, which is why the table quotes it with its key |
-| `hex:ae,67,88,00,…` RGBA quads | `AccentPalette`, REG_BINARY |
-| `#773556` | comments, and `install.cmd`'s instructions |
+| `16 8 12` decimal triple, bare and quoted | `.theme` and `.reg` colour tables |
+| `dword:00553576` ABGR, alpha high | DWM `AccentColor`, `AccentColorInactive`, and `Explorer\Accent` |
+| `0XC4763555` in the `.theme`, `"ColorizationColor"=dword:c4763555` in the `.reg` — AARRGGBB, alpha C4 | `[VisualStyles] ColorizationColor`, and the DWM `ColorizationColor` / `ColorizationAfterglow` DWORDs. The checker tells this DWORD from the ABGR one by its key name, which is why the table quotes it with its key |
+| `hex:ae,67,89,00,…` RGBA quads | `AccentPalette`, REG_BINARY |
+| `#763555` | comments, and `install.cmd`'s instructions |
 
 `build/cosmic.py` learned this the hard way: the COSMIC panel background sat
 unchecked until the checker learned to read a RON decimal triple. A value the
@@ -239,7 +239,7 @@ A third was caught after the surface landed, and **not by the checker**. The DWM
 `ColorizationColor` and `ColorizationAfterglow` DWORDs were written ABGR, like
 `AccentColor` beside them, and the checker passed them — it decoded the DWORD the
 same wrong way the writer had encoded it, so `remainder.reg` agreed with itself and
-would have handed Windows the bytes reversed — `563577` for `773556`. A checker verifies a file against
+would have handed Windows the bytes reversed — `553576` for `763555`. A checker verifies a file against
 its own reading of a notation; it cannot verify the reading. What caught it was the
 parity rule (`CONTRIBUTING.md` §11): the parent kit's `theme.reg` writes the pair
 AARRGGBB — the order the `.theme`'s own `[VisualStyles]` value uses, and the order

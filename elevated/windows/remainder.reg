@@ -12,59 +12,59 @@ Windows Registry Editor Version 5.00
 ; The colours table again, as registry values. The .theme file writes these when it is
 ; applied; merging them too means the table is right even if the theme is not applied.
 [HKEY_CURRENT_USER\Control Panel\Colors]
-"ActiveTitle"="119 53 86"
-"GradientActiveTitle"="119 53 86"
-"TitleText"="239 229 233"
-"InactiveTitle"="184 174 178"
-"GradientInactiveTitle"="184 174 178"
-"InactiveTitleText"="15 9 12"
-"Background"="15 9 12"
-"Window"="239 229 233"
-"WindowText"="15 9 12"
-"WindowFrame"="15 9 12"
-"ActiveBorder"="15 9 12"
-"InactiveBorder"="15 9 12"
-"Menu"="239 229 233"
-"MenuText"="15 9 12"
-"MenuBar"="239 229 233"
-"MenuHilight"="83 21 55"
-"Hilight"="83 21 55"
-"HilightText"="239 229 233"
-"HotTrackingColor"="119 53 86"
-"ButtonFace"="184 174 178"
-"ButtonText"="15 9 12"
-"ButtonHilight"="184 174 178"
-"ButtonLight"="184 174 178"
-"ButtonShadow"="74 65 69"
-"ButtonDkShadow"="15 9 12"
-"ButtonAlternateFace"="184 174 178"
-"GrayText"="74 65 69"
-"Scrollbar"="184 174 178"
-"AppWorkspace"="74 65 69"
-"InfoWindow"="239 229 233"
-"InfoText"="15 9 12"
+"ActiveTitle"="118 53 85"
+"GradientActiveTitle"="118 53 85"
+"TitleText"="241 228 233"
+"InactiveTitle"="186 173 178"
+"GradientInactiveTitle"="186 173 178"
+"InactiveTitleText"="16 8 12"
+"Background"="16 8 12"
+"Window"="241 228 233"
+"WindowText"="16 8 12"
+"WindowFrame"="16 8 12"
+"ActiveBorder"="16 8 12"
+"InactiveBorder"="16 8 12"
+"Menu"="241 228 233"
+"MenuText"="16 8 12"
+"MenuBar"="241 228 233"
+"MenuHilight"="82 20 54"
+"Hilight"="82 20 54"
+"HilightText"="241 228 233"
+"HotTrackingColor"="118 53 85"
+"ButtonFace"="186 173 178"
+"ButtonText"="16 8 12"
+"ButtonHilight"="186 173 178"
+"ButtonLight"="186 173 178"
+"ButtonShadow"="75 64 69"
+"ButtonDkShadow"="16 8 12"
+"ButtonAlternateFace"="186 173 178"
+"GrayText"="75 64 69"
+"Scrollbar"="186 173 178"
+"AppWorkspace"="75 64 69"
+"InfoWindow"="241 228 233"
+"InfoText"="16 8 12"
 
 ; DWM. Two byte orders under one key, and only the key name says which: AccentColor and
-; AccentColorInactive are ABGR, alpha high -- #773556 is dword:00563577.
+; AccentColorInactive are ABGR, alpha high -- #763555 is dword:00553576.
 ; ColorizationColor and ColorizationAfterglow are AARRGGBB, like the .theme value the shell
 ; copies into them, with the C4 alpha the documented default 0xC40078D7 carries -- the same
-; #773556 is dword:c4773556. Written ABGR until 2026-09-21; build/windows.py says why.
+; #763555 is dword:c4763555. Written ABGR until 2026-09-21; build/windows.py says why.
 ; ColorPrevalence=1 puts the accent on title bars and borders, which is what makes the
 ; key titlebar ACCENT. AccentColorInactive is the non-key one (PLATFORM.md names it).
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\DWM]
-"AccentColor"=dword:00563577
-"AccentColorInactive"=dword:00b2aeb8
-"ColorizationColor"=dword:c4773556
-"ColorizationAfterglow"=dword:c4773556
+"AccentColor"=dword:00553576
+"AccentColorInactive"=dword:00b2adba
+"ColorizationColor"=dword:c4763555
+"ColorizationAfterglow"=dword:c4763555
 "ColorPrevalence"=dword:00000001
 "EnableAeroPeek"=dword:00000000
 
 ; The eight-slot accent palette: RGBA quads, REG_BINARY, light to dark. Index 3 is
 ; ACCENT and index 5 is SELECT, exactly (build/windows.py --derive).
 [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Accent]
-"AccentPalette"=hex:ae,67,88,00,9b,56,77,00,89,46,66,00,77,35,56,00,65,25,46,00,53,15,37,00,42,03,28,00,77,35,56,00
-"AccentColorMenu"=dword:00371553
-"StartColorMenu"=dword:00371553
+"AccentPalette"=hex:ae,67,89,00,9b,56,77,00,89,45,66,00,76,35,55,00,64,24,45,00,52,14,36,00,41,02,27,00,76,35,55,00
+"AccentColorMenu"=dword:00361452
+"StartColorMenu"=dword:00361452
 
 ; Light, and transparency off system-wide. Mica and acrylic paint a surface as a blend
 ; of two things rather than a value the kit set, which is not an authored value at all.

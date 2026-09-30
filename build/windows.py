@@ -30,7 +30,7 @@ because it was written as a RON decimal triple. Windows is that problem five tim
     0XC4773556                  AARRGGBB, .theme           [VisualStyles] ColorizationColor
     dword:c4773556              DWORD, AARRGGBB, alpha C4  DWM ColorizationColor, ColorizationAfterglow
     hex:ae,67,88,00,...         REG_BINARY, RGBA quads     Explorer\\Accent AccentPalette
-    #773556                     hex                        comments and the README
+    #763555                     hex                        comments and the README
 
 Every one of them round-trips: `dec_triple`, `abgr_dword`, `argb_theme`, `argb_dword` and
 `rgba_quad` write them and `_decode` reads every one back out of every committed file --
@@ -260,7 +260,7 @@ _ARGB = re.compile(r'=\s*0[Xx]([0-9A-Fa-f]{8})\b')
 _BIN = re.compile(r'hex:((?:[0-9A-Fa-f]{2},?\s*\\?\s*)+)')
 # The optional trailing pair is an alpha byte. Nothing in elevated/windows/ writes one --
 # but build/cosmic.py carries the same allowance because the .ron files do, and a regex
-# that stops at six digits does not fail on `#EFE5E9FF`, it silently matches nothing.
+# that stops at six digits does not fail on `#F1E4E9FF`, it silently matches nothing.
 _HEX = re.compile(r'#([0-9A-Fa-f]{6})(?:[0-9A-Fa-f]{2})?\b')
 
 
@@ -430,10 +430,10 @@ def _reg():
         L.append('"%s"="%s"' % (slot, dec_triple(hx)))
     L += ['',
           '; DWM. Two byte orders under one key, and only the key name says which: AccentColor and',
-          '; AccentColorInactive are ABGR, alpha high -- #773556 is dword:' + abgr_dword(ACCENT) + '.',
+          '; AccentColorInactive are ABGR, alpha high -- #763555 is dword:' + abgr_dword(ACCENT) + '.',
           '; ColorizationColor and ColorizationAfterglow are AARRGGBB, like the .theme value the shell',
           '; copies into them, with the C4 alpha the documented default 0xC40078D7 carries -- the same',
-          '; #773556 is dword:' + argb_dword(ACCENT) + '. Written ABGR until 2026-09-21; build/windows.py says why.',
+          '; #763555 is dword:' + argb_dword(ACCENT) + '. Written ABGR until 2026-09-21; build/windows.py says why.',
           '; ColorPrevalence=1 puts the accent on title bars and borders, which is what makes the',
           '; key titlebar ACCENT. AccentColorInactive is the non-key one (PLATFORM.md names it).',
           '[HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\DWM]',
