@@ -16,7 +16,7 @@ on COSMIC, 2026-09-25 and 26.
 
 | File | What it does | Generated |
 |---|---|---|
-| `remainder.css` | the theme: 707 rules — Zettlr's own 1,449 painting declarations answered at their own selectors, each scoped to the windows that load it, and 90 rules for what no declaration of Zettlr's reaches. **Generated and committed** (`CONTRIBUTING.md` §11); `build/zettlr.py` fails if it is not what the tables now produce. | yes |
+| `remainder.css` | the theme: 712 rules — Zettlr's own 1,449 painting declarations answered at their own selectors, each scoped to the windows that load it, and 94 rules for what no declaration of Zettlr's reaches. **Generated and committed** (`CONTRIBUTING.md` §11); `build/zettlr.py` fails if it is not what the tables now produce. | yes |
 | `remainder-declutter.css` | §0's larger half: motion and blur removed. It carries no colour. **Generated and committed**, and imported unless `--no-declutter`. | yes |
 | `config.json` | light mode, pinned; the editor following the app; and Zettlr's own frame. Merged key by key into Zettlr's `config.json`. | no |
 | `install.sh` | finds Zettlr's data directory (native, Flatpak, or `--data-dir`), copies the two stylesheets in, writes the import block at the top of `custom.css`, merges the settings, and saves both files under `~/.local/state/remainder` on the first run. `--qa DIR` builds a QA profile instead. | no |
@@ -49,25 +49,27 @@ theme does not pretend to: every window is painted the same, focused or not.
 **The UI renders under the size the floors assume.** Zettlr sets its chrome at
 10 to 15 px, and every contrast floor in §0e is a function of text at about
 16 px (§5). Measured at the 16 px tiers those pairs would pass on paper and not
-on the screen. So the chrome's text is set at 16 px, a choice (§0c) with that
-reason beside it, as on `worksafe/obsidian/`, and the tiers `build/zettlr.py`
+on the screen. So the chrome's text is set at 16 px on the field and 18 px on a
+LIGHT panel, where it is SemiBold (below) — a choice (§0c) with that reason
+beside it, as on `worksafe/obsidian/` — and the tiers `build/zettlr.py`
 measures are the tiers on screen. Three things it costs, each left visible
 rather than squeezed: the About window's six tabs take two rows, and the strip
 grows to hold them; a few fixed-width buttons cut their labels short
-(*Select fo…*); and the settings' list of pages is cut at its default width.
+(*Select f…*) or wrap them (Assets Manager's *Open defaults folder*); and the
+settings' list of pages is cut at its default width.
 
 ## The shape of it
 
 | Surface | Value | Text |
 |---|---|---|
-| menubar, toolbar, tab strip, file manager, sidebar, status bar, popovers, tooltips of the editor | LIGHT `#BAADB2` | BLACK, 700 — Lc 61.2 |
+| menubar, toolbar, tab strip, file manager, sidebar, status bar, popovers, tooltips of the editor | LIGHT `#BAADB2` | BLACK, SemiBold at 18 px — Lc 61.2 |
 | the note, fields, lists, the settings' list of pages | WHITE `#F1E4E9` | BLACK, 400 — Lc 91.8 |
-| the current tab | WHITE | BLACK, 400 — the edge of the note below it |
+| the current tab | WHITE | BLACK, 400 at the strip's 18 px — the edge of the note below it |
 | menus | a LIGHT frame, WHITE rows | BLACK, 400 |
 | the settings page, search results | WHITE cards on a LIGHT page | BLACK, 400; DARK for descriptions, Lc 79.0 |
 | the current file, a selected row, the chosen completion or result | SELECT `#521436` | WHITE — Lc −87.5 |
-| hover on a panel, a hovered tab | WHITE | BLACK, 700 |
-| buttons | LIGHT on the field, WHITE on a panel, BLACK outline; hovered SELECT | BLACK, 700; WHITE on SELECT |
+| hover on a panel, a hovered tab | WHITE | BLACK, SemiBold |
+| buttons | LIGHT on the field, WHITE on a panel, BLACK outline; hovered SELECT | BLACK, SemiBold at 18 px; WHITE on SELECT |
 | the primary button, a ticked box, a chosen radio, a switch that is on, focus | ACCENT `#763555` | WHITE on it |
 | a toolbar toggle that is on | WHITE | its glyph or label ACCENT — Lc 75.4 |
 | links, tags, citation keys | on WHITE | ACCENT, links underlined — Lc 75.4 |
@@ -104,10 +106,24 @@ whose bundle loads its rule, `:where(:has(script[src="../assets/index.js"]))`;
 `:where()` keeps that out of the specificity, so a scoped override ranks
 exactly as an unscoped one.
 
-**Weight follows the ground.** BLACK on LIGHT is Lc 61.2, APCA's 16px/700 tier
-and not its 16px/400 one, so every LIGHT panel carries 700 and every WHITE field
-nested in one goes back to 400 — as on `worksafe/firefox/` and
-`worksafe/obsidian/`, for the same measured reason.
+**Weight and size follow the ground.** BLACK on LIGHT is Lc 61.2: APCA's tier
+for 16 px at 700, not for 16 px at 400. Elsewhere in the kit a LIGHT panel
+declares 700, which renders Montserrat ExtraBold (AUTHORITY §5). Zettlr is
+where the day is spent, and there a LIGHT panel is **SemiBold at 18 px**
+instead, chosen 2026-09-30 to be lighter to read for hours. APCA's own font
+table (apca-w3 0.1.9, its Lc 60 row) admits 600 from 18 px, so the panel keeps
+its tier, with no margin: 600 renders at exactly 600. Zettlr's own bolds in
+the chrome follow: the contents' level numbers, the heading the caret is under,
+the browser's bold for a heading or a `<b>`. Every WHITE field nested in a panel
+goes back to 400 at 16 px (Lc 91.8). The size is one variable, `--rm-size`, that
+the ground sets and every size the mirror writes reads, so a label takes the
+size of the ground it is on. A LIGHT ground *inside the note* (an alert's frame,
+a folded span) is the exception. It keeps the editor's size, which is yours to
+set and may be under 18 px, so its text stays 700, the tier from 16 px; so do
+marks and search matches. The cut comes from `worksafe/cosmic/install.sh
+--fonts`, and the installer says when it is missing. Without it, 600 resolves
+to ExtraBold, the nearest weight above it, which still meets the tier and is
+heavier than chosen.
 
 **The editor's selection keeps the text's own colour.** CodeMirror paints the
 selection *behind* the text, so its fill is LIGHT, BLACK on it Lc 61.2 — the
@@ -171,7 +187,7 @@ seven, §3's three and their two legend values, and the three ANSI normals
 `worksafe/obsidian/` already use for signal text.
 
 **The checker gates on the platform, recorded.** Of the 1,449 declarations the
-record holds, 1,015 take a kit role and 434 are left to Zettlr on purpose: 427
+record holds, 1,016 take a kit role and 433 are left to Zettlr on purpose: 426
 are content (below), from the sizes of a note's headings to the colours of a
 chart, 6 are real shadows and 1 a scrim over content while it loads (§4). The
 record is dated and names its build, and `--coverage` re-reads the installed
@@ -186,8 +202,9 @@ puts every setting back.
 `--screen` asks a running Zettlr, over its DevTools port, what every visible
 element computed — in every window, into every shadow root (Zettlr's icons are
 web components) — composites each text's ground from its ancestors, and reports
-every value off the ladder and every text pair under the tier its own computed
-size and weight demand. Then it **photographs** each window and reads the
+every value off the ladder, every surface the table names whose ground is not
+the table's, and every text pair under the tier its own computed size and weight
+demand, read off APCA's font table. Then it **photographs** each window and reads the
 pixels, because the computed styles cannot see what Chromium draws itself: a
 pixel with a readable hue must belong to a family the kit paints and be no more
 chromatic than the kit's own member of it. The first test found a search
@@ -245,6 +262,25 @@ window no element computed a colour in any notation but `rgb()`, the new probe
 and the old one read the same values, every value was a kit value, and every
 readable hue in the photographs was the kit's. A `custom.css` of your own may
 mix; the probe would now say so.
+
+On 2026-09-30 a screenshot from the machine the theme was installed on showed the
+sidebar WHITE, the contents on it at the panel's weight, and nothing between the
+note and the sidebar. Zettlr makes the sidebar transparent on Linux
+(`body.linux div#sidebar`, `PLATFORM.md` Zettlr). That rule outranks the mirror's,
+and it names no colour, so the record never held it, and the table above
+promised a LIGHT the screen did not show. Neither gate could see it: BLACK on
+WHITE clears every tier at any weight, and nothing compared a ground with the
+table. The sidebar is LIGHT now, by a rule, and `--screen` now reads the ground
+of every surface the table names and says when one is not the table's; run
+against the old theme, it names the sidebar. The same day it began reading each
+text's tier off APCA's table, for that text's own weight and size. Before, any
+text at 600 or heavier counted as bold at any size, which would have passed
+SemiBold at 16 px. Walked that day on a QA profile, with SemiBold available
+through fontconfig as the fonts step installs it: the main window at rest, with
+its Help menu, a file's context menu, the table popover and the find panel;
+Preferences; Statistics; About; the Assets Manager. Every ground was the
+table's, every value on the ladder, every pair over its tier, and every
+readable hue in the photographs the kit's.
 
 ## Residue
 

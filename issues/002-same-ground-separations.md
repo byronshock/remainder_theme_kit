@@ -65,3 +65,12 @@ prototype script lived in a session scratchpad and is not in the repo.
   the floor?
 - Should `PLATFORM.md` record the cosmic-panel findings above now? They are
   platform facts, and §11 asks for them in both kits.
+
+## Found since
+
+- **Zettlr, 2026-09-30: the sidebar against the note.** Both were WHITE, ΔE 0.0,
+  because Zettlr makes its sidebar transparent on Linux and the theme never
+  answered that rule (`worksafe/zettlr/README_ZETTLR.md`). Fixed in the theme: the
+  sidebar is LIGHT, the tone change §5 already names (ΔE 17.1), and
+  `build/zettlr.py --screen` now reports any surface whose ground is not the one
+  its table gives. One row of the audit, done; the rest of it stands.

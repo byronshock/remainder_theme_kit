@@ -278,6 +278,9 @@ done
 missing=''
 have_font() { fc-list : family 2>/dev/null | grep -qiE "(^|,)$1(,|\$)"; }
 have_font Montserrat || missing="$missing Montserrat"
+# The LIGHT panels are SemiBold. Without that cut 600 resolves to ExtraBold, the nearest weight above it: heavier,
+# and still on its tier, so the theme reads correctly; it is only not the weight chosen for it.
+have_font Montserrat && ! have_font 'Montserrat SemiBold' && missing="$missing 'Montserrat SemiBold'"
 have_font 'IntoneMono Nerd Font Mono' || have_font 'Intel One Mono' || missing="$missing 'IntoneMono Nerd Font Mono'"
 [ -n "$missing" ] && say "font(s) not installed:$missing -- run: sh $KIT/worksafe/cosmic/install.sh --fonts"
 

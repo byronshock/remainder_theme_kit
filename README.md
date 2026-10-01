@@ -184,8 +184,8 @@ before the last one leaves the machine untouched:
    hide the mono's 400 cuts so it renders at 500 and make it what
    `monospace` means for every program? Declined, it offers
    Intel One Mono itself instead (`--fonts-plain`). Not asked when
-   both are already on the machine and no 400 cut of the mono is visible.
-   Default yes.
+   both are already on the machine, Montserrat with the SemiBold Zettlr's
+   panels use, and no 400 cut of the mono is visible. Default yes.
 2. **Icons** — generate the icon theme from this machine's own icons? Not
    offered when the generator's dependencies are missing. Default yes.
 3. **Background** — the museum photograph, the flat BLACK field, or leave the
