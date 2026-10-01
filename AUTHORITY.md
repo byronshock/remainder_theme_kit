@@ -157,7 +157,7 @@ hides. The kit's UI renders at about 16px effective (§2 typography):
 |---|---|
 | 90 | body text, preferred |
 | 75 | body text, minimum |
-| 60 | 16px/700 bold, or 24px/400 |
+| 60 | 16px/700 bold, 18px/600, or 24px/400 |
 | 30 | non-text marks |
 | 15 | the visibility floor; nothing below it |
 
@@ -667,6 +667,16 @@ them rather than pretending to measure them:
   pass, which is worse than a failing one. Verified on the running chrome,
   2026-09-19: a tab label at declared 700 renders Montserrat ExtraBold and the
   toolbar at 400 renders Montserrat Medium.
+
+  **Zettlr's LIGHT panels are SemiBold, at 18px.** A lighter bold cannot be
+  paid for by moving a colour, but it can be paid for in size: APCA's own font
+  table admits 600 at Lc 60 from 18px, where 700 needs 16. Zettlr is where the
+  day is spent, so there, and only there, a LIGHT panel declares 600 at 18px.
+  That renders Montserrat SemiBold exactly: no margin, and no false pass,
+  because the declared weight is the rendered one. The fonts step installs the
+  cut beside the other two, and it moves nothing else: 700 still resolves to
+  ExtraBold, the nearest weight above it, and fontconfig still answers "bold"
+  with it. Chosen 2026-09-30 (`worksafe/zettlr/README_ZETTLR.md`).
 - **Wallpaper.** No painting, so no composed desktop. The field is a flat
   **BLACK** one. The tiling gaps are the rule, and at BLACK they are
   literally it: the rule is BLACK, so the gap between two windows is the same

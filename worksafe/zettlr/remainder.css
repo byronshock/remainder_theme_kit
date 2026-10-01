@@ -26,6 +26,9 @@
   --rm-yellow: #525200;
   --rm-face-ui: "Montserrat", sans-serif;
   --rm-face-mono: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
+  /* §5's size, the field's: every size the mirror writes reads it, and a LIGHT panel sets it to 18px for its
+     SemiBold (THE RULES). */
+  --rm-size: 16px;
 }
 
 /* THE MIRROR. Every declaration Zettlr makes that puts a colour on the screen, or a face or a size the kit
@@ -37,7 +40,7 @@
 :root .tippy-box {
   background-color: var(--rm-black);
   color: var(--rm-white);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a tooltip's arrow is drawn in its text colour, and is the tooltip's BLACK */
 :root .tippy-arrow {
@@ -62,7 +65,7 @@
 :root:where(:has(script[src="../main_window/index.js"]), :has(script[src="../preferences/index.js"]), :has(script[src="../assets/index.js"])) body .popover {
   background-color: var(--rm-light);
   border-color: transparent;
-  font-size: 16px;
+  font-size: var(--rm-size);
   font-family: "Montserrat", sans-serif;
 }
 /* no line: the tone changes (§5) */
@@ -100,7 +103,7 @@
 /* a checkbox's description: DARK on the WHITE card, Lc 79.0 */
 :root:where(:has(script[src="../main_window/index.js"]), :has(script[src="../preferences/index.js"]), :has(script[src="../paste_image/index.js"]), :has(script[src="../project_properties/index.js"]), :has(script[src="../stats/index.js"])) body .cb-group div.info {
   color: var(--rm-dark);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a checkbox is a WHITE box with a BLACK outline, flat */
 :root:where(:has(script[src="../main_window/index.js"]), :has(script[src="../preferences/index.js"]), :has(script[src="../paste_image/index.js"]), :has(script[src="../project_properties/index.js"]), :has(script[src="../stats/index.js"])) body label.checkbox .checkmark {
@@ -122,7 +125,7 @@
 /* labels: Montserrat at 16 px */
 :root:where(:has(script[src="../main_window/index.js"]), :has(script[src="../preferences/index.js"]), :has(script[src="../paste_image/index.js"]), :has(script[src="../project_properties/index.js"]), :has(script[src="../stats/index.js"])) body.linux label {
   font-family: "Montserrat", sans-serif;
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a checkbox is a WHITE box with a BLACK outline, flat */
 :root:where(:has(script[src="../main_window/index.js"]), :has(script[src="../preferences/index.js"]), :has(script[src="../paste_image/index.js"]), :has(script[src="../project_properties/index.js"]), :has(script[src="../stats/index.js"])) body.linux label.checkbox .checkmark {
@@ -182,7 +185,7 @@
 
 /* --- sheet d38e748d: main_window, preferences, onboarding --- */
 :root:where(:has(script[src="../main_window/index.js"]), :has(script[src="../preferences/index.js"]), :has(script[src="../onboarding/index.js"])) body .radio-group-container p {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a disabled label: DARK (§2) */
 :root:where(:has(script[src="../main_window/index.js"]), :has(script[src="../preferences/index.js"]), :has(script[src="../onboarding/index.js"])) body .radio-group-container label:not(.radio).disabled {
@@ -272,7 +275,7 @@
   color: var(--rm-black);
 }
 :root:where(:not(:has(script[src="../about/index.js"]), :has(script[src="../error/index.js"]), :has(script[src="../log_viewer/index.js"]), :has(script[src="../print/index.js"]), :has(script[src="../splash_screen/index.js"]), :has(script[src="../update/index.js"]))) body div.form-control p.info {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a text field with its reset button: WHITE, BLACK outline */
 :root:where(:not(:has(script[src="../about/index.js"]), :has(script[src="../error/index.js"]), :has(script[src="../log_viewer/index.js"]), :has(script[src="../print/index.js"]), :has(script[src="../splash_screen/index.js"]), :has(script[src="../update/index.js"]))) body.linux div.form-control .input-text-button-group {
@@ -372,7 +375,7 @@
 /* --- sheet 03104b57: main_window, preferences, assets, about, error, log_viewer, paste_image, print, project_properties, stats, tag_manager, update --- */
 /* tabs on the strip */
 :root:where(:not(:has(script[src="../onboarding/index.js"]), :has(script[src="../splash_screen/index.js"]))) body div.tab-list button[role="tab"] {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the current tab is the field's edge: WHITE, BLACK */
 :root:where(:not(:has(script[src="../onboarding/index.js"]), :has(script[src="../splash_screen/index.js"]))) body div.tab-list button[role="tab"].active {
@@ -420,11 +423,11 @@
 /* --- sheet 46c70b87: main_window, preferences, assets, about, error, log_viewer, paste_image, print, project_properties, stats, tag_manager, update --- */
 /* toolbar labels */
 :root:where(:not(:has(script[src="../onboarding/index.js"]), :has(script[src="../splash_screen/index.js"]))) body div#toolbar div.toolbar-group span.toolbar-label {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the toolbar: a LIGHT panel, its glyphs BLACK */
 :root:where(:not(:has(script[src="../onboarding/index.js"]), :has(script[src="../splash_screen/index.js"]))) body.linux div#toolbar {
-  font-size: 16px;
+  font-size: var(--rm-size);
   background-color: var(--rm-light);
   color: var(--rm-black);
 }
@@ -464,7 +467,7 @@
 /* --- sheet ee92b0f6: main_window, preferences, assets, about, error, log_viewer, paste_image, print, project_properties, stats, tag_manager, update --- */
 /* toolbar labels */
 :root:where(:not(:has(script[src="../onboarding/index.js"]), :has(script[src="../splash_screen/index.js"]))) body .toolbar-text {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 
 /* --- sheet 29c981f0: main_window, preferences, assets, about, error, log_viewer, paste_image, print, project_properties, stats, tag_manager, update --- */
@@ -495,10 +498,10 @@
   background-color: var(--rm-white);
 }
 :root:where(:has(script[src="../main_window/index.js"])) body div.tab-container div[role="tab"] .deduplicate {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) body div.tab-container div[role="tab"] .close {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the tab strip's scroll arrows: the panel, no lines */
 :root:where(:has(script[src="../main_window/index.js"])) body.linux div.document-tablist-wrapper div.scroller {
@@ -517,7 +520,7 @@
 }
 /* a tab: the panel, no lines */
 :root:where(:has(script[src="../main_window/index.js"])) body.linux div.tab-container div[role="tab"] {
-  font-size: 16px;
+  font-size: var(--rm-size);
   background-color: var(--rm-light);
 }
 /* a hover on a panel is WHITE */
@@ -533,7 +536,7 @@
   border-bottom-color: transparent;
 }
 :root:where(:has(script[src="../main_window/index.js"])) body.linux div.tab-container div[role="tab"] .close {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the tab strip's scroll arrows: the panel, no lines */
 :root:where(:has(script[src="../main_window/index.js"])) body.linux.dark div.document-tablist-wrapper div.scroller {
@@ -621,7 +624,7 @@
 
 /* --- sheet a82f3f11: main_window --- */
 :root:where(:has(script[src="../main_window/index.js"])) body div#global-search-pane {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* search results: no lines */
 :root:where(:has(script[src="../main_window/index.js"])) body div#global-search-pane hr {
@@ -629,15 +632,15 @@
 }
 :root:where(:has(script[src="../main_window/index.js"])) body div#global-search-pane div.search-result-container {
   border-bottom-color: transparent;
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a result's path: BLACK on the panel */
 :root:where(:has(script[src="../main_window/index.js"])) body div#global-search-pane div.search-result-container div.result-header .filepath {
   color: var(--rm-black);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) body div#global-search-pane div.search-result-container div.result-line {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a hover on a panel is WHITE */
 :root:where(:has(script[src="../main_window/index.js"])) body div#global-search-pane div.search-result-container div.result-line:hover {
@@ -718,14 +721,14 @@
 /* the other badges -- counts, the writing target -- are the row's own text; only dark mode gives them a
    ground, and the theme paints dark mode as light */
 :root:where(:has(script[src="../main_window/index.js"])) body div.list-item-wrapper div.list-item div.meta-info .badge {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) body div.list-item-wrapper div.list-item div.filename {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the date under a name: BLACK on the panel (DARK on LIGHT is Lc 48.4) */
 :root:where(:has(script[src="../main_window/index.js"])) body div.list-item-wrapper div.list-item div.filename div.date {
-  font-size: 16px;
+  font-size: var(--rm-size);
   color: var(--rm-black);
 }
 /* a row in the file list: the LIGHT panel, no line */
@@ -837,11 +840,11 @@
 /* the header over the tree: no line */
 :root:where(:has(script[src="../main_window/index.js"])) body.linux #file-tree #directories-dirs-header {
   border-bottom-color: transparent;
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) body.linux #file-tree #directories-files-header {
   border-bottom-color: transparent;
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the tree is the LIGHT panel */
 :root:where(:has(script[src="../main_window/index.js"])) body.linux.dark #file-tree {
@@ -850,7 +853,7 @@
 
 /* --- sheet 0296f7d4: main_window --- */
 :root:where(:has(script[src="../main_window/index.js"])) body div.tree-item-container {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a project is a folder; its glyph says so, and red would say error (§3) */
 :root:where(:has(script[src="../main_window/index.js"])) body div.tree-item-container .tree-item.project {
@@ -917,11 +920,11 @@
 /* file properties: BLACK on the panel */
 :root:where(:has(script[src="../main_window/index.js"])) body div.popover div.properties-info-container {
   color: var(--rm-black);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a tag badge: WHITE on DARK */
 :root:where(:has(script[src="../main_window/index.js"])) body div.popover .badge {
-  font-size: 16px;
+  font-size: var(--rm-size);
   background-color: var(--rm-dark);
   color: var(--rm-white);
 }
@@ -944,6 +947,10 @@
 :root:where(:has(script[src="../main_window/index.js"])) body #sidebar {
   background-color: var(--rm-light);
 }
+/* the contents' title: a label on the panel, at the panel's size */
+:root:where(:has(script[src="../main_window/index.js"])) body #sidebar h1 {
+  font-size: var(--rm-size);
+}
 /* a heading's level in the contents: BLACK on the panel */
 :root:where(:has(script[src="../main_window/index.js"])) body #sidebar div.toc-entry-container div.toc-level {
   color: var(--rm-black);
@@ -957,7 +964,7 @@
   background-color: var(--rm-white);
 }
 :root:where(:has(script[src="../main_window/index.js"])) body #sidebar div.related-files-container div.related-file span.filename {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the sidebar: a LIGHT panel, BLACK at 700 */
 :root:where(:has(script[src="../main_window/index.js"])) body.dark #sidebar {
@@ -971,7 +978,7 @@
 
 /* --- sheet 0f00884f: main_window --- */
 :root:where(:has(script[src="../main_window/index.js"])) h2.other-files-panel-folder-name {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 
 /* --- sheet 0deaf4e4: main_window --- */
@@ -1006,7 +1013,7 @@
 :root:where(:not(:has(script[src="../onboarding/index.js"]), :has(script[src="../splash_screen/index.js"]))) #menubar[data-v-93113968] {
   background-color: var(--rm-light);
   color: var(--rm-black);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a hover on a panel is WHITE */
 :root:where(:not(:has(script[src="../onboarding/index.js"]), :has(script[src="../splash_screen/index.js"]))) #menubar div.top-level-item[data-v-93113968]:hover {
@@ -1036,15 +1043,15 @@
   background-color: var(--rm-light);
 }
 :root:where(:has(script[src="../main_window/index.js"])) #lrt-wrapper .lrt .title[data-v-a8d70f68] {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* its detail line takes the legend of its ground (the rules) */
 :root:where(:has(script[src="../main_window/index.js"])) #lrt-wrapper .lrt .info[data-v-a8d70f68] {
-  font-size: 16px;
+  font-size: var(--rm-size);
   color: inherit;
 }
 :root:where(:has(script[src="../main_window/index.js"])) #lrt-wrapper .lrt .metadata[data-v-a8d70f68] {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a finished task: §3's SUCCESS with its legend -- the meaning is present */
 @media (prefers-color-scheme: dark) {
@@ -1089,10 +1096,10 @@
 
 /* --- sheet dd6e59cf: main_window --- */
 :root:where(:has(script[src="../main_window/index.js"])) div#references-panel h1 small.word-count {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) div#references-list div.csl-bib-body div.csl-entry {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a link in a reference, on the panel: BLACK at 700 and underlined -- ACCENT on LIGHT is Lc 44.8 */
 :root:where(:has(script[src="../main_window/index.js"])) div#references-list div.csl-bib-body div.csl-entry a {
@@ -1102,16 +1109,16 @@
 /* --- sheet 44aa3197: main_window --- */
 /* the label after the front matter's opening line */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-yaml-frontmatter-start::after {
-  font-size: 16px;
+  font-size: var(--rm-size);
   color: var(--rm-black);
   background-color: var(--rm-light);
 }
 /* footnote references: at the size the floors assume */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .footnote {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .footnote-ref-label {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the block caret (vim, overwrite): CURSOR */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .CodeMirror-overwrite .CodeMirror-cursor {
@@ -1149,7 +1156,7 @@
 /* a button on a panel: a BLACK outline */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-panel .cm-button {
   border-color: var(--rm-black);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the formatting bar: a LIGHT panel, no outline */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-formatting-bar {
@@ -1211,7 +1218,7 @@
   background-color: var(--rm-light);
   border-color: transparent;
   font-family: "Montserrat", sans-serif;
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the row under the pointer: SELECT carrying WHITE (§2) */
 :root body div.application-menu div.menu-item:not(.separator):not(.disabled):hover {
@@ -1269,7 +1276,7 @@
 }
 /* the item being dragged: a LIGHT chip carrying BLACK at 700; its shadow is a real one */
 :root body .dragger {
-  font-size: 16px;
+  font-size: var(--rm-size);
   background-color: var(--rm-light);
 }
 /* a tag chip's outline: there are no lines (§5) */
@@ -1364,7 +1371,7 @@
 
 /* --- sheet ea7e8b3c: preferences, assets, project_properties --- */
 :root:where(:has(script[src="../preferences/index.js"]), :has(script[src="../assets/index.js"]), :has(script[src="../project_properties/index.js"])) .admonition {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* §3: a warning is WARNING with its legend, and no line */
 :root:where(:has(script[src="../preferences/index.js"]), :has(script[src="../assets/index.js"]), :has(script[src="../project_properties/index.js"])) .admonition.warning {
@@ -1389,7 +1396,7 @@
 /* a settings category over its cards: BLACK on the LIGHT page */
 :root:where(:has(script[src="../preferences/index.js"])) .form-container .fieldset-category {
   color: var(--rm-black);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a group of settings: a WHITE card on the LIGHT page, BLACK at 400, no line */
 :root:where(:has(script[src="../preferences/index.js"])) .form-container fieldset {
@@ -1398,21 +1405,21 @@
   color: var(--rm-black);
 }
 :root:where(:has(script[src="../preferences/index.js"])) .form-container fieldset .form-header legend {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a help badge: WHITE on DARK */
 :root:where(:has(script[src="../preferences/index.js"])) .form-container fieldset .form-help {
   background-color: var(--rm-dark);
   border-color: transparent;
   color: var(--rm-white);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* no line */
 :root:where(:has(script[src="../preferences/index.js"])) .form-container fieldset hr {
   border-top-color: transparent;
 }
 :root:where(:has(script[src="../preferences/index.js"])) .form-container fieldset .control-grid .control-grid-cell.heading {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a group of settings: a WHITE card on the LIGHT page, BLACK at 400, no line */
 :root:where(:has(script[src="../preferences/index.js"])) body.dark .form-container fieldset {
@@ -1431,14 +1438,14 @@
 /* --- sheet e98611d7: preferences --- */
 /* descriptions: DARK on the card, Lc 79.0 */
 :root:where(:has(script[src="../preferences/index.js"])) .form-field-info-text {
-  font-size: 16px;
+  font-size: var(--rm-size);
   color: var(--rm-dark);
 }
 :root:where(:has(script[src="../preferences/index.js"])) .form-field-sub-heading {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../preferences/index.js"])) .form-field-plain-text {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 
 /* --- sheet 142e3d18: preferences, project_properties --- */
@@ -1446,7 +1453,7 @@
 :root:where(:has(script[src="../preferences/index.js"]), :has(script[src="../project_properties/index.js"])) body div.table-view table {
   border-color: transparent;
   background-color: var(--rm-white);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* no stripes: a LIGHT row would need 700 at every other line */
 :root:where(:has(script[src="../preferences/index.js"]), :has(script[src="../project_properties/index.js"])) body div.table-view table.striped tr:nth-child(2n) {
@@ -1500,7 +1507,7 @@
 }
 /* secondary text in a list: DARK on WHITE, Lc 79.0 */
 :root:where(:has(script[src="../preferences/index.js"]), :has(script[src="../assets/index.js"])) body .selectable-list-wrapper .selectable-list-container div.item .info-string {
-  font-size: 16px;
+  font-size: var(--rm-size);
   color: var(--rm-dark);
 }
 /* an error in a row: the ANSI red, Lc 75.0 on WHITE */
@@ -1524,7 +1531,7 @@
 }
 /* a row: WHITE, BLACK at 400 */
 :root:where(:has(script[src="../preferences/index.js"]), :has(script[src="../assets/index.js"])) body.linux .selectable-list-wrapper .selectable-list-container div.item {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a list's footer: a LIGHT panel of two glyphs, no lines */
 :root:where(:has(script[src="../preferences/index.js"]), :has(script[src="../assets/index.js"])) body.linux.dark .selectable-list-wrapper .selectable-list-footer {
@@ -1548,10 +1555,10 @@
 
 /* --- sheet da5a3092: preferences --- */
 :root:where(:has(script[src="../preferences/index.js"])) p#theme-selection-label {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../preferences/index.js"])) div#theme-container {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the chosen theme's button: SELECT carrying WHITE */
 :root:where(:has(script[src="../preferences/index.js"])) div#theme-container div.theme-container-item div.theme-metadata div.selected-button {
@@ -1572,7 +1579,7 @@
 /* --- sheet b4429824: preferences --- */
 :root:where(:has(script[src="../preferences/index.js"])) body div.token-list {
   font-family: "Montserrat", sans-serif;
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a token: WHITE on DARK, Lc -81.7 */
 :root:where(:has(script[src="../preferences/index.js"])) body div.token-list .token {
@@ -1595,7 +1602,7 @@
 /* --- sheet 7e8ce7cc: preferences --- */
 /* a key cap is WHITE on DARK, Lc -81.7, as on worksafe/vscode/ */
 :root:where(:has(script[src="../preferences/index.js"])) div.shortcut-wrapper kbd[data-v-4305d7fe] {
-  font-size: 16px;
+  font-size: var(--rm-size);
   border-color: transparent;
   color: var(--rm-white);
   background-color: var(--rm-dark);
@@ -1625,7 +1632,7 @@
 :root:where(:has(script[src="../preferences/index.js"])) .shortcut-control-wrapper .shortcut-input[data-v-2b2a6c2a] {
   font-family: "Montserrat", sans-serif;
   color: var(--rm-black);
-  font-size: 16px;
+  font-size: var(--rm-size);
   border-color: var(--rm-black);
 }
 /* focus: ACCENT (§2) */
@@ -1794,7 +1801,7 @@
 :root:where(:has(script[src="../about/index.js"])) div#about-general p#uuid {
   font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
   color: var(--rm-dark);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 
 /* --- sheet cf734099: about --- */
@@ -1929,7 +1936,7 @@
   background-color: var(--rm-accent);
 }
 :root:where(:has(script[src="../onboarding/index.js"])) p.small {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* no outline */
 :root:where(:has(script[src="../onboarding/index.js"])) .box {
@@ -2002,7 +2009,7 @@
 }
 /* a file left out of the export, and a folder's name: DARK on the field */
 :root:where(:has(script[src="../project_properties/index.js"])) .export-file-list .export-file-item .display-name .relative-dirname {
-  font-size: 16px;
+  font-size: var(--rm-size);
   color: var(--rm-dark);
 }
 /* no lines */
@@ -2112,10 +2119,10 @@
   border-top-color: transparent;
 }
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-dialog label {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-dialog-close {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a placeholder: DARK */
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-placeholder {
@@ -2135,7 +2142,7 @@
 }
 /* a button on a panel: WHITE, BLACK outline, flat */
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-button {
-  font-size: 16px;
+  font-size: var(--rm-size);
   border-color: var(--rm-black);
   background-image: none;
 }
@@ -2144,7 +2151,7 @@
 }
 /* a field: WHITE, BLACK outline */
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-textfield {
-  font-size: 16px;
+  font-size: var(--rm-size);
   background-color: var(--rm-white);
   border-color: var(--rm-black);
 }
@@ -2169,7 +2176,7 @@
   color: var(--rm-black);
 }
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-diagnosticSource {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the wavy underline was an image; it is a text-decoration in the mark's role (the rules) */
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-lintRange-error {
@@ -2270,7 +2277,7 @@
 }
 /* a panel: LIGHT, BLACK at 700 */
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-statusbar {
-  font-size: 16px;
+  font-size: var(--rm-size);
   background-color: var(--rm-light);
   color: var(--rm-black);
 }
@@ -2285,7 +2292,7 @@
   color: var(--rm-black);
 }
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-panel.cm-search label {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* a search match: LIGHT behind it, 700 (the rules) */
 :root:where(:has(script[src="../assets/index.js"]), :has(script[src="../main_window/index.js"])) .cm-editor .cm-searchMatch {
@@ -2339,36 +2346,36 @@
 /* --- codemirror: main_window --- */
 /* a note's preview: at the size the floors assume, BLACK on the panel */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview h1 {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview h2 {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview h3 {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview h4 {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview h5 {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview h6 {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .editor-note-preview .metadata {
   color: var(--rm-black);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* the gutter's labels: the mono face at 16 px */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-footnote-gutter .cm-gutterElement {
   font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .footnote-preview-container {
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* typewriter mode's band: none, for the same reason */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-content .typewriter-active-line {
@@ -2379,7 +2386,7 @@
 /* the gutter's labels: the mono face at 16 px */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor .cm-heading-gutter .cm-gutterElement div {
   font-family: "IntoneMono Nerd Font Mono", "Intel One Mono", monospace;
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* raw mode shows an alert as its markers, on the note: a note, tip or important one BLACK -- information has
    no hue (§3) ... */
@@ -2460,18 +2467,18 @@
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor figure.image-preview .image-size-info {
   background-color: var(--rm-black);
   color: var(--rm-white);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor figure.image-preview figcaption {
   background-color: var(--rm-black);
   color: var(--rm-white);
-  font-size: 16px;
+  font-size: var(--rm-size);
   caret-color: var(--rm-white);
 }
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor figure.image-preview .open-externally-button {
   background-color: var(--rm-black);
   color: var(--rm-white);
-  font-size: 16px;
+  font-size: var(--rm-size);
 }
 /* selected caption text: §2's selection */
 :root:where(:has(script[src="../main_window/index.js"])) .cm-editor figure.image-preview figcaption::selection {
@@ -2899,7 +2906,9 @@ progress {
   color: var(--rm-white);
 }
 
-/* Weight follows the ground (§2): every LIGHT panel carries BLACK at 700, Lc 61.2 ... */
+/* Weight and size follow the ground (§2): every LIGHT panel of the chrome carries BLACK at 600 and 18 px, Lc
+   61.2, APCA's tier for SemiBold at that size (the type, above). Zettlr's own bold inside a panel -- the
+   contents' level numbers and the heading the caret is under -- is the panel's SemiBold too ... */
 :root:root #menubar,
 :root:root div#toolbar,
 :root:root div#titlebar,
@@ -2915,20 +2924,55 @@ progress {
 :root:root div.application-menu,
 :root:root .dragger,
 :root:root .admonition.info,
-:root:root .cm-editor .admonition-wrapper.note,
-:root:root .cm-editor .admonition-wrapper.tip,
-:root:root .cm-editor .admonition-wrapper.important,
 :root:root #lrt-wrapper .lrt.in-progress,
 :root:root #lrt-wrapper .lrt.aborted,
 :root:root div#project-container div.project-box,
-:root:root .cm-editor .cm-foldPlaceholder,
 :root:root .selectable-list-wrapper .selectable-list-footer,
 :root:root button,
-:root:root div#global-search-pane {
+:root:root div#global-search-pane,
+:root:root #sidebar div.toc-entry-container div.toc-level,
+:root:root #sidebar div.toc-entry-container div.toc-entry-active {
+  font-weight: 600;
+  --rm-size: 18px;
+  font-size: var(--rm-size);
+}
+
+/* ... and so is the bold the browser gives a heading, a <b> or a table's header there, at its own size, so a
+   panel has one weight. */
+:root:root #menubar :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div#toolbar :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div#titlebar :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div.tab-list :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div.tab-container :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root #file-manager :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root #sidebar :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div#statusbar :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root .cm-editor .cm-panels :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root .cm-editor .cm-tooltip :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root .cm-editor .cm-formatting-bar :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root .popover :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div.application-menu :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root .dragger :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root .admonition.info :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root #lrt-wrapper .lrt.in-progress :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root #lrt-wrapper .lrt.aborted :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div#project-container div.project-box :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root .selectable-list-wrapper .selectable-list-footer :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root button :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend),
+:root:root div#global-search-pane :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend) {
+  font-weight: 600;
+}
+
+/* A LIGHT ground inside the note -- an alert's frame, a folded span -- keeps the editor's size, so its text is
+   700, the tier from 16 px. */
+:root:root .cm-editor .admonition-wrapper.note,
+:root:root .cm-editor .admonition-wrapper.tip,
+:root:root .cm-editor .admonition-wrapper.important,
+:root:root .cm-editor .cm-foldPlaceholder {
   font-weight: 700;
 }
 
-/* ... and every WHITE field nested in one goes back to 400, Lc 91.8. */
+/* Every WHITE field nested in a panel goes back to 400, Lc 91.8, and in the chrome to 16 px. */
 :root:root #menubar input,
 :root:root #menubar textarea,
 :root:root #menubar select,
@@ -2974,15 +3018,6 @@ progress {
 :root:root .admonition.info input,
 :root:root .admonition.info textarea,
 :root:root .admonition.info select,
-:root:root .cm-editor .admonition-wrapper.note input,
-:root:root .cm-editor .admonition-wrapper.note textarea,
-:root:root .cm-editor .admonition-wrapper.note select,
-:root:root .cm-editor .admonition-wrapper.tip input,
-:root:root .cm-editor .admonition-wrapper.tip textarea,
-:root:root .cm-editor .admonition-wrapper.tip select,
-:root:root .cm-editor .admonition-wrapper.important input,
-:root:root .cm-editor .admonition-wrapper.important textarea,
-:root:root .cm-editor .admonition-wrapper.important select,
 :root:root #lrt-wrapper .lrt.in-progress input,
 :root:root #lrt-wrapper .lrt.in-progress textarea,
 :root:root #lrt-wrapper .lrt.in-progress select,
@@ -2992,9 +3027,6 @@ progress {
 :root:root div#project-container div.project-box input,
 :root:root div#project-container div.project-box textarea,
 :root:root div#project-container div.project-box select,
-:root:root .cm-editor .cm-foldPlaceholder input,
-:root:root .cm-editor .cm-foldPlaceholder textarea,
-:root:root .cm-editor .cm-foldPlaceholder select,
 :root:root .selectable-list-wrapper .selectable-list-footer input,
 :root:root .selectable-list-wrapper .selectable-list-footer textarea,
 :root:root .selectable-list-wrapper .selectable-list-footer select,
@@ -3009,10 +3041,28 @@ progress {
 :root:root div.autocomplete-list,
 :root:root div.single-search-result {
   font-weight: 400;
+  --rm-size: 16px;
+  font-size: var(--rm-size);
 }
 
-/* The current tab is the field's edge: WHITE, carrying BLACK at 400. In light mode Zettlr marks it only by an
-   underline, which would be a line between the tab and its field. */
+:root:root .cm-editor .admonition-wrapper.note input,
+:root:root .cm-editor .admonition-wrapper.note textarea,
+:root:root .cm-editor .admonition-wrapper.note select,
+:root:root .cm-editor .admonition-wrapper.tip input,
+:root:root .cm-editor .admonition-wrapper.tip textarea,
+:root:root .cm-editor .admonition-wrapper.tip select,
+:root:root .cm-editor .admonition-wrapper.important input,
+:root:root .cm-editor .admonition-wrapper.important textarea,
+:root:root .cm-editor .admonition-wrapper.important select,
+:root:root .cm-editor .cm-foldPlaceholder input,
+:root:root .cm-editor .cm-foldPlaceholder textarea,
+:root:root .cm-editor .cm-foldPlaceholder select {
+  font-weight: 400;
+}
+
+/* The current tab is the field's edge: WHITE, carrying BLACK at 400 -- at the strip's size, so the labels in
+   one strip stand on one line. In light mode Zettlr marks it only by an underline, which would be a line
+   between the tab and its field. */
 :root:root div.tab-container div[role="tab"].active {
   background-color: var(--rm-white);
   font-weight: 400;
@@ -3109,7 +3159,8 @@ hr {
 }
 
 :root:root .form-container .fieldset-category {
-  font-weight: 700;
+  font-weight: 600;
+  --rm-size: 18px;
 }
 
 /* A strip of tabs may wrap: at the size the floors assume and the weight a LIGHT strip needs, the About
@@ -3182,6 +3233,14 @@ input[type="search"]::-webkit-search-cancel-button {
 
 /* The file manager is a LIGHT panel: Zettlr leaves it to show the window field through. */
 :root:root #file-manager {
+  background-color: var(--rm-light);
+}
+
+/* So is the sidebar. Zettlr grounds it, then makes it transparent on Linux and macOS (`body.linux
+   div#sidebar`) for the vibrancy macOS draws, and that rule outranks the mirror's; it names no colour, so the
+   record never held it. The note's WHITE showed through, the contents stood on it at the panel's weight, and
+   note and sidebar met with nothing between them (seen on screen, 2026-09-30). */
+:root:root #sidebar {
   background-color: var(--rm-light);
 }
 

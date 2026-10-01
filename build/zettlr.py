@@ -21,7 +21,8 @@ on electron43, 2026-09-25) shape it:
     state (PLATFORM.md), as COSMIC cannot, and the theme does not pretend to.
 
   THE UI RENDERS UNDER THE SIZE THE FLOORS ASSUME. Zettlr sets its chrome at 10 to 15 px, and every floor in §0e
-    assumes about 16 (§5). So the chrome's text is set at 16 px (CHOSEN, as on worksafe/obsidian/), and what that
+    assumes about 16 (§5). So the chrome's text is set at 16 px (CHOSEN, as on worksafe/obsidian/), and at 18 px
+    on a LIGHT panel, where it is SemiBold and APCA's table asks that size of it (CHOSEN 2026-09-30); what that
     costs is written down where it happens: the About window's six tabs take two rows, a few fixed-width buttons
     cut their labels short, the settings' list of pages is cut at its default width.
 
@@ -31,7 +32,8 @@ So the surface is a record, a role table and a mirror (CONTRIBUTING.md §8):
               and the checker fails on any declaration no row classifies. --coverage says what an update moved.
   ROLES       every declaration on one of the kit's fifteen values: §2's seven, §3's three and their two
               legends, and build/cosmic.py's ANSI normal tier for signal text, as on worksafe/obsidian/. Weight
-              follows the ground: a LIGHT panel carries BLACK at 700 (Lc 61.2), a WHITE field 400 (Lc 91.8).
+              and size follow the ground: a LIGHT panel carries BLACK at 600 and 18 px (Lc 61.2), a WHITE field
+              400 at 16 px (Lc 91.8).
   THE MIRROR  each override at its platform rule's own selector with `:root` in front, and :where(:has(...))
               naming the windows whose bundle loads that rule, so an override meant for one window reaches no
               other and still ranks exactly as the rule it answers.
@@ -126,7 +128,23 @@ CAPS = {hx: note for slot, row in _T.items() for tier, (hx, lc, note) in row.ite
 # The mono is IntoneMono Nerd Font Mono, and Intel One Mono where it is absent (§5).
 FACES = {'ui': '"Montserrat", sans-serif', 'mono': '"IntoneMono Nerd Font Mono", "Intel One Mono", monospace'}
 UI, MONO = 'ui', 'mono'
-PX16 = '16px'
+# Weight and size follow the ground. BLACK on LIGHT is Lc 61.2, and APCA's own font table (apca-w3 0.1.9,
+# fontLookupAPCA, its Lc 60 row) admits that at 16 px for 700 and at 18 px for 600. Everywhere else the kit
+# declares 700, which renders Montserrat ExtraBold (§5). Zettlr is where the day is spent, and there a LIGHT panel
+# is SemiBold at 18 px instead (CHOSEN 2026-09-30): lighter to read for hours, and still on APCA's tier, with no
+# margin -- 600 renders at exactly 600, Montserrat SemiBold, which cosmic's --fonts installs beside the two cuts
+# the rest of the kit uses. A WHITE field is 400 at 16 px (Lc 91.8). Every size the mirror writes is one variable,
+# --rm-size, which the ground sets (THE RULES), so a label takes the size of the ground it is on.
+SIZE = 'var(--rm-size)'
+PANEL_WEIGHT, PANEL_SIZE, FIELD_SIZE = '600', '18px', '16px'
+# That row of APCA's table: the least size, in px, at which each weight may carry text at Lc 60. §0e's "16px/700,
+# or 24px/400" is two of its cells. --screen reads each text's tier off it.
+LC60_PX = {100: 72, 200: 48, 300: 42, 400: 24, 500: 21, 600: 18, 700: 16, 800: 16, 900: 18}
+
+
+def tier60(weight, size):
+    """True if text at this computed weight and size may stand at Lc 60; otherwise its floor is 75."""
+    return size >= LC60_PX[min(900, max(100, round(weight / 100) * 100))]
 
 
 # --- 2. Zettlr's own stylesheets, read off the installed build ---------------------------------------------
@@ -618,24 +636,24 @@ def rule(pattern, note='', **roles):
 
 # Shorthands for the rows below. `ground`, `ink`, `line`, `shadow`, `image`, `size`, `face` and `var` name the
 # property class; each takes a role, NONE (transparent, or none for an image or a shadow), a Keep with its
-# reason, PX16, UI or MONO.
-PANEL = dict(ground=L, ink=B, size=PX16, face=UI, line=NONE)      # a LIGHT panel carries BLACK at 700 (§2)
-FIELD = dict(ground=W, ink=B, size=PX16, face=UI, line=NONE)      # a WHITE field carries BLACK at 400
+# reason, SIZE, UI or MONO.
+PANEL = dict(ground=L, ink=B, size=SIZE, face=UI, line=NONE)      # a LIGHT panel carries BLACK at 600, 18 px
+FIELD = dict(ground=W, ink=B, size=SIZE, face=UI, line=NONE)      # a WHITE field carries BLACK at 400, 16 px
 PICKED = dict(ground=S, ink=W)                                     # the selected row: SELECT carrying WHITE (§2)
 
 CLASSIFY = [
     # --- every window ------------------------------------------------------------------------------------------
     rule(r'^html$', 'the root size is 16 px already, and rem reads it', size=CONTENT),
     rule(r'^body$', 'the page: BLACK on the window field, in Montserrat (§5); #000000 and white are §3\'s',
-         ink=B, ground=W, face=UI, size=PX16),
+         ink=B, ground=W, face=UI, size=SIZE),
     rule(r'^:root$', 'Zettlr\'s own palette variables: a backstop, so anything that reads one lands on a kit value',
          var='VARS'),
     rule(r'^\.tippy-box(\s|$)', 'tooltips: WHITE on BLACK, Lc -92.3, as on worksafe/obsidian/; a link in one is WHITE '
-         'and keeps its underline', ground=B, ink=W, size=PX16),
+         'and keeps its underline', ground=B, ink=W, size=SIZE),
     rule(r'^\.tippy-arrow$', 'a tooltip\'s arrow is drawn in its text colour, and is the tooltip\'s BLACK', ink=B),
     rule(r'^a$', 'links route to ACCENT (§3) and keep the underline', ink=A),
     rule(r'^\.dragger$', 'the item being dragged: a LIGHT chip carrying BLACK at 700; its shadow is a real one',
-         ground=L, size=PX16, shadow=SHADOW),
+         ground=L, size=SIZE, shadow=SHADOW),
     rule(r'^\.taglist .* \.tag$', 'a tag chip\'s outline: there are no lines (§5)', line=NONE),
     rule(r'::-webkit-scrollbar-thumb', 'the scrollbar: a LIGHT thumb on the field; on a panel it is DARK (the rules)',
          ground=L),
@@ -650,12 +668,12 @@ CLASSIFY = [
     rule(r'^div\.tab-list button\[role="tab"\]\.active$', 'the current tab is the field\'s edge: WHITE, BLACK',
          ground=W, ink=B),
     rule(r'^div\.tab-list button\[role="tab"\]:hover$', 'a hover on a panel is WHITE', ground=W),
-    rule(r'^div\.tab-list button\[role="tab"\]$', 'tabs on the strip', line=NONE, size=PX16),
+    rule(r'^div\.tab-list button\[role="tab"\]$', 'tabs on the strip', line=NONE, size=SIZE),
     rule(r'^div#statusbar$', 'the button strip at the foot of a dialog: a LIGHT panel', **PANEL),
     rule(r'^div#statusbar button\.primary$', 'the primary button: ACCENT carrying WHITE, Lc -78.5; flat', ground=A,
          line=A, ink=W, image=NONE),
     rule(r'^div#toolbar$', 'the toolbar: a LIGHT panel, its glyphs BLACK', **PANEL),
-    rule(r'^div#toolbar div\.toolbar-group span\.toolbar-label$|^\.toolbar-text$', 'toolbar labels', size=PX16),
+    rule(r'^div#toolbar div\.toolbar-group span\.toolbar-label$|^\.toolbar-text$', 'toolbar labels', size=SIZE),
     rule(r'^div#toolbar button:hover$|^div#toolbar button\.toolbar-overflow$',
          'a hover on a panel is WHITE', ground=W),
     rule(r'^div#toolbar button$', 'a toolbar button is its glyph: no outline, the panel\'s ground', line=NONE,
@@ -671,7 +689,7 @@ CLASSIFY = [
     rule(r'^div#toolbar button\.error-control-active$', 'errors, filtered in: §3\'s DESTRUCTIVE with its legend',
          ground=DS, ink=LL),
     rule(r'^div\.application-menu$', 'a menu: a LIGHT frame, WHITE rows (the rules), no outline; its shadow is a '
-         'real one', ground=L, ink=B, line=NONE, size=PX16, face=UI, shadow=SHADOW),
+         'real one', ground=L, ink=B, line=NONE, size=SIZE, face=UI, shadow=SHADOW),
     rule(r'^div\.application-menu div\.menu-item:not\(\.separator\):not\(\.disabled\):hover$',
          'the row under the pointer: SELECT carrying WHITE (§2)', ground=S),
     rule(r'^div\.application-menu div\.menu-item\.disabled$', 'a disabled row: DARK (§2), on a WHITE row Lc 79.0',
@@ -689,7 +707,7 @@ CLASSIFY = [
          'WHITE carrying BLACK at 400', line=B, ground=W, ink=B),
     rule(r'^button$', 'a button is LIGHT on the field and carries BLACK at 700, in its BLACK outline', line=B,
          ground=L, ink=B),
-    rule(r'^label$', 'labels: Montserrat at 16 px', face=UI, size=PX16),
+    rule(r'^label$', 'labels: Montserrat at 16 px', face=UI, size=SIZE),
     rule(r'^input\[type="time"\]$', '', face=UI),
     rule(r'^label\.checkbox \.checkmark$', 'a checkbox is a WHITE box with a BLACK outline, flat', ground=W, line=B,
          image=NONE),
@@ -701,8 +719,8 @@ CLASSIFY = [
     rule(r'^label\.checkbox\.disabled span\.checkmark$', 'disabled: the field, flat', ground=W, image=NONE),
     rule(r'^\.cb-group label\.disabled$|^\.radio-group-container label:not\(\.radio\)\.disabled$',
          'a disabled label: DARK (§2)', ink=D),
-    rule(r'^\.cb-group div\.info$', 'a checkbox\'s description: DARK on the WHITE card, Lc 79.0', ink=D, size=PX16),
-    rule(r'^\.radio-group-container p$', '', size=PX16),
+    rule(r'^\.cb-group div\.info$', 'a checkbox\'s description: DARK on the WHITE card, Lc 79.0', ink=D, size=SIZE),
+    rule(r'^\.radio-group-container p$', '', size=SIZE),
     rule(r'^label\.radio \.toggle$', 'a radio button is a WHITE box with a BLACK outline (§5: square), flat',
          ground=W, line=B, image=NONE),
     rule(r'^label\.radio input:checked \+ \.toggle$', 'chosen: ACCENT', ground=A),
@@ -722,18 +740,18 @@ CLASSIFY = [
          'outline', ground=W, line=B, ink=B),
     rule(r'^div\.form-control \.input-text-button-group button\.input-reset-button$', 'the reset glyph in a field',
          ground=NONE, ink=B),
-    rule(r'^div\.form-control p\.info$', '', size=PX16),
+    rule(r'^div\.form-control p\.info$', '', size=SIZE),
     rule(r'^\.progress-bar-container progress::-webkit-progress-bar$', 'a progress bar\'s track: LIGHT', ground=L),
     rule(r'^\.progress-bar-container progress(:indeterminate)?::-webkit-progress-(bar|value)$',
          'progress: ACCENT; the moving stripes are motion and a blend', ground=A, image=NONE),
     rule(r'^\.progress-bar-container \.interrupt-button:hover$', 'a hover on the field is LIGHT', ground=L),
-    rule(r'^\.admonition$', '', size=PX16),
+    rule(r'^\.admonition$', '', size=SIZE),
     rule(r'^\.admonition\.warning$', '§3: a warning is WARNING with its legend, and no line', ground=WN, ink=LD,
          line=NONE),
     rule(r'^\.admonition\.error$', '§3: an error is DESTRUCTIVE with its legend', ground=DS, ink=LL, line=NONE),
     rule(r'^\.admonition\.info$', 'information has no hue (§3 has three semantics, not four): LIGHT, BLACK at 700',
          ground=L, ink=B, line=NONE),
-    rule(r'^div\.table-view table$', 'a table: WHITE rows, no grid (§5)', ground=W, line=NONE, size=PX16),
+    rule(r'^div\.table-view table$', 'a table: WHITE rows, no grid (§5)', ground=W, line=NONE, size=SIZE),
     rule(r'^div\.table-view table\.striped tr:nth-child\(2n\)$', 'no stripes: a LIGHT row would need 700 at every '
          'other line', ground=W),
     rule(r'^div\.table-view table thead tr', 'no grid', line=NONE),
@@ -748,20 +766,20 @@ CLASSIFY = [
     rule(r'^\.selectable-list-wrapper \.selectable-list-footer \.(add|remove)$', '', ink=B),
     rule(r'^\.selectable-list-wrapper \.selectable-list-container div\.item\.selected$', '', **PICKED),
     rule(r'^\.selectable-list-wrapper \.selectable-list-container div\.item$', 'a row: WHITE, BLACK at 400',
-         ground=W, ink=B, line=NONE, size=PX16),
+         ground=W, ink=B, line=NONE, size=SIZE),
     rule(r'^\.selectable-list-wrapper \.selectable-list-container div\.item \.info-string\.error$',
          'an error in a row: the ANSI red, Lc 75.0 on WHITE', ink=RED),
     rule(r'^\.selectable-list-wrapper \.selectable-list-container div\.item \.info-string$', 'secondary text in a '
-         'list: DARK on WHITE, Lc 79.0', ink=D, size=PX16),
+         'list: DARK on WHITE, Lc 79.0', ink=D, size=SIZE),
     rule(r'^\.selectable-list-wrapper \.selectable-list-container div\.no-items-label$', '', ink=D, size=CONTENT),
     rule(r'^div\.shortcut-wrapper kbd$', 'a key cap is WHITE on DARK, Lc -81.7, as on worksafe/vscode/', ground=D,
-         ink=W, line=NONE, size=PX16),
+         ink=W, line=NONE, size=SIZE),
     rule(r'^div\.shortcut-wrapper\.muted kbd$', 'a key that is not bound: a WHITE cap in a DARK outline, carrying '
          'DARK as disabled text (§2), Lc 79.0 -- DARK on LIGHT would be 48.4', ground=W, ink=D, line=D),
     rule(r'^\.shortcut-control-wrapper \.shortcut-input$', 'a shortcut field: BLACK in a BLACK outline', ink=B,
-         line=B, face=UI, size=PX16),
+         line=B, face=UI, size=SIZE),
     rule(r'^\.shortcut-control-wrapper \.shortcut-input:focus$', 'focus: ACCENT (§2)', line=A),
-    rule(r'^div\.token-list$', '', face=UI, size=PX16),
+    rule(r'^div\.token-list$', '', face=UI, size=SIZE),
     rule(r'^div\.token-list \.token$', 'a token: WHITE on DARK, Lc -81.7', ground=D, ink=W),
     rule(r'^div\.token-list \.token:hover$', 'hovered, a click removes it: §3\'s DESTRUCTIVE with its legend (the '
          'rules)', ground=DS),
@@ -771,12 +789,12 @@ CLASSIFY = [
          'shadow is a real one', ground=W, ink=B, shadow=SHADOW),
     rule(r'^#file-tree$', 'the tree is the LIGHT panel', ground=L),
     rule(r'^#file-tree #directories-(dirs|files)-header$', 'the header over the tree: no line', line=NONE,
-         size=PX16),
+         size=SIZE),
     rule(r'^#file-tree #directories-(dirs|files)-header \.close-all(:hover)?$', 'the collapse-all glyph',
          ground=NONE),
     rule(r'^#file-tree \.empty-tree \.info$|^#file-list \.empty-(file-list|directory)$', '', size=CONTENT),
     rule(r'^ul#workspaces-drag-list li', 'the workspace order list: no lines', line=NONE, size=CONTENT),
-    rule(r'^div\.tree-item-container$', '', size=PX16),
+    rule(r'^div\.tree-item-container$', '', size=SIZE),
     rule(r'^div\.tree-item-container \.tree-item\.(blue|purple|rose|red|orange|yellow|green)$', 'a colour the user '
          'gave a folder: information, left as Zettlr paints it', ink=CONTENT),
     rule(r'^div\.tree-item-container \.tree-item\.project$', 'a project is a folder; its glyph says so, and red would '
@@ -794,15 +812,15 @@ CLASSIFY = [
          'WHITE, the field\'s tone on the panel', ground=W),
     rule(r'^div\.list-item-wrapper div\.list-item\.selected( div\.filename div\.date)?$', '', **PICKED),
     rule(r'^div\.list-item-wrapper div\.list-item div\.filename div\.date$', 'the date under a name: BLACK on the '
-         'panel (DARK on LIGHT is Lc 48.4)', ground=NONE, ink=B, size=PX16),
-    rule(r'^div\.list-item-wrapper div\.list-item div\.filename$', '', size=PX16),
+         'panel (DARK on LIGHT is Lc 48.4)', ground=NONE, ink=B, size=SIZE),
+    rule(r'^div\.list-item-wrapper div\.list-item div\.filename$', '', size=SIZE),
     rule(r'^div\.list-item-wrapper div\.list-item div\.meta-info \.badge\.code-indicator$', 'the code-file badge: '
          'ACCENT carrying WHITE', ground=A, ink=W),
     rule(r'^div\.list-item-wrapper div\.list-item div\.meta-info \.badge\.tag$', 'a tag\'s badge: WHITE on DARK, Lc '
-         '-81.7', ground=D, ink=W, size=PX16),
+         '-81.7', ground=D, ink=W, size=SIZE),
     rule(r'^div\.list-item-wrapper div\.list-item div\.meta-info \.badge$', 'the other badges -- counts, the writing '
          'target -- are the row\'s own text; only dark mode gives them a ground, and the theme paints dark mode as '
-         'light', ground=NONE, ink=INHERIT, size=PX16),
+         'light', ground=NONE, ink=INHERIT, size=SIZE),
     rule(r'^div\.list-item-wrapper div\.list-item div\.meta-info \.badge\.tag \.color-circle$|'
          r'^\.tag-cloud \.tag \.color-circle$|^div\.popover \.badge \.color-circle$', 'the ring round a tag\'s own '
          'colour: no line; the colour inside is the user\'s', line=NONE),
@@ -811,12 +829,12 @@ CLASSIFY = [
          ink=W),
     rule(r'^div\.list-item-wrapper div\.list-item div\.meta-info \.badge svg path$', '... and its progress BLACK '
          '(the rules take both through the open and the selected row)', ink=B),
-    rule(r'^div#global-search-pane$', '', size=PX16),
+    rule(r'^div#global-search-pane$', '', size=SIZE),
     rule(r'^div#global-search-pane (hr|div\.search-result-container)$', 'search results: no lines', line=NONE,
-         size=PX16),
+         size=SIZE),
     rule(r'^div#global-search-pane div\.search-result-container div\.result-header \.filepath$', 'a result\'s path: '
-         'BLACK on the panel', ink=B, size=PX16),
-    rule(r'^div#global-search-pane div\.search-result-container div\.result-line$', '', size=PX16),
+         'BLACK on the panel', ink=B, size=SIZE),
+    rule(r'^div#global-search-pane div\.search-result-container div\.result-line$', '', size=SIZE),
     rule(r'^div#global-search-pane div\.search-result-container div\.result-line:hover$', 'a hover on a panel is '
          'WHITE', ground=W),
     rule(r'^div#global-search-pane div\.search-result-container div\.result-line \.search-result-highlight$',
@@ -826,12 +844,12 @@ CLASSIFY = [
     # --- the main window: tabs, panes, the editor's frame --------------------------------------------------------
     rule(r'^div\.tab-container$', 'the tab strip: a LIGHT panel, no line under it', **PANEL),
     rule(r'^div\.tab-container div\[role="tab"\](:not\(:last-child\))?$', 'a tab: the panel, no lines', ground=L,
-         line=NONE, size=PX16),
+         line=NONE, size=SIZE),
     rule(r'^div\.tab-container div\[role="tab"\]\.active$', 'the current tab is the field\'s edge: WHITE, and its '
          'underline would be a line between it and the field', ground=W, line=NONE),
     rule(r'^div\.tab-container div\[role="tab"\]:hover$|^div\.document-tablist-wrapper div\.scroller:hover$',
          'a hover on a panel is WHITE', ground=W),
-    rule(r'^div\.tab-container div\[role="tab"\] \.(deduplicate|close)$', '', size=PX16),
+    rule(r'^div\.tab-container div\[role="tab"\] \.(deduplicate|close)$', '', size=SIZE),
     rule(r'^div\.tab-container \.dropzone$', 'where a dragged tab will land: ACCENT', ground=A),
     rule(r'^div\.document-tablist-wrapper div\.scroller(\.left|\.right)?$', 'the tab strip\'s scroll arrows: the '
          'panel, no lines', ground=L, line=NONE),
@@ -845,18 +863,18 @@ CLASSIFY = [
     rule(r'^\.editor-pane \.editor-container \.empty-pane$|^\.main-editor-wrapper$', 'the field', ground=W),
     rule(r'^\.main-editor-wrapper\.code-file \.cm-editor$', 'a code file: the mono face (§5)', face=MONO),
     rule(r'^#sidebar$', 'the sidebar: a LIGHT panel, BLACK at 700', **PANEL),
-    rule(r'^#sidebar h1$', '', size=CONTENT),
+    rule(r'^#sidebar h1$', 'the contents\' title: a label on the panel, at the panel\'s size', size=SIZE),
     rule(r'^#sidebar div\.toc-entry-container div\.toc-level$', 'a heading\'s level in the contents: BLACK on the '
          'panel', ink=B),
     rule(r'^#sidebar div\.toc-entry-container div\.toc-entry-active$', 'the heading the caret is under: BLACK, on '
          'SELECT (the rules)', ink=W),
     rule(r'^#sidebar div\.related-files-container div\.related-file:hover$', 'a hover on a panel is WHITE',
          ground=W),
-    rule(r'^#sidebar div\.related-files-container div\.related-file span\.filename$', '', size=PX16),
-    rule(r'^h2\.other-files-panel-folder-name$', '', size=PX16),
+    rule(r'^#sidebar div\.related-files-container div\.related-file span\.filename$', '', size=SIZE),
+    rule(r'^h2\.other-files-panel-folder-name$', '', size=SIZE),
     rule(r'^\.toc-entry-container\.toc-drop-effect$', 'where a dragged heading will land: an ACCENT mark', line=A),
     rule(r'^div#references-panel h1 small\.word-count$|^div#references-list div\.csl-bib-body div\.csl-entry$', '',
-         size=PX16),
+         size=SIZE),
     rule(r'^div#references-list div\.csl-bib-body div\.csl-entry a$', 'a link in a reference, on the panel: BLACK '
          'at 700 and underlined -- ACCENT on LIGHT is Lc 44.8', ink=B),
 
@@ -865,8 +883,8 @@ CLASSIFY = [
     rule(r'^\.popover$', 'a popover: a LIGHT panel, no outline; its shadow is a real one', **PANEL, shadow=SHADOW),
     rule(r'^\.popover hr$', 'no line: the tone changes (§5)', line=NONE),
     rule(r'^\.popover form input(\.small)?$', '', size=CONTENT),
-    rule(r'^div\.popover div\.properties-info-container$', 'file properties: BLACK on the panel', ink=B, size=PX16),
-    rule(r'^div\.popover \.badge$', 'a tag badge: WHITE on DARK', ground=D, ink=W, size=PX16),
+    rule(r'^div\.popover div\.properties-info-container$', 'file properties: BLACK on the panel', ink=B, size=SIZE),
+    rule(r'^div\.popover \.badge$', 'a tag badge: WHITE on DARK', ground=D, ink=W, size=SIZE),
     rule(r'^div\.popover \.badge\.primary$', 'the primary badge: ACCENT carrying WHITE', ground=A, ink=W),
     rule(r'^\.color-selector \.color-swatch\.(blue|purple|rose|red|orange|yellow|green)$', 'the colours a user may '
          'give a folder: information, as Zettlr paints them', ground=CONTENT),
@@ -890,8 +908,8 @@ CLASSIFY = [
     rule(r'^#lrt-wrapper \.lrt\.(in-progress|aborted)$', 'a running or abandoned task: LIGHT, BLACK at 700',
          ground=L),
     rule(r'^#lrt-wrapper \.lrt \.info$', 'its detail line takes the legend of its ground (the rules)', ink=INHERIT,
-         size=PX16),
-    rule(r'^#lrt-wrapper \.lrt \.(title|metadata)$', '', size=PX16),
+         size=SIZE),
+    rule(r'^#lrt-wrapper \.lrt \.(title|metadata)$', '', size=SIZE),
     rule(r'^div\.background-button$', 'the image viewer\'s backdrop choices: a BLACK outline', line=B),
     rule(r'^div\.background-button\.active$', '...the chosen one ACCENT', line=A),
     rule(r'^\.bg-(white|black|checker)$', 'the backdrop a user chose to inspect an image on: information',
@@ -913,10 +931,10 @@ CLASSIFY = [
          line=L),
     rule(r'^(\.cm-editor )?\.cm-formatting-bar button\.formatting-toolbar-button$', '', ink=B),
     rule(r'^(\.cm-editor )?\.cm-panel\.cm-panel-lint button\[aria-label="close"\]$', '', ink=B),
-    rule(r'^(\.cm-editor )?\.cm-panel \.cm-button$', 'a button on a panel: a BLACK outline', line=B, size=PX16),
+    rule(r'^(\.cm-editor )?\.cm-panel \.cm-button$', 'a button on a panel: a BLACK outline', line=B, size=SIZE),
     rule(r'^\.cm-editor \.cm-yaml-frontmatter-start::after$', 'the label after the front matter\'s opening line',
-         size=PX16, ground=L, ink=B),
-    rule(r'^\.cm-editor \.footnote(-ref-label)?$', 'footnote references: at the size the floors assume', size=PX16),
+         size=SIZE, ground=L, ink=B),
+    rule(r'^\.cm-editor \.footnote(-ref-label)?$', 'footnote references: at the size the floors assume', size=SIZE),
     rule(r'^\.cm-editor \.heading-tag span$', '', size=CONTENT),
     rule(r'^\.cm-editor \.katex$|^\.katex|^\.cm-editor \.cm-completionIcon', 'math, and the completion list\'s '
          'glyphs', size=CONTENT, face=CONTENT),
@@ -943,17 +961,17 @@ CLASSIFY = [
     rule(r'^\.cm-editor \.cm-gutters$', 'the gutter is the field, and its labels DARK, Lc 79.0', ground=W, ink=D,
          line=NONE),
     rule(r'^\.cm-editor \.cm-(footnote|heading)-gutter \.cm-gutterElement( div)?$', 'the gutter\'s labels: the mono face at '
-         '16 px', face=MONO, size=PX16),
+         '16 px', face=MONO, size=SIZE),
     rule(r'^\.cm-editor \.cm-panels-(top|bottom)$', 'no line between a panel and the note', line=NONE),
-    rule(r'^\.cm-editor \.cm-(dialog label|dialog-close|panel\.cm-search label|diagnosticSource)$', '', size=PX16),
+    rule(r'^\.cm-editor \.cm-(dialog label|dialog-close|panel\.cm-search label|diagnosticSource)$', '', size=SIZE),
     rule(r'^\.cm-editor \.cm-placeholder$', 'a placeholder: DARK', ink=D),
     rule(r'^\.cm-editor \.cm-highlightSpace$', 'shown whitespace: a DARK dot', ground=InPlace(D)),
     rule(r'^\.cm-editor \.cm-highlightTab$', 'a shown tab: its arrow was an image stroked grey; it is drawn by the '
          'rules', image=NONE),
     rule(r'^\.cm-editor \.cm-trailingSpace$', 'trailing whitespace: LIGHT behind it', ground=L),
     rule(r'^\.cm-editor \.cm-button(:active)?$', 'a button on a panel: WHITE, BLACK outline, flat', image=NONE,
-         line=B, size=PX16),
-    rule(r'^\.cm-editor \.cm-textfield$', 'a field: WHITE, BLACK outline', ground=W, line=B, size=PX16),
+         line=B, size=SIZE),
+    rule(r'^\.cm-editor \.cm-textfield$', 'a field: WHITE, BLACK outline', ground=W, line=B, size=SIZE),
     rule(r'^\.cm-editor \.cm-diagnostic-error$|^\.cm-editor \.cm-lintPoint:after$', 'an error\'s mark: '
          'DESTRUCTIVE (§3)', line=DS),
     rule(r'^\.cm-editor \.cm-diagnostic-warning$|^\.cm-editor \.cm-lintPoint-warning:after$', 'a warning\'s mark: '
@@ -987,8 +1005,8 @@ CLASSIFY = [
     rule(r'^\.cm-editor \.cm-searchMatch$', 'a search match: LIGHT behind it, 700 (the rules)', ground=L),
     rule(r'^\.cm-editor \.cm-searchMatch-selected$', '...the current one outlined in ACCENT (the rules)', ground=L),
     rule(r'^\.cm-editor \.editor-note-preview( h[1-6]| \.metadata)?$', 'a note\'s preview: at the size the floors '
-         'assume, BLACK on the panel', size=PX16, ink=B),
-    rule(r'^\.cm-editor \.footnote-preview-container$', '', size=PX16),
+         'assume, BLACK on the panel', size=SIZE, ink=B),
+    rule(r'^\.cm-editor \.footnote-preview-container$', '', size=SIZE),
     rule(r'^\.cm-editor \.cm-readability-\d+$', 'readability mode colours each sentence by its difficulty: an '
          'analysis of the text, information', ground=CONTENT, ink=CONTENT),
     rule(r'^\.cm-editor \.admonition-wrapper\.(note|tip|important)$', 'a note, tip or important alert is furniture: '
@@ -1010,7 +1028,7 @@ CLASSIFY = [
     rule(r'^\.cm-editor div\.cm-table-editor-widget-wrapper table (td|th)$', 'a table: BLACK, no grid (§5)', ink=B,
          line=NONE),
     rule(r'^\.cm-editor figure\.image-preview (\.image-size-info|figcaption|\.open-externally-button)$',
-         'captions over an image: WHITE on BLACK, Lc -92.3, opaque', ground=B, ink=W, size=PX16),
+         'captions over an image: WHITE on BLACK, Lc -92.3, opaque', ground=B, ink=W, size=SIZE),
     rule(r'^\.cm-editor figure\.image-preview figcaption::selection$', 'selected caption text: §2\'s selection',
          ground=S, ink=W),
     rule(r'^\.cm-editor \.code$', 'code: BLACK in the mono face (§5)', ink=B, face=MONO),
@@ -1045,17 +1063,17 @@ CLASSIFY = [
 
     # --- auxiliary windows ------------------------------------------------------------------------------------
     rule(r'^\.form-container \.fieldset-category$', 'a settings category over its cards: BLACK on the LIGHT page',
-         ink=B, size=PX16),
+         ink=B, size=SIZE),
     rule(r'^\.form-container fieldset$', 'a group of settings: a WHITE card on the LIGHT page, BLACK at 400, no line',
          ground=W, ink=B, line=NONE),
     rule(r'^\.form-container fieldset \.form-header legend$|^\.form-container fieldset \.control-grid '
-         r'\.control-grid-cell\.heading$', '', size=PX16),
+         r'\.control-grid-cell\.heading$', '', size=SIZE),
     rule(r'^\.form-container fieldset \.form-help$', 'a help badge: WHITE on DARK', ground=D, ink=W, line=NONE,
-         size=PX16),
+         size=SIZE),
     rule(r'^\.form-container (fieldset )?hr$', 'no line', line=NONE),
     rule(r'^\.form-field-(info-text|sub-heading|plain-text)$', 'descriptions: DARK on the card, Lc 79.0', ink=D,
-         size=PX16),
-    rule(r'^p#theme-selection-label$|^div#theme-container$', '', size=PX16),
+         size=SIZE),
+    rule(r'^p#theme-selection-label$|^div#theme-container$', '', size=SIZE),
     rule(r'^div#theme-container div\.theme-container-item div\.theme-mockup', 'the pictures of Zettlr\'s five editor '
          'themes: pictures of windows, content', ground=CONTENT, size=CONTENT, shadow=CONTENT),
     rule(r'^div#theme-container div\.theme-container-item div\.theme-metadata div\.selected-button$', 'the chosen '
@@ -1066,7 +1084,7 @@ CLASSIFY = [
     rule(r'^\.code-editor-wrapper$', 'a code field: WHITE, BLACK outline (a control)', ground=W, line=B),
     rule(r'^\.asset-container span\.protected-info$', 'DARK on the field', ink=D),
     rule(r'^div#sil-1-1-text$|^div#error p#additional-info$|^div#about-general p#uuid$|^\.message \.details$',
-         'fixed-width text: the mono face (§5)', face=MONO, ink=D, size=PX16),
+         'fixed-width text: the mono face (§5)', face=MONO, ink=D, size=SIZE),
     rule(r'^div#project-container div\.project-box$', 'a project\'s card: LIGHT carrying BLACK at 700, no line',
          ground=L, line=NONE),
     rule(r'^div#project-container div\.project-box:hover$', 'hovered: WHITE', ground=W),
@@ -1082,7 +1100,7 @@ CLASSIFY = [
     rule(r'^#onboarding-progress span$', 'the steps to come: LIGHT', ground=L),
     rule(r'^#onboarding-progress span\.done$', 'the steps done: ACCENT', ground=A),
     rule(r'^p#version-string$', 'the version: ACCENT on WHITE, Lc 75.4', ink=A, size=CONTENT),
-    rule(r'^p\.small$', '', size=PX16),
+    rule(r'^p\.small$', '', size=SIZE),
     rule(r'^\.box$', 'no outline', line=NONE),
     rule(r'^(button|select)(\.active)?$', 'the first-run window\'s buttons: ACCENT carrying WHITE', ground=A, ink=W),
     rule(r'^(button|select)(\.active)?:hover$', '...hovered SELECT', ground=S),
@@ -1093,7 +1111,7 @@ CLASSIFY = [
          ink=CONTENT, line=CONTENT, face=CONTENT, size=CONTENT),
     rule(r'^div#project-lists p\.warning$', 'a warning: WARNING with its legend', ground=WN, ink=LD, line=NONE),
     rule(r'^\.export-file-list \.export-file-item( \.display-name \.relative-dirname|:not\(\.active\))$', 'a file '
-         'left out of the export, and a folder\'s name: DARK on the field', ink=D, size=PX16),
+         'left out of the export, and a folder\'s name: DARK on the field', ink=D, size=SIZE),
     rule(r'^\.export-file-list \.export-file-item:not\(:last-child\)$', 'no lines', line=NONE),
     rule(r'^#splash-screen-wrapper #info h1$', '', size=CONTENT),
     rule(r'^div#calendar-container|^div#chart-container|^#box-plot-fsal-stats-words|^div#graph-container div#graph',
@@ -1307,6 +1325,13 @@ PANELS = ('#menubar', 'div#toolbar', 'div#titlebar', 'div.tab-list', 'div.tab-co
           '#lrt-wrapper .lrt.in-progress', '#lrt-wrapper .lrt.aborted', 'div#project-container div.project-box',
           '.cm-editor .cm-foldPlaceholder', '.selectable-list-wrapper .selectable-list-footer', 'button',
           'div#global-search-pane')
+# LIGHT grounds inside the note itself take the editor's size, which is yours to set (Preferences, zoom), and may be
+# under 18 px; there text keeps 700, which reaches Lc 60 from 16 px. Every other panel is chrome, at 600 and 18 px.
+IN_NOTE = ('.cm-editor .admonition-wrapper.note', '.cm-editor .admonition-wrapper.tip',
+           '.cm-editor .admonition-wrapper.important', '.cm-editor .cm-foldPlaceholder')
+CHROME = tuple(p for p in PANELS if p not in IN_NOTE)
+# Zettlr's own bold inside the chrome: the contents' level numbers and the heading the caret is under.
+PANEL_BOLD = ('#sidebar div.toc-entry-container div.toc-level', '#sidebar div.toc-entry-container div.toc-entry-active')
 FIELDS = ('input', 'textarea', 'select', 'div.application-menu div.menu-item',
           '.cm-editor .cm-tooltip-autocomplete ul li', 'div.autocomplete-list', 'div.single-search-result')
 _hi = lambda sels: ', '.join(':root:root ' + s for s in sels)
@@ -1317,7 +1342,7 @@ RULES = [
      [('color-scheme', 'light'), ('background-color', '{white}')]),
     ('§5: the controls take the page\'s face and the size every floor assumes; the browser gives them Arial at '
      '13.33 px.', 'button, input, select, textarea',
-     [('font-family', 'var(--rm-face-ui)'), ('font-size', '16px')]),
+     [('font-family', 'var(--rm-face-ui)'), ('font-size', FIELD_SIZE)]),
     ('A button\'s text is BLACK: Zettlr colours its buttons only in dark mode, and the browser\'s ButtonText is #000000, '
      'which §3 reserves for legend.', 'button', [('color', '{black}')]),
     ('A field is WHITE carrying BLACK: the browser paints it #FFFFFF, which §3 reserves.',
@@ -1356,13 +1381,23 @@ RULES = [
     ('The find panel and the tooltips are chrome inside the editor, where Zettlr\'s editor selection would reach '
      'them: §2\'s selection.', ':root:root .cm-editor .cm-panels ::selection, :root:root .cm-editor .cm-tooltip '
      '::selection', [('background-color', '{select}'), ('color', '{white}')]),
-    ('Weight follows the ground (§2): every LIGHT panel carries BLACK at 700, Lc 61.2 ...', _hi(PANELS),
-     [('font-weight', '700')]),
-    ('... and every WHITE field nested in one goes back to 400, Lc 91.8.', _hi(PANELS[:1]) and
-     ', '.join(f':root:root {p} {f}' for p in PANELS for f in FIELDS[:3]) + ', ' + _hi(FIELDS[3:]),
-     [('font-weight', '400')]),
-    ('The current tab is the field\'s edge: WHITE, carrying BLACK at 400. In light mode Zettlr marks it only by an '
-     'underline, which would be a line between the tab and its field.',
+    ('Weight and size follow the ground (§2): every LIGHT panel of the chrome carries BLACK at 600 and 18 px, Lc '
+     '61.2, APCA\'s tier for SemiBold at that size (the type, above). Zettlr\'s own bold inside a panel -- the '
+     'contents\' level numbers and the heading the caret is under -- is the panel\'s SemiBold too ...',
+     _hi(CHROME + PANEL_BOLD), [('font-weight', PANEL_WEIGHT), ('--rm-size', PANEL_SIZE),
+                                ('font-size', 'var(--rm-size)')]),
+    ('... and so is the bold the browser gives a heading, a <b> or a table\'s header there, at its own size, so a '
+     'panel has one weight.', ', '.join(f':root:root {p} :is(h1, h2, h3, h4, h5, h6, b, strong, th, legend)'
+                                         for p in CHROME), [('font-weight', PANEL_WEIGHT)]),
+    ('A LIGHT ground inside the note -- an alert\'s frame, a folded span -- keeps the editor\'s size, so its text '
+     'is 700, the tier from 16 px.', _hi(IN_NOTE), [('font-weight', '700')]),
+    ('Every WHITE field nested in a panel goes back to 400, Lc 91.8, and in the chrome to 16 px.',
+     ', '.join(f':root:root {p} {f}' for p in CHROME for f in FIELDS[:3]) + ', ' + _hi(FIELDS[3:]),
+     [('font-weight', '400'), ('--rm-size', FIELD_SIZE), ('font-size', 'var(--rm-size)')]),
+    ('', ', '.join(f':root:root {p} {f}' for p in IN_NOTE for f in FIELDS[:3]), [('font-weight', '400')]),
+    ('The current tab is the field\'s edge: WHITE, carrying BLACK at 400 -- at the strip\'s size, so the labels in '
+     'one strip stand on one line. In light mode Zettlr marks it only by an underline, which would be a line '
+     'between the tab and its field.',
      ':root:root div.tab-container div[role="tab"].active', [('background-color', '{white}'), ('font-weight', '400')]),
     ('The pomodoro ring: Zettlr strokes it by attribute, #aaaaaa and #ff3388 whatever the phase (it passes the '
      'phase\'s colour as `colour` and the ring reads `trackColour`). A track in the field\'s tone, the time gone '
@@ -1400,7 +1435,7 @@ RULES = [
     ('Settings: the page is a LIGHT panel and each group a WHITE card on it (§2\'s alternation, as on '
      'worksafe/obsidian/); the list of pages beside it is the field. Zettlr paints page and cards alike.',
      ':root:root div.view:has(> .form-container)', [('background-color', '{light}')]),
-    ('', ':root:root .form-container .fieldset-category', [('font-weight', '700')]),
+    ('', ':root:root .form-container .fieldset-category', [('font-weight', PANEL_WEIGHT), ('--rm-size', PANEL_SIZE)]),
     ('A strip of tabs may wrap: at the size the floors assume and the weight a LIGHT strip needs, the About '
      'window\'s six do not fit its width. Zettlr fixes the strip at 40 px, for one row of 11 px labels, so it grows '
      'from there to hold the second row, and the page below gives up the room. The current tab is WHITE, so it goes '
@@ -1435,6 +1470,11 @@ RULES = [
                      'calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px))')]),
     ('The file manager is a LIGHT panel: Zettlr leaves it to show the window field through.',
      ':root:root #file-manager', [('background-color', '{light}')]),
+    ('So is the sidebar. Zettlr grounds it, then makes it transparent on Linux and macOS (`body.linux div#sidebar`) '
+     'for the vibrancy macOS draws, and that rule outranks the mirror\'s; it names no colour, so the record never held '
+     'it. The note\'s WHITE showed through, the contents stood on it at the panel\'s weight, and note and sidebar '
+     'met with nothing between them (seen on screen, 2026-09-30).', ':root:root #sidebar',
+     [('background-color', '{light}')]),
     ('Menu rows are the field, on the menu\'s LIGHT frame (worksafe/obsidian/); the row under the pointer is '
      'SELECT carrying WHITE, its shortcut included.',
      ':root:root div.application-menu div.menu-item:not(.separator)', [('background-color', '{white}')]),
@@ -1624,6 +1664,9 @@ def theme_text():
         out.append(f'  --rm-{name}: {ROLES[name]};')
     for name, face in FACES.items():
         out.append(f'  --rm-face-{name}: {face};')
+    out += _comment('§5\'s size, the field\'s: every size the mirror writes reads it, and a LIGHT panel sets it to '
+                    f'{PANEL_SIZE} for its SemiBold (THE RULES).', '  ')
+    out.append(f'  --rm-size: {FIELD_SIZE};')
     out.append('}')
     out.append('')
     out += _comment('THE MIRROR. Every declaration Zettlr makes that puts a colour on the screen, or a face or a '
@@ -1700,7 +1743,7 @@ CONTENT_SELECTORS = ('.katex', 'math', '.mermaid-chart', '#print-container', 'di
 # custom.css may.
 PROBE = r"""(() => {
   const out = [], unread = new Set();
-  const CONTENT = __CONTENT__;
+  const CONTENT = __CONTENT__, GROUNDS = __GROUNDS__;
   const srgb = v => 255 * Math.min(1, Math.max(0, v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055));
   const oklab = (L, a, b) => { const l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3, m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3,
     s = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3; return [4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
@@ -1752,7 +1795,8 @@ PROBE = r"""(() => {
     if (el.tagName === 'INPUT' && ['checkbox', 'radio', 'range'].includes(el.type) && cs.appearance !== 'none')
       out.push({prop: 'native-control', value: el.type, where: where(el)});
   }
-  return {body: document.body.className, focused: document.hasFocus(), records: out, unread: [...unread]};
+  const grounds = {}; for (const s of GROUNDS) { const e = document.querySelector(s); if (e && e.getBoundingClientRect().width >= 1) grounds[s] = hex(ground(e)); }
+  return {body: document.body.className, focused: document.hasFocus(), records: out, unread: [...unread], grounds};
 })()"""
 
 
@@ -1760,8 +1804,16 @@ def role_of(hx):
     return next((k for k, v in ROLES.items() if v.upper() == hx.upper()), None)
 
 
+# The grounds the README's table gives the surfaces it names. --screen reads what each one composites to, because a
+# text pair can pass on the wrong ground: the sidebar stood on the note's WHITE at the panel's weight until
+# 2026-09-30, and BLACK on WHITE clears every tier, so nothing else said so.
+GROUNDS = {'#menubar': L, 'div#toolbar': L, 'div.tab-container': L, '#file-manager': L, '#sidebar': L,
+           'div#statusbar': L, '.cm-editor .cm-panels-bottom': L, 'div#titlebar': L, '.main-editor-wrapper': W}
+
+
 def probe_js():
-    return PROBE.replace('__CONTENT__', json.dumps(', '.join(CONTENT_SELECTORS)))
+    return (PROBE.replace('__CONTENT__', json.dumps(', '.join(CONTENT_SELECTORS)))
+                 .replace('__GROUNDS__', json.dumps(list(GROUNDS))))
 
 
 def parsed_rules(page, path=THEME):
@@ -1866,6 +1918,12 @@ def report(window, shot):
         for s in shot['unread']:
             print(f'  {s}')
         print()
+    if shot.get('grounds'):
+        print('grounds of the surfaces the table names:')
+        for sel, hx in shot['grounds'].items():
+            want = GROUNDS[sel]
+            print(f"  {sel:28} {role_of(hx) or hx:8} {'ok' if role_of(hx) == want else 'NOT THE TABLE\'S ' + want.upper()}")
+        print()
     content = [r for r in recs if r.get('content')]
     recs = [r for r in recs if not r.get('content')]
     print(f"content, left as Zettlr paints it (§0a): {len(content)} values in "
@@ -1894,17 +1952,17 @@ def report(window, shot):
     glyph = lambda r: ' > svg' in r['where'] or r['where'].startswith('svg')
     for r in recs:
         if r['prop'] == 'text':
-            k = (r['value'], r['ground'], 'glyph' if glyph(r) else r['weight'] >= 600, round(r['size']),
-                 r['opacity'] < 1 or r['alpha'] < 1)
+            k = (r['value'], r['ground'], 'glyph' if glyph(r) else round(r['weight'] / 100) * 100,
+                 round(r['size'], 1), r['opacity'] < 1 or r['alpha'] < 1)
             pairs.setdefault(k, []).append(r)
-    for (t, g, tier, size, faded), rs in sorted(pairs.items(), key=lambda kv: -len(kv[1])):
+    for (t, g, weight, size, faded), rs in sorted(pairs.items(), key=lambda kv: -len(kv[1])):
         lc = apca.lc(t, g)
-        floor = 30 if tier == 'glyph' else 60 if tier else 75
+        floor = 30 if weight == 'glyph' else 60 if tier60(weight, size) else 75
         low = abs(lc) < floor                           # a slot at its gamut cap is the gate's 'cap', not a defect
         flag = ('cap' if low and t.upper() in CAPS else 'LOW' if low else 'FADED' if faded else
-                'SMALL' if size < 16 and tier != 'glyph' else 'ok')
-        weight = 'glyph' if tier == 'glyph' else '700' if tier else '400'
-        print(f"  {role_of(t) or t:12} on {role_of(g) or g:12} Lc {lc:6.1f} {size:3}px/{weight:5} "
+                'SMALL' if size < 16 and weight != 'glyph' else 'ok')
+        size = f'{size:g}'
+        print(f"  {role_of(t) or t:12} on {role_of(g) or g:12} Lc {lc:6.1f} {size:>4}px/{weight!s:5} "
               f"{flag:5} {len(rs):4}x  e.g. {rs[0]['sample'][:22]!r} {rs[0]['where'][-60:]}")
     faces = {}
     for r in recs:
@@ -1921,11 +1979,13 @@ def report(window, shot):
 
 # --- 11. what the checker measures ---------------------------------------------------------------------------
 # The pairs this surface authors, by role: text on its ground at the tier it renders at, and marks at theirs. The
-# weight follows the ground (THE RULES): a LIGHT panel carries 700, so BLACK on LIGHT is measured at the 16px/700
-# tier. `--screen` measures the same pairs as the running app paints them, per element.
+# weight and size follow the ground (THE RULES): a LIGHT panel carries 600 at 18 px, so BLACK on LIGHT is measured
+# at the Lc 60 tier, which APCA's table gives SemiBold from 18 px. `--screen` measures the same pairs as the
+# running app paints them, per element, each at the tier its own computed weight and size reach (tier60).
 PAIRS = [
     (B, W, 75, 'the note, a field, a menu row, a settings card: BLACK at 400'),
-    (B, L, 60, 'a LIGHT panel\'s labels at 700: menubar, toolbar, tabs, file manager, sidebar, status bar, popovers'),
+    (B, L, 60, 'a LIGHT panel\'s labels at 600, 18 px: menubar, toolbar, tabs, file manager, sidebar, status bar, '
+               'popovers'),
     (W, S, 75, 'the current file, a selected row, the chosen result, a hovered button'),
     (D, W, 75, 'descriptions, placeholders, Markdown\'s marks, the gutter\'s labels, comments'),
     (A, W, 75, 'links, tags, citation keys, literals in code'),
@@ -2085,7 +2145,7 @@ def check():
     print("\nfills under text that keeps its colour (the platform's shortfall, measured):")
     for ground, ink, why in HIGHLIGHTS:
         print(f"  {ink:12} on {ground:12} Lc {apca.lc(ROLES[ink], ROLES[ground]):7.1f}  {why}")
-    print("\npairs the mirror authors in one rule (a LIGHT ground carries 700, so its tier is 60):")
+    print("\npairs the mirror authors in one rule (a LIGHT ground carries 600 at 18 px, so its tier is 60):")
     seen = {}
     for block, media, sel, decls, notes_ in mirror_rules(rows):
         d = {p_: v for p_, v, imp in decls}

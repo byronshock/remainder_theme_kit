@@ -494,6 +494,12 @@ COSMIC.
 - **Some states are styled only under `body.dark` or `body.darwin`.** On Linux in
   light mode a chosen radio button, a shortcut that is not bound and a pressed
   toolbar toggle have no style of their own.
+- **The sidebar is made transparent on Linux and macOS**, by
+  `body.linux div#sidebar` (and `body.darwin`), for the vibrancy macOS draws, so
+  the window's own ground shows through it, and the grounded rule written for it,
+  `body #sidebar`, never shows on either. The transparent rule outranks that one
+  and names no colour of its own, so a record of only the declarations that
+  paint does not hold it. Found 2026-09-30.
 - **The chrome's text is 10 to 15 px.** The note's size is a setting.
 - **Update checks are compiled out** of this package: Preferences says so, and
   the Updater window reports none.

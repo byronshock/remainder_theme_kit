@@ -13,8 +13,8 @@
 #
 #   --fonts    fetch Montserrat and IntoneMono Nerd Font Mono (Intel One Mono's Nerd Fonts build) from their
 #              authoritative sources, verify, install per-user, and hide the mono's 400 cuts so it renders
-#              at 500 (§5). --no-fonts declines. Not asked when both are on the machine and no 400 cut of
-#              the mono is visible.
+#              at 500 (§5). --no-fonts declines. Not asked when both are on the machine, Montserrat with
+#              its SemiBold, and no 400 cut of the mono is visible.
 #   --fonts-plain  the same, with Intel One Mono itself for the mono: §5's fallback, Intel's own release
 #              without the Nerd Fonts icons. Offered on a terminal when the Nerd build is declined.
 #   --icons    repaint this machine's own application icons along the kit's own lightness ramp (§4):
@@ -169,7 +169,7 @@ mono_400_visible() {
 # 1. fonts. Asked first because §5 makes them load-bearing: every contrast floor in §0e is a function
 # of what 12pt Montserrat renders at, so a machine without them is not running the measured kit.
 if [ "$ASK" = 1 ] && [ -z "$WANT_FONTS" ]; then
-  if have_font Montserrat && have_mono && ! mono_400_visible; then
+  if have_font 'Montserrat SemiBold' && have_mono && ! mono_400_visible; then
     say "Montserrat and the mono are already installed, the mono's 400 cuts hidden — not fetching them."
     WANT_FONTS=0
   else
@@ -266,7 +266,7 @@ INTEL_SHA=54863552d25dcb9c3f5360b296fc980d6e1fbfd02e0d214224e8b78f0a2bccf0
 INTEL_FACES="IntelOneMono-Medium IntelOneMono-Bold IntelOneMono-MediumItalic IntelOneMono-BoldItalic"
 MONT_TAG=v7.222
 MONT_RAW="https://raw.githubusercontent.com/JulietaUla/Montserrat/$MONT_TAG"
-# file:sha256 — the four faces §5 asks for, plus the licence the OFL requires to travel with them.
+# file:sha256 — the five faces §5 asks for, plus the licence the OFL requires to travel with them.
 # The cuts are MEDIUM and EXTRABOLD, not Regular and Bold, and that is a choice with a measured direction.
 # Montserrat Regular reads thin at the ~16px §5 assumes. Every contrast floor in the kit gets EASIER as the
 # rendered weight goes up and harder as it comes down, and the pair with no room to lose is BLACK on LIGHT
@@ -278,7 +278,12 @@ MONT_RAW="https://raw.githubusercontent.com/JulietaUla/Montserrat/$MONT_TAG"
 # assumes. Going the other way -- a bold LIGHTER than 700 -- would have made that checker a false pass,
 # which is worse than a failing one.
 # Re-recorded from the authoritative download at the pinned tag, 2026-09-19.
+# SEMIBOLD is the one cut the rest of the kit does not use. worksafe/zettlr/ declares 600 on its LIGHT panels, at
+# 18 px, where APCA's table admits SemiBold at Lc 61.2 (CHOSEN 2026-09-30: lighter for the hours spent there).
+# Installing it moves nothing else: CSS matching still resolves 700 to ExtraBold, the nearest weight above, and
+# fontconfig still answers "bold" with it. Recorded from the authoritative download at the pinned tag, 2026-09-30.
 MONT_FILES="fonts/ttf/Montserrat-Medium.ttf:7ce96811837174f00c087b73332aed3f04a19069248ab46213d9ea05ff879cbc
+fonts/ttf/Montserrat-SemiBold.ttf:49fbfce003ad1692d7c9a6502791577088c12c50088d4caa27dbbfe540ad9d13
 fonts/ttf/Montserrat-ExtraBold.ttf:1b364c3400bf7b1cc2c47a25dd0d3edd8331da451412aa5539080f78f8f70b63
 fonts/ttf/Montserrat-MediumItalic.ttf:c1715ca387d44de2216a7b3e298aa7ec80d89619aead93ba4db6ae8d5bd37abf
 fonts/ttf/Montserrat-ExtraBoldItalic.ttf:f034db8c7857e3b7d719c52830fd9760237498697b450997343d19afa513023c
@@ -351,6 +356,8 @@ elif [ "$ASK" = 0 ]; then
   # machine without them is not running the measured kit. Someone who just declined the question
   # knows that already and does not need the flag read back to them.
   have_font Montserrat || say "font 'Montserrat' not installed — run: sh install.sh --fonts"
+  have_font Montserrat && ! have_font 'Montserrat SemiBold' &&
+    say "Montserrat SemiBold not installed (worksafe/zettlr/'s panels use it) — run: sh install.sh --fonts"
   have_mono || say "font 'Intel One Mono' not installed — run: sh install.sh --fonts (or --fonts-plain)"
   if have_mono && mono_400_visible; then
     say "the mono's 400 cuts are visible, so it renders at 400 and not 500 — run: sh install.sh --fonts"
